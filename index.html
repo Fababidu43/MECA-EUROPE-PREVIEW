@@ -49,30 +49,30 @@
           </div>
 
           <section id="activites" class="metiers-list">
-            <a href="#" class="metier-item">
+            <div class="metier-item">
               <span class="icon-wrap"><img src="https://api.iconify.design/mdi:cog-outline.svg?color=%23ffffff" alt="Usinage"></span>
               <span>Usinage de pièces mécaniques</span>
-            </a>
-            <a href="#" class="metier-item">
+            </div>
+            <div class="metier-item">
               <span class="icon-wrap"><img src="https://api.iconify.design/mdi:tools.svg?color=%23ffffff" alt="Tournage et fraisage"></span>
               <span>Tournage, fraisage et perçage</span>
-            </a>
-            <a href="#" class="metier-item">
+            </div>
+            <div class="metier-item">
               <span class="icon-wrap"><img src="https://api.iconify.design/mdi:nut.svg?color=%23ffffff" alt="Montage"></span>
               <span>Montage d'ensembles mécaniques</span>
-            </a>
-            <a href="#" class="metier-item">
+            </div>
+            <div class="metier-item">
               <span class="icon-wrap"><img src="https://api.iconify.design/mdi:hammer-wrench.svg?color=%23ffffff" alt="Décolletage"></span>
               <span>Décolletage et pièces techniques</span>
-            </a>
-            <a href="#" class="metier-item">
+            </div>
+            <div class="metier-item">
               <span class="icon-wrap"><img src="https://api.iconify.design/mdi:layers-triple-outline.svg?color=%23ffffff" alt="Matières travaillées"></span>
               <span>Travail de l'aluminium et de l'inox</span>
-            </a>
-            <a href="#" class="metier-item">
+            </div>
+            <div class="metier-item">
               <span class="icon-wrap"><img src="https://api.iconify.design/mdi:ruler-square-compass.svg?color=%23ffffff" alt="Fabrication sur mesure"></span>
               <span>Fabrication en série et sur mesure</span>
-            </a>
+            </div>
           </section>
         </div>
 
@@ -170,13 +170,11 @@
 
     <section id="contact" class="pre-footer">
       <div class="wrap pre-footer-grid reveal">
-        <div class="pre-box">
-          <p>BESOIN D'UNE PIÈCE SPÉCIFIQUE OU D'UNE PRODUCTION EN SÉRIE ?</p>
-          <a href="mailto:mecaeurope@orange.fr" class="button-pill">Nous écrire</a>
-        </div>
-        <div class="pre-box right">
-          <p>22, ROUTE DU MIDI 43220 RIOTORD</p>
-          <a href="#plan" class="social-dot">M</a>
+        <div class="contact-bubble">
+          <p class="contact-kicker">Contact atelier</p>
+          <h2 class="contact-bubble-title">Parlons de votre projet mécanique</h2>
+          <p class="contact-bubble-lead">Demande de devis, besoin technique ou production sur mesure.</p>
+          <button type="button" class="button-pill contact-open-btn" data-open-contact-modal>Nous écrire</button>
         </div>
       </div>
     </section>
@@ -209,6 +207,41 @@
       </div>
     </section>
   </main>
+
+  <div class="contact-modal" id="contact-modal" aria-hidden="true">
+    <div class="contact-modal-backdrop" data-close-contact-modal></div>
+    <div class="contact-modal-dialog" role="dialog" aria-modal="true" aria-labelledby="contact-modal-title">
+      <button type="button" class="contact-modal-close" data-close-contact-modal aria-label="Fermer le formulaire">×</button>
+      <p class="contact-modal-kicker">Contact atelier</p>
+      <h3 id="contact-modal-title">Envoyez votre demande</h3>
+      <p class="contact-modal-lead">Indiquez vos besoins, nous vous répondons rapidement.</p>
+
+      <form class="contact-form" id="contact-form">
+        <label>
+          Nom
+          <input type="text" name="name" required placeholder="Votre nom">
+        </label>
+        <label>
+          Email
+          <input type="email" name="email" required placeholder="vous@exemple.fr">
+        </label>
+        <label>
+          Téléphone
+          <input type="tel" name="phone" placeholder="06 00 00 00 00">
+        </label>
+        <label>
+          Message
+          <textarea name="message" required rows="4" placeholder="Décrivez votre besoin (série, unitaire, matière, délais)..."></textarea>
+        </label>
+        <div class="contact-form-actions">
+          <button type="submit" class="button-pill">Envoyer</button>
+          <button type="button" class="contact-form-cancel" data-close-contact-modal>Annuler</button>
+        </div>
+      </form>
+
+      <p class="contact-form-feedback" id="contact-form-feedback" aria-live="polite"></p>
+    </div>
+  </div>
 
   <footer class="footer reveal">
     <div class="wrap footer-head">
