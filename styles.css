@@ -204,25 +204,26 @@ a {
 
 .hero {
   background: #ffffff;
-  padding: 54px 0 44px;
+  padding: 54px 0 300px;
   position: relative;
   z-index: 3;
-  overflow: visible;
+  overflow: hidden;
+}
+
+.hero::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 150px;
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0) 0%, rgba(255, 255, 255, 0.76) 68%, #ffffff 100%);
+  z-index: 1;
+  pointer-events: none;
 }
 
 .hero::after {
-  content: "";
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(
-    180deg,
-    rgba(255, 255, 255, 0.82) 0%,
-    rgba(255, 255, 255, 0.72) 58%,
-    rgba(255, 255, 255, 0.9) 86%,
-    rgba(255, 255, 255, 1) 100%
-  );
-  z-index: 1;
-  pointer-events: none;
+  content: none;
 }
 
 .hero-video-bg {
@@ -231,9 +232,10 @@ a {
   width: 100%;
   height: 100%;
   object-fit: cover;
-  object-position: center;
+  object-position: center center;
   transform: none;
-  filter: saturate(0.92) contrast(1.04);
+  opacity: 1;
+  filter: none;
   z-index: 0;
   pointer-events: none;
 }
@@ -346,6 +348,84 @@ a {
 
 .section {
   padding: 100px 0;
+}
+
+.decor-surface {
+  position: relative;
+  isolation: isolate;
+  --decor-shift: 0px;
+}
+
+.decor-surface > .wrap {
+  position: relative;
+  z-index: 1;
+}
+
+.decor-surface::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  opacity: 0.34;
+  background-image:
+    url("assets/decor/motif-points-gris.svg"),
+    url("assets/decor/motif-ligne-technique.svg"),
+    url("assets/decor/motif-grand-cercle-fin.svg"),
+    url("assets/decor/motif-croix-rouge.svg"),
+    url("assets/decor/motif-ligne-droite-point.svg"),
+    url("assets/decor/motif-angle-plan.svg"),
+    url("assets/decor/motif-repere-cible.svg");
+  background-repeat: no-repeat;
+  background-size: 138px, 320px, 420px, 18px, 240px, 118px, 88px;
+  background-position:
+    5% calc(14% + var(--decor-shift)),
+    97% calc(17% - var(--decor-shift)),
+    92% calc(72% + var(--decor-shift)),
+    12% calc(77% - var(--decor-shift)),
+    9% calc(90% + var(--decor-shift)),
+    86% calc(90% - var(--decor-shift)),
+    74% calc(38% + var(--decor-shift));
+}
+
+.decor-surface.decor-b::after {
+  background-image:
+    url("assets/decor/motif-points-rouges.svg"),
+    url("assets/decor/motif-cercle-technique.svg"),
+    url("assets/decor/motif-ligne-technique.svg"),
+    url("assets/decor/motif-chevrons.svg"),
+    url("assets/decor/motif-grand-cercle-fin.svg"),
+    url("assets/decor/motif-cadre-technique.svg"),
+    url("assets/decor/motif-croix-rouge.svg");
+  background-size: 104px, 108px, 284px, 92px, 360px, 144px, 16px;
+  background-position:
+    8% calc(16% + var(--decor-shift)),
+    88% calc(14% - var(--decor-shift)),
+    95% calc(52% + var(--decor-shift)),
+    14% calc(58% - var(--decor-shift)),
+    2% calc(88% + var(--decor-shift)),
+    79% calc(82% - var(--decor-shift)),
+    91% calc(72% + var(--decor-shift));
+}
+
+.decor-surface.decor-c::after {
+  background-image:
+    url("assets/decor/motif-angle-plan.svg"),
+    url("assets/decor/motif-points-gris.svg"),
+    url("assets/decor/motif-ligne-droite-point.svg"),
+    url("assets/decor/motif-grand-cercle-fin.svg"),
+    url("assets/decor/motif-repere-cible.svg"),
+    url("assets/decor/motif-cadre-technique.svg"),
+    url("assets/decor/motif-croix-rouge.svg");
+  background-size: 126px, 132px, 264px, 340px, 92px, 118px, 16px;
+  background-position:
+    4% calc(18% + var(--decor-shift)),
+    91% calc(10% - var(--decor-shift)),
+    8% calc(48% + var(--decor-shift)),
+    92% calc(84% - var(--decor-shift)),
+    74% calc(34% + var(--decor-shift)),
+    18% calc(82% - var(--decor-shift)),
+    88% calc(58% + var(--decor-shift));
 }
 
 .intro-section {
@@ -661,55 +741,122 @@ mark {
   text-align: center;
 }
 
-.news-grid {
+.works-carousel {
   margin-top: 58px;
-  display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 34px;
-}
-
-.news-card {
-  background: #fff;
-  border-radius: 10px;
-  padding: 40px 28px 24px;
   position: relative;
-  min-height: 260px;
+  display: grid;
+  gap: 18px;
+  --slides-to-show: 3;
 }
 
-.news-card:nth-child(3) {
-  background: #f1f1f1;
+.carousel-viewport {
+  overflow: hidden;
+  border-radius: 26px;
+  box-shadow: 0 16px 34px rgba(0, 0, 0, 0.1);
+  border: 1px solid rgba(0, 0, 0, 0.14);
+  background: #ffffff;
 }
 
-.news-card img {
-  width: 82px;
-  height: 82px;
+.carousel-track {
+  display: flex;
+  transition: transform 0.5s ease;
+  will-change: transform;
+}
+
+.carousel-slide {
+  margin: 0;
+  min-width: calc(100% / var(--slides-to-show));
+  position: relative;
+  aspect-ratio: 4 / 3;
+  background: #ececec;
+  overflow: hidden;
+}
+
+.carousel-slide img {
+  width: 100%;
+  height: 100%;
   object-fit: cover;
-  border-radius: 50%;
+  object-position: center center;
+  display: block;
+  transform: scale(1.01);
+}
+
+.carousel-slide figcaption {
   position: absolute;
-  left: -10px;
-  top: -16px;
-}
-
-.news-card h3 {
-  margin: 10px 0 12px;
-  color: #222;
-  font-size: clamp(1.05rem, 1.05vw, 1.4rem);
-  line-height: 1.34;
-}
-
-.news-cat {
-  display: inline-block;
-  border: 1px solid var(--c-teal);
-  color: var(--c-teal);
-  padding: 4px 12px;
-  border-radius: 4px;
-  font-size: 0.95rem;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  margin: 0;
+  padding: 22px 14px 10px;
+  border-radius: 0;
+  color: #fff;
+  background: linear-gradient(180deg, rgba(0, 0, 0, 0) 0%, rgba(0, 0, 0, 0.72) 72%);
+  border: 0;
+  font-size: 0.88rem;
   font-weight: 700;
+  line-height: 1.25;
+  max-width: none;
 }
 
-.news-date {
-  font-size: 1.05rem;
-  color: #7a7a7a;
+.carousel-btn {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 44px;
+  height: 44px;
+  border-radius: 999px;
+  border: 0;
+  display: inline-grid;
+  place-items: center;
+  background: rgba(30, 30, 30, 0.72);
+  color: #fff;
+  cursor: pointer;
+  z-index: 2;
+  transition: transform 0.2s ease, background-color 0.2s ease;
+}
+
+.carousel-btn:hover,
+.carousel-btn:focus-visible {
+  transform: translateY(-50%) scale(1.05);
+  background: rgba(225, 22, 22, 0.88);
+}
+
+.carousel-btn:active {
+  transform: translateY(-50%) scale(0.96);
+}
+
+.carousel-btn span {
+  font-size: 1.9rem;
+  line-height: 1;
+}
+
+.carousel-btn-prev {
+  left: 14px;
+}
+
+.carousel-btn-next {
+  right: 14px;
+}
+
+.carousel-dots {
+  display: flex;
+  justify-content: center;
+  gap: 8px;
+}
+
+.carousel-dot {
+  width: 11px;
+  height: 11px;
+  border-radius: 50%;
+  border: 0;
+  background: rgba(0, 0, 0, 0.22);
+  cursor: pointer;
+  transition: transform 0.2s ease, background-color 0.2s ease;
+}
+
+.carousel-dot.is-active {
+  background: var(--c-teal);
+  transform: scale(1.2);
 }
 
 .news-more {
@@ -739,6 +886,100 @@ mark {
   grid-template-columns: 1fr;
   gap: 0;
   align-items: center;
+}
+
+.contact-showcase {
+  width: min(100%, 1220px);
+  min-height: 560px;
+  margin: 0 auto;
+  border-radius: 34px;
+  padding: 60px 66px;
+  display: flex;
+  align-items: center;
+  background:
+    linear-gradient(90deg, rgba(255, 255, 255, 0.96) 0%, rgba(255, 255, 255, 0.93) 45%, rgba(255, 255, 255, 0.52) 68%, rgba(255, 255, 255, 0.18) 100%),
+    url("assets/images/background-nous-contacter.webp") center / cover no-repeat;
+  border: 1px solid rgba(0, 0, 0, 0.08);
+  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.14);
+}
+
+.contact-showcase-content {
+  max-width: 560px;
+  display: grid;
+  gap: 20px;
+}
+
+.contact-showcase-kicker {
+  margin: 0;
+  color: var(--c-teal);
+  font-size: 1.08rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.16em;
+}
+
+.contact-showcase-kicker::after {
+  content: "";
+  display: block;
+  width: 66px;
+  height: 2px;
+  border-radius: 999px;
+  margin-top: 13px;
+  background: rgba(225, 22, 22, 0.38);
+}
+
+.contact-showcase h2 {
+  margin: 0;
+  color: #0e1116;
+  font-size: clamp(2.5rem, 5vw, 5rem);
+  line-height: 1.04;
+  letter-spacing: -0.02em;
+}
+
+.contact-showcase h2 span {
+  color: var(--c-teal);
+}
+
+.contact-showcase-lead {
+  margin: 0;
+  color: #30353f;
+  font-size: clamp(1rem, 1.25vw, 1.7rem);
+  line-height: 1.45;
+  max-width: 520px;
+}
+
+.contact-showcase-tags {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.contact-showcase-tags span {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 46px;
+  padding: 0 16px;
+  border-radius: 14px;
+  border: 1px solid rgba(25, 25, 25, 0.2);
+  background: rgba(255, 255, 255, 0.84);
+  color: #2a2f39;
+  font-size: 1rem;
+  font-weight: 600;
+}
+
+.contact-showcase-tags span img {
+  width: 20px;
+  height: 20px;
+}
+
+.contact-showcase-btn {
+  margin-top: 8px;
+  min-height: 64px;
+  padding: 0 34px;
+  font-size: 1.04rem;
+  width: fit-content;
+  box-shadow: 0 10px 24px rgba(225, 22, 22, 0.34);
 }
 
 .pre-box {
@@ -1548,6 +1789,10 @@ body.legal-page {
 }
 
 @media (max-width: 1250px) {
+    .works-carousel {
+      --slides-to-show: 2;
+    }
+
   .header-main {
     padding: 14px 0;
     min-height: initial;
@@ -1640,6 +1885,21 @@ body.legal-page {
     padding: 40px 34px 32px;
   }
 
+  .contact-showcase {
+    min-height: 500px;
+    border-radius: 26px;
+    padding: 50px 42px;
+    background-position: 58% center;
+  }
+
+  .contact-showcase-content {
+    max-width: 510px;
+  }
+
+  .contact-showcase h2 {
+    font-size: clamp(2.05rem, 4.2vw, 3.5rem);
+  }
+
   #pieces-unitaires .text-content {
     padding: 30px 26px 24px;
   }
@@ -1661,10 +1921,6 @@ body.legal-page {
   }
 
   .metiers-list {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-  }
-
-  .news-grid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
@@ -1778,6 +2034,68 @@ body.legal-page {
     padding: 24px 18px 20px;
   }
 
+  .contact-showcase {
+    min-height: 420px;
+    border-radius: 20px;
+    padding: 24px 16px;
+    background:
+      linear-gradient(90deg, rgba(255, 255, 255, 0.96) 0%, rgba(255, 255, 255, 0.92) 60%, rgba(255, 255, 255, 0.52) 100%),
+      url("assets/images/background-nous-contacter.webp") 68% center / cover no-repeat;
+  }
+
+  .contact-showcase-content {
+    max-width: none;
+    gap: 14px;
+  }
+
+  .contact-showcase-kicker {
+    font-size: 0.88rem;
+    letter-spacing: 0.14em;
+  }
+
+  .contact-showcase-kicker::after {
+    width: 52px;
+    margin-top: 10px;
+  }
+
+  .contact-showcase h2 {
+    font-size: clamp(1.85rem, 7.5vw, 2.6rem);
+    line-height: 1.08;
+  }
+
+  .contact-showcase-lead {
+    font-size: 0.98rem;
+  }
+
+  .contact-showcase-tags {
+    gap: 8px;
+  }
+
+  .contact-showcase-tags span {
+    min-height: 38px;
+    padding: 0 10px;
+    border-radius: 12px;
+    font-size: 0.88rem;
+  }
+
+  .contact-showcase-tags span img {
+    width: 17px;
+    height: 17px;
+  }
+
+  .contact-showcase-btn {
+    min-height: 56px;
+    padding: 0 22px;
+    font-size: 0.98rem;
+  }
+
+  .decor-surface::after,
+  .decor-surface.decor-b::after,
+  .decor-surface.decor-c::after {
+    opacity: 0.22;
+    background-size: 92px, 210px, 240px, 14px, 166px, 82px, 62px;
+  }
+
   #pieces-unitaires .text-content {
     border-radius: 28px;
     padding: 24px 18px 20px;
@@ -1842,8 +2160,7 @@ body.legal-page {
     font-size: clamp(1.9rem, 8vw, 2.6rem);
   }
 
-  .metiers-list,
-  .news-grid {
+  .metiers-list {
     grid-template-columns: 1fr;
   }
 
@@ -1915,21 +2232,36 @@ body.legal-page {
     padding-left: 20px;
   }
 
-  .news-grid {
-    gap: 20px;
+  .works-carousel {
     margin-top: 32px;
+    gap: 12px;
+    --slides-to-show: 1;
   }
 
-  .news-card {
-    padding: 30px 18px 20px;
-    min-height: initial;
+  .carousel-viewport {
+    border-radius: 18px;
   }
 
-  .news-card img {
-    width: 68px;
-    height: 68px;
-    left: 12px;
-    top: -12px;
+  .carousel-slide figcaption {
+    font-size: 0.86rem;
+    padding: 18px 10px 8px;
+  }
+
+  .carousel-btn {
+    width: 38px;
+    height: 38px;
+  }
+
+  .carousel-btn span {
+    font-size: 1.5rem;
+  }
+
+  .carousel-btn-prev {
+    left: 8px;
+  }
+
+  .carousel-btn-next {
+    right: 8px;
   }
 
   .plan-details {

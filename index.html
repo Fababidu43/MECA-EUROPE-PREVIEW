@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="description" content="MECA-EUROPE - Mécanique générale, pièces de série, pièces unitaires et parc machines à Riotord.">
   <title>MECA-EUROPE | Mécanique générale</title>
-  <link rel="icon" type="image/png" sizes="32x32" href="favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="assets/images/favicon-32x32.png">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&family=Source+Sans+3:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -15,7 +15,7 @@
   <header class="header">
     <div class="header-main wrap">
       <a href="#top" class="brand" aria-label="Page d'accueil">
-        <img src="header_logo_meca.png" alt="MECA-EUROPE">
+        <img src="assets/images/header_logo_meca.png" alt="MECA-EUROPE">
       </a>
 
       <button type="button" class="menu-toggle" aria-controls="primary-nav" aria-expanded="false">
@@ -47,9 +47,7 @@
 
   <main id="top">
     <section class="hero reveal">
-      <video class="hero-video-bg" autoplay muted loop preload="auto" aria-hidden="true">
-        <source src="hero-usinage.mp4" type="video/mp4">
-      </video>
+      <img class="hero-video-bg" src="assets/images/background-hero.webp" alt="" aria-hidden="true">
       <div class="wrap hero-layout">
         <div class="hero-shell">
           <div class="hero-copy">
@@ -86,10 +84,10 @@
       </div>
     </section>
 
-    <section id="pieces-serie" class="section intro-section reveal">
+    <section id="pieces-serie" class="section intro-section reveal decor-surface decor-a">
       <div class="wrap intro-grid">
         <figure class="intro-figure">
-          <img src="parc_machine_2.jpg" alt="Pièces de série MECA-EUROPE">
+          <img src="assets/images/Tour CNC grande capacité_3.webp" alt="Tour CNC grande capacité 3 MECA-EUROPE">
         </figure>
         <article class="intro-copy">
           <h2>Pièces de série <mark>pour productions régulières et besoins récurrents</mark></h2>
@@ -103,7 +101,7 @@
       </div>
     </section>
 
-    <section id="pieces-unitaires" class="section engage-section reveal">
+    <section id="pieces-unitaires" class="section engage-section reveal decor-surface decor-b">
       <div class="wrap split-grid">
         <article class="text-content">
           <h2>Pièces unitaires <mark>pour demandes spécifiques et fabrications ponctuelles</mark></h2>
@@ -117,15 +115,15 @@
           <a class="button-pill" href="#contact">Demander une étude</a>
         </article>
         <figure class="section-figure">
-          <img src="parc_machine_3.jpg" alt="Pièces unitaires MECA-EUROPE">
+          <img src="assets/images/Tour CNC grande capacité.webp" alt="Tour CNC grande capacité MECA-EUROPE">
         </figure>
       </div>
     </section>
 
-    <section id="parc-machines" class="section experience-section reveal">
+    <section id="parc-machines" class="section experience-section reveal decor-surface decor-c">
       <div class="wrap split-grid reverse">
         <figure class="section-figure">
-          <img src="parc_machine_4.jpg" alt="Parc machines MECA-EUROPE">
+          <img src="assets/images/Tour CNC grande capacité_2.webp" alt="Tour CNC grande capacité 2 MECA-EUROPE">
         </figure>
         <article class="text-content dark">
           <h2>Parc machines <mark>au service de l'usinage et de la précision</mark></h2>
@@ -143,28 +141,47 @@
       </div>
     </section>
 
-    <section id="actualites" class="section news-section reveal">
+    <section id="actualites" class="section news-section reveal decor-surface decor-a">
       <div class="wrap reveal">
         <h2>Exemples de <mark>réalisations</mark></h2>
-        <div class="news-grid">
-          <article class="news-card">
-            <img src="pieces_serie_1.webp" alt="Pièces de série">
-            <p class="news-cat">Pièces de série</p>
-            <h3>Bague quadrillée intérieure et fabrication répétée de pièces techniques.</h3>
-            <p class="news-date">Production série</p>
-          </article>
-          <article class="news-card">
-            <img src="pieces_serie_2.webp" alt="Pièces unitaires">
-            <p class="news-cat">Pièces unitaires</p>
-            <h3>Fabrication dédiée pour matériel agricole, automobile et applications industrielles.</h3>
-            <p class="news-date">Sur demande</p>
-          </article>
-          <article class="news-card">
-            <img src="pieces_serie_3.webp" alt="Parc machines">
-            <p class="news-cat">Parc machines</p>
-            <h3>Capacités d'usinage adaptées aux diamètres, longueurs et contraintes de production.</h3>
-            <p class="news-date">Atelier mécanique</p>
-          </article>
+        <div class="works-carousel" data-carousel>
+          <button type="button" class="carousel-btn carousel-btn-prev" data-carousel-prev aria-label="Image précédente">
+            <span aria-hidden="true">‹</span>
+          </button>
+
+          <div class="carousel-viewport">
+            <div class="carousel-track" data-carousel-track>
+              <figure class="carousel-slide is-active">
+                <img src="assets/images/axe-epaule-usine-cnc.webp" alt="Usinage d'axe à épaulement sur tour CNC">
+                <figcaption>Axe à épaulement usiné CNC</figcaption>
+              </figure>
+              <figure class="carousel-slide">
+                <img src="assets/images/bride-mecanique-multi-percages.webp" alt="Bride mécanique avec multi-perçages usinés">
+                <figcaption>Bride mécanique multi-perçages</figcaption>
+              </figure>
+              <figure class="carousel-slide">
+                <img src="assets/images/corps-cylindrique-usinage-interieur.webp" alt="Corps cylindrique avec usinage intérieur de précision">
+                <figcaption>Corps cylindrique usinage intérieur</figcaption>
+              </figure>
+              <figure class="carousel-slide">
+                <img src="assets/images/flasque-adaptation-usinee-cnc.webp" alt="Flasque d'adaptation usinée sur machine CNC">
+                <figcaption>Flasque d'adaptation usinée CNC</figcaption>
+              </figure>
+              <figure class="carousel-slide">
+                <img src="assets/images/piece-revolution-usinage-tour-cnc.webp" alt="Pièce de révolution usinée sur tour CNC">
+                <figcaption>Pièce de révolution usinée</figcaption>
+              </figure>
+              <figure class="carousel-slide">
+                <img src="assets/images/usinage-cylindrique-tour-cnc.webp" alt="Usinage cylindrique réalisé sur tour CNC">
+                <figcaption>Usinage cylindrique sur tour CNC</figcaption>
+              </figure>
+            </div>
+          </div>
+
+          <button type="button" class="carousel-btn carousel-btn-next" data-carousel-next aria-label="Image suivante">
+            <span aria-hidden="true">›</span>
+          </button>
+          <div class="carousel-dots" data-carousel-dots aria-label="Sélecteur d'images"></div>
         </div>
         <div class="news-more">
           <a href="#contact" class="button-pill">Nous contacter</a>
@@ -172,18 +189,28 @@
       </div>
     </section>
 
-    <section id="contact" class="pre-footer">
+    <section id="contact" class="pre-footer decor-surface decor-b">
       <div class="wrap pre-footer-grid reveal">
-        <div class="contact-bubble">
-          <p class="contact-kicker">Contact atelier</p>
-          <h2 class="contact-bubble-title">Parlons de votre projet mécanique</h2>
-          <p class="contact-bubble-lead">Demande de devis, besoin technique ou production sur mesure.</p>
-          <button type="button" class="button-pill contact-open-btn" data-open-contact-modal>Nous écrire</button>
+        <div class="contact-showcase">
+          <div class="contact-showcase-content">
+            <p class="contact-showcase-kicker">Contact atelier</p>
+            <h2>Un projet d'usinage <span>sur mesure</span> ?</h2>
+            <p class="contact-showcase-lead">
+              Confiez-nous vos contraintes techniques, vos plans et vos delais : notre equipe vous accompagne
+              pour realiser des pieces fiables, precises et pretes a l'emploi.
+            </p>
+            <div class="contact-showcase-tags" aria-label="Types de prestations">
+              <span><img src="https://api.iconify.design/mdi:file-document-outline.svg?color=%23e11616" alt="">Piece sur plan</span>
+              <span><img src="https://api.iconify.design/mdi:crosshairs-gps.svg?color=%23e11616" alt="">Usinage CNC</span>
+              <span><img src="https://api.iconify.design/mdi:layers-triple-outline.svg?color=%23e11616" alt="">Petite serie</span>
+            </div>
+            <button type="button" class="button-pill contact-open-btn contact-showcase-btn" data-open-contact-modal>Envoyer une demande</button>
+          </div>
         </div>
       </div>
     </section>
 
-    <section id="plan" class="plan-section reveal">
+    <section id="plan" class="plan-section reveal decor-surface decor-c">
       <div class="wrap plan-grid">
         <div class="plan-copy">
           <p class="plan-kicker">Plan et accès</p>
@@ -250,7 +277,7 @@
   <footer class="footer reveal">
     <div class="wrap footer-head">
       <div class="footer-logo-wrap">
-        <img src="header_logo_meca.png" alt="MECA-EUROPE">
+        <img src="assets/images/header_logo_meca.png" alt="MECA-EUROPE">
       </div>
       <div class="footer-head-actions">
         <a href="mailto:mecaeurope@orange.fr" class="social-ring">@</a>

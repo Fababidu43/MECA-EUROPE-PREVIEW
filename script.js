@@ -12,6 +12,7 @@ const contactForm = document.querySelector('#contact-form');
 const contactFeedback = document.querySelector('#contact-form-feedback');
 const body = document.body;
 const parallaxTargets = document.querySelectorAll('.intro-figure img, .section-figure img, .plan-map-wrap');
+const decorSurfaces = document.querySelectorAll('.decor-surface');
 
 let lastScrollY = window.scrollY;
 let ticking = false;
@@ -95,21 +96,37 @@ const setScrollProgress = () => {
 };
 
 const updateParallax = () => {
-  if (prefersReducedMotion || !parallaxTargets.length) {
-    return;
+  const viewportHeight = window.innerHeight || 1;
+
+  if (!prefersReducedMotion && parallaxTargets.length) {
+    parallaxTargets.forEach((element) => {
+      const rect = element.getBoundingClientRect();
+      if (rect.bottom < 0 || rect.top > viewportHeight) {
+        return;
+      }
+
+      const center = rect.top + (rect.height / 2);
+      const normalized = (center / viewportHeight) - 0.5;
+      const shift = Math.max(-16, Math.min(16, normalized * -18));
+      element.style.setProperty('--parallax-shift', `${shift.toFixed(2)}px`);
+    });
   }
 
-  const viewportHeight = window.innerHeight || 1;
-  parallaxTargets.forEach((element) => {
-    const rect = element.getBoundingClientRect();
+  decorSurfaces.forEach((surface) => {
+    if (prefersReducedMotion) {
+      surface.style.setProperty('--decor-shift', '0px');
+      return;
+    }
+
+    const rect = surface.getBoundingClientRect();
     if (rect.bottom < 0 || rect.top > viewportHeight) {
       return;
     }
 
     const center = rect.top + (rect.height / 2);
     const normalized = (center / viewportHeight) - 0.5;
-    const shift = Math.max(-16, Math.min(16, normalized * -18));
-    element.style.setProperty('--parallax-shift', `${shift.toFixed(2)}px`);
+    const shift = Math.max(-18, Math.min(18, normalized * -22));
+    surface.style.setProperty('--decor-shift', `${shift.toFixed(2)}px`);
   });
 };
 
@@ -281,6 +298,187 @@ const setupStaggeredEntry = () => {
 };
 
 setupStaggeredEntry();
+
+const setupCarousels = () => {
+  const carousels = document.querySelectorAll('[data-carousel]');
+
+  carousels.forEach((carousel) => {
+    const track = carousel.querySelector('[data-carousel-track]');
+    const slides = track ? Array.from(track.querySelectorAll('.carousel-slide')) : [];
+    const prevBtn = carousel.querySelector('[data-carousel-prev]');
+    const nextBtn = carousel.querySelector('[data-carousel-next]');
+    const dotsWrap = carousel.querySelector('[data-carousel-dots]');
+
+    if (!track || slides.length === 0) {
+      return;
+    }
+
+    let currentIndex = 0;
+    let autoPlayTimer;
+    let touchStartX = 0;
+    let touchEndX = 0;
+    let slidesToShow = 3;
+    let maxIndex = Math.max(0, slides.length - slidesToShow);
+    let dots = [];
+
+    const getSlidesToShow = () => {
+      if (window.innerWidth <= 760) {
+        return 1;
+      }
+      if (window.innerWidth <= 1250) {
+        return 2;
+      }
+      return 3;
+    };
+
+    const renderDots = () => {
+      if (!dotsWrap) {
+        return;
+      }
+
+      dotsWrap.innerHTML = '';
+      dots = [];
+
+      for (let index = 0; index <= maxIndex; index += 1) {
+        const dot = document.createElement('button');
+        dot.type = 'button';
+        dot.className = 'carousel-dot';
+        dot.setAttribute('aria-label', `Aller au groupe ${index + 1}`);
+        dot.addEventListener('click', () => {
+          goToSlide(index, true);
+        });
+        dotsWrap.appendChild(dot);
+        dots.push(dot);
+      }
+    };
+
+    const updateSlides = () => {
+      track.style.transform = `translateX(-${(currentIndex * 100) / slidesToShow}%)`;
+
+      slides.forEach((slide, index) => {
+        const isActive = index >= currentIndex && index < currentIndex + slidesToShow;
+        slide.classList.toggle('is-active', isActive);
+        slide.setAttribute('aria-hidden', String(!isActive));
+      });
+
+      dots.forEach((dot, index) => {
+        if (!dot) {
+          return;
+        }
+
+        const isActive = index === currentIndex;
+        dot.classList.toggle('is-active', isActive);
+        dot.setAttribute('aria-current', isActive ? 'true' : 'false');
+      });
+    };
+
+    const stopAutoPlay = () => {
+      if (autoPlayTimer) {
+        window.clearInterval(autoPlayTimer);
+      }
+    };
+
+    const startAutoPlay = () => {
+      if (prefersReducedMotion || slides.length < 2) {
+        return;
+      }
+
+      stopAutoPlay();
+      autoPlayTimer = window.setInterval(() => {
+        goToSlide(currentIndex + 1);
+      }, 5000);
+    };
+
+    const goToSlide = (nextIndex, fromInteraction = false) => {
+      const lastIndex = maxIndex;
+
+      if (nextIndex < 0) {
+        currentIndex = lastIndex;
+      } else if (nextIndex > lastIndex) {
+        currentIndex = 0;
+      } else {
+        currentIndex = nextIndex;
+      }
+
+      updateSlides();
+
+      if (fromInteraction) {
+        startAutoPlay();
+      }
+    };
+
+    if (slides.length < 2) {
+      if (prevBtn) {
+        prevBtn.hidden = true;
+      }
+      if (nextBtn) {
+        nextBtn.hidden = true;
+      }
+      if (dotsWrap) {
+        dotsWrap.hidden = true;
+      }
+    }
+
+    const syncLayout = () => {
+      slidesToShow = getSlidesToShow();
+      maxIndex = Math.max(0, slides.length - slidesToShow);
+      carousel.style.setProperty('--slides-to-show', String(slidesToShow));
+      currentIndex = Math.min(currentIndex, maxIndex);
+
+      if (dotsWrap) {
+        dotsWrap.hidden = maxIndex === 0;
+      }
+
+      renderDots();
+      updateSlides();
+    };
+
+    if (prevBtn) {
+      prevBtn.addEventListener('click', () => {
+        goToSlide(currentIndex - 1, true);
+      });
+    }
+
+    if (nextBtn) {
+      nextBtn.addEventListener('click', () => {
+        goToSlide(currentIndex + 1, true);
+      });
+    }
+
+    track.addEventListener('touchstart', (event) => {
+      touchStartX = event.changedTouches[0].clientX;
+    }, { passive: true });
+
+    track.addEventListener('touchend', (event) => {
+      touchEndX = event.changedTouches[0].clientX;
+      const delta = touchStartX - touchEndX;
+
+      if (Math.abs(delta) < 45) {
+        return;
+      }
+
+      if (delta > 0) {
+        goToSlide(currentIndex + 1, true);
+      } else {
+        goToSlide(currentIndex - 1, true);
+      }
+    }, { passive: true });
+
+    carousel.addEventListener('mouseenter', stopAutoPlay);
+    carousel.addEventListener('mouseleave', startAutoPlay);
+    carousel.addEventListener('focusin', stopAutoPlay);
+    carousel.addEventListener('focusout', startAutoPlay);
+
+    syncLayout();
+    startAutoPlay();
+
+    window.addEventListener('resize', () => {
+      syncLayout();
+    });
+  });
+};
+
+setupCarousels();
 
 const enableClickPulse = () => {
   const clickTargets = document.querySelectorAll('.button-pill, .plan-phone, .primary-nav a, .sticky-actions a, .scroll-top, .contact-form-cancel, .contact-modal-close');
