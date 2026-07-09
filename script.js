@@ -9,6 +9,8 @@ const contactModal = document.querySelector('#contact-modal');
 const closeContactModalBtns = document.querySelectorAll('[data-close-contact-modal]');
 const contactForm = document.querySelector('#contact-form');
 const contactFeedback = document.querySelector('#contact-form-feedback');
+const introParallaxImage = document.querySelector('.intro-figure img');
+const contactShowcase = document.querySelector('.contact-showcase');
 const body = document.body;
 
 const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -120,6 +122,33 @@ const syncIntersectionScrolls = (force = false) => {
   lastScrollY = currentScrollY;
 };
 
+const updateScrollDynamics = () => {
+  if (prefersReducedMotion) {
+    return;
+  }
+
+  const viewportWidth = window.innerWidth || 0;
+  const viewportHeight = window.innerHeight || 1;
+  const mediaRange = viewportWidth <= 760 ? 6 : viewportWidth <= 1024 ? 10 : 14;
+  const contactRange = viewportWidth <= 760 ? 26 : viewportWidth <= 1024 ? 40 : 56;
+
+  if (introParallaxImage) {
+    const rect = introParallaxImage.getBoundingClientRect();
+    const centerOffset = (rect.top + (rect.height / 2)) - (viewportHeight / 2);
+    const ratio = clamp(-centerOffset / viewportHeight, -1, 1);
+    const shift = clamp(ratio * mediaRange, -mediaRange, mediaRange);
+    introParallaxImage.style.setProperty('--media-parallax-y', `${shift}px`);
+  }
+
+  if (contactShowcase) {
+    const rect = contactShowcase.getBoundingClientRect();
+    const centerOffset = (rect.top + (rect.height / 2)) - (viewportHeight * 0.72);
+    const ratio = clamp(-centerOffset / viewportHeight, -1, 1);
+    const shift = clamp(ratio * contactRange, -contactRange, contactRange);
+    contactShowcase.style.setProperty('--contact-scroll-y', `${shift}px`);
+  }
+};
+
 const syncScrollState = (force = false) => {
   forceScrollSync = forceScrollSync || force;
 
@@ -130,6 +159,7 @@ const syncScrollState = (force = false) => {
   scrollFrame = window.requestAnimationFrame(() => {
     updateActiveNavLink();
     syncIntersectionScrolls(forceScrollSync);
+    updateScrollDynamics();
     lastScrollY = window.scrollY || 0;
     scrollFrame = 0;
     forceScrollSync = false;
@@ -208,6 +238,7 @@ const setupCarousels = () => {
     let slidesToShow = 3;
     let maxIndex = Math.max(0, slides.length - slidesToShow);
     let dots = [];
+    let slideMotionTimer = 0;
 
     const getSlidesToShow = () => {
       if (window.innerWidth <= 760) {
@@ -242,13 +273,18 @@ const setupCarousels = () => {
       }
     };
 
-    const updateSlides = () => {
+    const updateSlides = (direction = null) => {
       track.style.transform = `translateX(-${(currentIndex * 100) / slidesToShow}%)`;
 
       slides.forEach((slide, index) => {
         const isActive = index >= currentIndex && index < currentIndex + slidesToShow;
         slide.classList.toggle('is-active', isActive);
         slide.setAttribute('aria-hidden', String(!isActive));
+        slide.style.setProperty('--slide-offset', String(Math.max(0, index - currentIndex)));
+
+        if (!isActive) {
+          slide.classList.remove('is-entering-forward', 'is-entering-backward');
+        }
       });
 
       dots.forEach((dot, index) => {
@@ -260,6 +296,30 @@ const setupCarousels = () => {
         dot.classList.toggle('is-active', isActive);
         dot.setAttribute('aria-current', isActive ? 'true' : 'false');
       });
+
+      if (!direction) {
+        return;
+      }
+
+      window.clearTimeout(slideMotionTimer);
+
+      slides.forEach((slide, index) => {
+        const isActive = index >= currentIndex && index < currentIndex + slidesToShow;
+
+        if (!isActive) {
+          return;
+        }
+
+        slide.classList.remove('is-entering-forward', 'is-entering-backward');
+        void slide.offsetWidth;
+        slide.classList.add(direction === 'forward' ? 'is-entering-forward' : 'is-entering-backward');
+      });
+
+      slideMotionTimer = window.setTimeout(() => {
+        slides.forEach((slide) => {
+          slide.classList.remove('is-entering-forward', 'is-entering-backward');
+        });
+      }, 900);
     };
 
     const stopAutoPlay = () => {
@@ -268,8 +328,11 @@ const setupCarousels = () => {
       }
     };
 
+    const shouldAutoPlay = () => !prefersReducedMotion && window.innerWidth > 1250 && slides.length > 1;
+
     const startAutoPlay = () => {
-      if (prefersReducedMotion || slides.length < 2) {
+      if (!shouldAutoPlay()) {
+        stopAutoPlay();
         return;
       }
 
@@ -281,6 +344,11 @@ const setupCarousels = () => {
 
     const goToSlide = (nextIndex, fromInteraction = false) => {
       const lastIndex = maxIndex;
+      const direction = nextIndex === currentIndex
+        ? null
+        : (nextIndex > currentIndex || (currentIndex === lastIndex && nextIndex === 0))
+          ? 'forward'
+          : 'backward';
 
       if (nextIndex < 0) {
         currentIndex = lastIndex;
@@ -290,7 +358,7 @@ const setupCarousels = () => {
         currentIndex = nextIndex;
       }
 
-      updateSlides();
+      updateSlides(direction);
 
       if (fromInteraction) {
         startAutoPlay();
@@ -366,6 +434,11 @@ const setupCarousels = () => {
 
     window.addEventListener('resize', () => {
       syncLayout();
+      if (shouldAutoPlay()) {
+        startAutoPlay();
+      } else {
+        stopAutoPlay();
+      }
     });
   });
 };
@@ -489,6 +562,7 @@ const init = () => {
   computeSectionOffsets();
   updateActiveNavLink();
   setupContactModal();
+  updateScrollDynamics();
 
   if (window.location.hash && window.location.hash.length > 1) {
     window.setTimeout(() => {
@@ -514,6 +588,7 @@ const init = () => {
   window.addEventListener('resize', () => {
     computeSectionOffsets();
     syncScrollState(true);
+    updateScrollDynamics();
   }, { passive: true });
 
   syncScrollState(true);
