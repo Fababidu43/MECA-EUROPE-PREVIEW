@@ -1,0 +1,54 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="260" viewBox="0 0 1600 260" fill="none">
+  <defs>
+    <style>
+      .line{stroke:#d9dde2;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+      .line2{stroke:#e7eaee;stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round}
+      .dash{stroke:#cfd5db;stroke-width:1.5;stroke-dasharray:8 8;stroke-linecap:round}
+      .accent{fill:#f36a67}
+      .soft{stroke:#eceff2;stroke-width:1.2}
+      .gridDot{fill:#d8dadd}
+    </style>
+  </defs>
+
+  <g opacity="0.6" transform="translate(50 92)">
+    <circle class="gridDot" cx="0" cy="0" r="1.7"/><circle class="gridDot" cx="16" cy="0" r="1.7"/><circle class="gridDot" cx="32" cy="0" r="1.7"/><circle class="gridDot" cx="48" cy="0" r="1.7"/>
+    <circle class="gridDot" cx="0" cy="16" r="1.7"/><circle class="gridDot" cx="16" cy="16" r="1.7"/><circle class="gridDot" cx="32" cy="16" r="1.7"/><circle class="gridDot" cx="48" cy="16" r="1.7"/>
+    <circle class="gridDot" cx="0" cy="32" r="1.7"/><circle class="gridDot" cx="16" cy="32" r="1.7"/><circle class="gridDot" cx="32" cy="32" r="1.7"/><circle class="gridDot" cx="48" cy="32" r="1.7"/>
+    <circle class="gridDot" cx="0" cy="48" r="1.7"/><circle class="gridDot" cx="16" cy="48" r="1.7"/><circle class="gridDot" cx="32" cy="48" r="1.7"/><circle class="gridDot" cx="48" cy="48" r="1.7"/>
+  </g>
+
+  <path d="M120 170 H290 L320 140 H430 L460 170 H560" class="line"/>
+  <circle cx="120" cy="170" r="8" fill="#fff" class="line"/>
+  <circle cx="290" cy="170" r="11" fill="#fff" class="line2"/>
+  <circle cx="290" cy="170" r="4" class="accent"/>
+  <circle cx="430" cy="140" r="6" fill="#fff" class="line2"/>
+
+  <path d="M560 170 H710" class="line"/>
+  <circle cx="760" cy="116" r="56" class="soft" opacity="0.65"/>
+  <circle cx="760" cy="116" r="34" class="soft" opacity="0.85"/>
+  <line x1="760" y1="20" x2="760" y2="70" class="dash"/>
+  <line x1="760" y1="162" x2="760" y2="220" class="dash"/>
+  <circle cx="760" cy="116" r="4.5" class="accent"/>
+  <path d="M710 170 L738 142" class="line"/>
+  <path d="M782 142 L820 170 H940" class="line"/>
+
+  <path d="M940 170 H1020 L1048 150 H1108 L1134 126 H1210 L1236 150 H1310 L1332 128 H1450" class="line"/>
+  <circle cx="1078" cy="150" r="6" fill="#fff" class="line2"/>
+  <circle cx="1180" cy="126" r="6" fill="#fff" class="line2"/>
+  <circle cx="1450" cy="128" r="4.5" class="accent"/>
+
+  <g opacity="0.55">
+    <circle cx="180" cy="170" r="72" class="soft" stroke-dasharray="10 10"/>
+    <circle cx="180" cy="170" r="48" class="soft"/>
+  </g>
+
+  <g opacity="0.55" transform="translate(1490 92)">
+    <path d="M0 0 h84 v56 h-84" class="line2"/>
+    <circle cx="22" cy="18" r="2.8" class="accent"/>
+    <circle cx="38" cy="18" r="2.8" class="gridDot"/>
+    <circle cx="54" cy="18" r="2.8" class="gridDot"/>
+    <circle cx="22" cy="34" r="2.8" class="gridDot"/>
+    <circle cx="38" cy="34" r="2.8" class="gridDot"/>
+    <circle cx="54" cy="34" r="2.8" class="gridDot"/>
+  </g>
+</svg>

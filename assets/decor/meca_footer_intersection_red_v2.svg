@@ -1,0 +1,26 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="140" viewBox="0 0 1600 140" fill="none">
+  <defs>
+    <style>
+      .line { stroke: #ff6b6b; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; opacity: 0.72; }
+      .dotline { stroke: #ff6b6b; stroke-width: 2; stroke-linecap: round; stroke-dasharray: 2 8; opacity: 0.72; }
+      .circle { stroke: #ff6b6b; stroke-width: 2; fill: #ffffff; opacity: 0.9; }
+      .chev { stroke: #ff3030; stroke-width: 3; stroke-linecap: round; stroke-linejoin: round; }
+    </style>
+  </defs>
+
+  <circle class="circle" cx="52" cy="68" r="6"/>
+  <path class="line" d="M58 68 H240 L270 96 H420"/>
+  <path class="dotline" d="M420 96 H500"/>
+  <circle class="circle" cx="520" cy="96" r="5"/>
+  <path class="line" d="M526 96 H720 L744 124 H780"/>
+
+  <path class="chev" d="M772 122 L786 136 L800 122"/>
+  <path class="chev" d="M788 122 L802 136 L816 122" opacity="0.95"/>
+
+  <path class="line" d="M820 124 H860 L884 96 H1078"/>
+  <circle class="circle" cx="1098" cy="96" r="5"/>
+  <path class="line" d="M1104 96 H1188"/>
+  <path class="dotline" d="M1188 96 H1268"/>
+  <path class="line" d="M1268 96 L1298 68 H1542"/>
+  <circle class="circle" cx="1550" cy="68" r="6"/>
+</svg>

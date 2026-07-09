@@ -1,7 +1,6 @@
 const navToggle = document.querySelector('.menu-toggle');
 const primaryNav = document.querySelector('#primary-nav');
 const navLinks = primaryNav ? primaryNav.querySelectorAll('a') : [];
-const revealItems = document.querySelectorAll('.reveal');
 const header = document.querySelector('.header');
 const hashLinks = document.querySelectorAll('a[href^="#"]');
 const sectionLinks = document.querySelectorAll('.primary-nav a[href^="#"]');
@@ -11,17 +10,131 @@ const closeContactModalBtns = document.querySelectorAll('[data-close-contact-mod
 const contactForm = document.querySelector('#contact-form');
 const contactFeedback = document.querySelector('#contact-form-feedback');
 const body = document.body;
-const parallaxTargets = document.querySelectorAll('.intro-figure img, .section-figure img, .plan-map-wrap');
-const decorSurfaces = document.querySelectorAll('.decor-surface');
 
-let lastScrollY = window.scrollY;
-let ticking = false;
-let directionBuffer = 0;
-const headerHideThreshold = 150;
 const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-const sectionOffsets = new Map();
+const revealItems = document.querySelectorAll('.reveal');
+const intersectionScrollItems = Array.from(document.querySelectorAll('[data-intersection-scroll]'));
+const sectionTargets = new Map();
+const intersectionStates = new Map();
+
+let lastScrollY = window.scrollY || 0;
+let scrollFrame = 0;
+let forceScrollSync = false;
+
+const clamp = (value, min, max) => Math.min(Math.max(value, min), max);
 
 const getScrollOffset = () => (header ? header.offsetHeight : 0) + 18;
+
+const computeSectionOffsets = () => {
+  sectionTargets.clear();
+
+  sectionLinks.forEach((link) => {
+    const hash = link.getAttribute('href');
+    if (!hash || hash.length < 2) {
+      return;
+    }
+
+    const target = document.querySelector(hash);
+    if (target) {
+      sectionTargets.set(hash, target);
+    }
+  });
+};
+
+const updateActiveNavLink = () => {
+  if (!sectionTargets.size) {
+    return;
+  }
+
+  const probeY = window.scrollY + getScrollOffset() + 28;
+  let activeHash = '#top';
+
+  sectionTargets.forEach((section, hash) => {
+    if (probeY >= section.offsetTop) {
+      activeHash = hash;
+    }
+  });
+
+  sectionLinks.forEach((link) => {
+    const isActive = link.getAttribute('href') === activeHash;
+    link.classList.toggle('is-active', isActive);
+
+    if (isActive) {
+      link.setAttribute('aria-current', 'page');
+    } else {
+      link.removeAttribute('aria-current');
+    }
+  });
+};
+
+const getIntersectionState = (element) => {
+  if (!intersectionStates.has(element)) {
+    intersectionStates.set(element, {
+      progress: 0,
+      locked: false,
+    });
+  }
+
+  return intersectionStates.get(element);
+};
+
+const syncIntersectionScrolls = (force = false) => {
+  if (!intersectionScrollItems.length) {
+    return;
+  }
+
+  const currentScrollY = window.scrollY || 0;
+  const scrollingDown = currentScrollY > lastScrollY;
+
+  if (!force && !scrollingDown) {
+    return;
+  }
+
+  const viewportHeight = window.innerHeight || 1;
+
+  intersectionScrollItems.forEach((item) => {
+    const state = getIntersectionState(item);
+
+    if (state.locked) {
+      return;
+    }
+
+    const rect = item.getBoundingClientRect();
+    const revealStart = viewportHeight * 0.82;
+    const revealEnd = -Math.max(0, rect.height * 0.14);
+    const span = Math.max(1, revealStart - revealEnd);
+    const rawProgress = clamp((revealStart - rect.top) / span, 0, 1);
+    const nextProgress = Math.max(state.progress, rawProgress);
+
+    if (nextProgress !== state.progress) {
+      state.progress = nextProgress;
+      item.style.setProperty('--intersection-reveal', String(nextProgress));
+    }
+
+    if (nextProgress >= 1) {
+      state.locked = true;
+      item.style.setProperty('--intersection-reveal', '1');
+    }
+  });
+
+  lastScrollY = currentScrollY;
+};
+
+const syncScrollState = (force = false) => {
+  forceScrollSync = forceScrollSync || force;
+
+  if (scrollFrame) {
+    return;
+  }
+
+  scrollFrame = window.requestAnimationFrame(() => {
+    updateActiveNavLink();
+    syncIntersectionScrolls(forceScrollSync);
+    lastScrollY = window.scrollY || 0;
+    scrollFrame = 0;
+    forceScrollSync = false;
+  });
+};
 
 const scrollToHash = (hash, updateHistory = true) => {
   if (!hash || hash.length < 2) {
@@ -33,10 +146,10 @@ const scrollToHash = (hash, updateHistory = true) => {
     return;
   }
 
-  const targetTop = window.pageYOffset + target.getBoundingClientRect().top - getScrollOffset();
+  const top = Math.max(0, window.pageYOffset + target.getBoundingClientRect().top - getScrollOffset());
   window.scrollTo({
-    top: Math.max(0, targetTop),
-    behavior: 'smooth',
+    top,
+    behavior: prefersReducedMotion ? 'auto' : 'smooth',
   });
 
   if (updateHistory) {
@@ -56,187 +169,11 @@ hashLinks.forEach((link) => {
   });
 });
 
-const markSiteReady = () => {
-  body.classList.add('site-ready');
-};
-
-requestAnimationFrame(() => {
-  requestAnimationFrame(markSiteReady);
-});
-
-window.addEventListener('pageshow', () => {
-  body.classList.add('site-ready');
-
-  if (header) {
-    header.classList.toggle('is-scrolled', window.scrollY > 16);
-  }
-
-  if (window.location.hash && window.location.hash.length > 1) {
-    setTimeout(() => {
-      scrollToHash(window.location.hash, false);
-    }, 0);
-  }
-});
-
-const createScrollProgress = () => {
-  const progress = document.createElement('div');
-  progress.className = 'scroll-progress';
-  progress.setAttribute('aria-hidden', 'true');
-  body.appendChild(progress);
-  return progress;
-};
-
-const scrollProgress = createScrollProgress();
-
-const setScrollProgress = () => {
-  const doc = document.documentElement;
-  const maxScroll = Math.max(1, doc.scrollHeight - window.innerHeight);
-  const progress = Math.min(1, Math.max(0, window.scrollY / maxScroll));
-  scrollProgress.style.setProperty('--progress', String(progress));
-};
-
-const updateParallax = () => {
-  const viewportHeight = window.innerHeight || 1;
-
-  if (!prefersReducedMotion && parallaxTargets.length) {
-    parallaxTargets.forEach((element) => {
-      const rect = element.getBoundingClientRect();
-      if (rect.bottom < 0 || rect.top > viewportHeight) {
-        return;
-      }
-
-      const center = rect.top + (rect.height / 2);
-      const normalized = (center / viewportHeight) - 0.5;
-      const shift = Math.max(-16, Math.min(16, normalized * -18));
-      element.style.setProperty('--parallax-shift', `${shift.toFixed(2)}px`);
-    });
-  }
-
-  decorSurfaces.forEach((surface) => {
-    if (prefersReducedMotion) {
-      surface.style.setProperty('--decor-shift', '0px');
-      return;
-    }
-
-    const rect = surface.getBoundingClientRect();
-    if (rect.bottom < 0 || rect.top > viewportHeight) {
-      return;
-    }
-
-    const center = rect.top + (rect.height / 2);
-    const normalized = (center / viewportHeight) - 0.5;
-    const shift = Math.max(-18, Math.min(18, normalized * -22));
-    surface.style.setProperty('--decor-shift', `${shift.toFixed(2)}px`);
-  });
-};
-
-const computeSectionOffsets = () => {
-  sectionOffsets.clear();
-  sectionLinks.forEach((link) => {
-    const hash = link.getAttribute('href');
-    if (!hash || hash.length < 2) {
-      return;
-    }
-
-    const target = document.querySelector(hash);
-    if (!target) {
-      return;
-    }
-
-    sectionOffsets.set(hash, target);
-  });
-};
-
-const updateActiveNavLink = () => {
-  if (!sectionOffsets.size) {
+const setupNavToggle = () => {
+  if (!navToggle || !primaryNav) {
     return;
   }
 
-  const probeY = window.scrollY + getScrollOffset() + 28;
-  let activeHash = '#top';
-
-  sectionOffsets.forEach((section, hash) => {
-    const top = section.offsetTop;
-    if (probeY >= top) {
-      activeHash = hash;
-    }
-  });
-
-  sectionLinks.forEach((link) => {
-    const isActive = link.getAttribute('href') === activeHash;
-    link.classList.toggle('is-active', isActive);
-    if (isActive) {
-      link.setAttribute('aria-current', 'page');
-    } else {
-      link.removeAttribute('aria-current');
-    }
-  });
-};
-
-const updateScrollDirection = () => {
-  const currentY = window.scrollY;
-  const delta = currentY - lastScrollY;
-
-  setScrollProgress();
-
-  if (!header) {
-    lastScrollY = currentY;
-    return;
-  }
-
-  header.classList.toggle('is-scrolled', currentY > 16);
-
-  if (Math.abs(delta) < 3) {
-    lastScrollY = currentY;
-    updateParallax();
-    updateActiveNavLink();
-    return;
-  }
-
-  directionBuffer += delta;
-
-  if (currentY > headerHideThreshold && directionBuffer > 12) {
-    body.classList.add('scroll-down');
-    body.classList.remove('scroll-up');
-    header.classList.add('is-hidden');
-    directionBuffer = 0;
-  } else if (directionBuffer < -12 || currentY <= 8) {
-    body.classList.add('scroll-up');
-    body.classList.remove('scroll-down');
-    header.classList.remove('is-hidden');
-    directionBuffer = 0;
-  }
-
-  updateParallax();
-  updateActiveNavLink();
-  lastScrollY = currentY;
-};
-
-const onScroll = () => {
-  if (ticking) {
-    return;
-  }
-
-  ticking = true;
-  window.requestAnimationFrame(() => {
-    updateScrollDirection();
-    ticking = false;
-  });
-};
-
-window.addEventListener('scroll', onScroll, { passive: true });
-window.addEventListener('resize', () => {
-  setScrollProgress();
-  computeSectionOffsets();
-  updateActiveNavLink();
-  updateParallax();
-});
-setScrollProgress();
-computeSectionOffsets();
-updateActiveNavLink();
-updateParallax();
-
-if (navToggle && primaryNav) {
   navToggle.addEventListener('click', () => {
     const isOpen = primaryNav.classList.toggle('is-open');
     navToggle.setAttribute('aria-expanded', String(isOpen));
@@ -248,56 +185,7 @@ if (navToggle && primaryNav) {
       navToggle.setAttribute('aria-expanded', 'false');
     });
   });
-}
-
-if ('IntersectionObserver' in window) {
-  const revealImmediatelyIfVisible = (item) => {
-    const rect = item.getBoundingClientRect();
-    if (rect.top <= window.innerHeight * 0.9) {
-      item.classList.add('is-visible');
-      return true;
-    }
-    return false;
-  };
-
-  const observer = new IntersectionObserver((entries) => {
-    entries.forEach((entry) => {
-      if (entry.isIntersecting) {
-        entry.target.classList.add('is-visible');
-        observer.unobserve(entry.target);
-      }
-    });
-  }, {
-    threshold: 0.08,
-    rootMargin: '0px 0px -8% 0px',
-  });
-
-  revealItems.forEach((item) => {
-    if (!revealImmediatelyIfVisible(item)) {
-      observer.observe(item);
-    }
-  });
-} else {
-  revealItems.forEach((item) => item.classList.add('is-visible'));
-}
-
-const setupStaggeredEntry = () => {
-  const animatedGroups = [
-    '.metiers-list .metier-item',
-    '.news-grid .news-card',
-    '.footer-main > div',
-  ];
-
-  animatedGroups.forEach((selector) => {
-    const items = document.querySelectorAll(selector);
-    items.forEach((item, index) => {
-      item.style.setProperty('--stagger-index', String(index));
-      item.classList.add('stagger-item');
-    });
-  });
 };
-
-setupStaggeredEntry();
 
 const setupCarousels = () => {
   const carousels = document.querySelectorAll('[data-carousel]');
@@ -325,9 +213,11 @@ const setupCarousels = () => {
       if (window.innerWidth <= 760) {
         return 1;
       }
+
       if (window.innerWidth <= 1250) {
         return 2;
       }
+
       return 3;
     };
 
@@ -411,9 +301,11 @@ const setupCarousels = () => {
       if (prevBtn) {
         prevBtn.hidden = true;
       }
+
       if (nextBtn) {
         nextBtn.hidden = true;
       }
+
       if (dotsWrap) {
         dotsWrap.hidden = true;
       }
@@ -478,10 +370,8 @@ const setupCarousels = () => {
   });
 };
 
-setupCarousels();
-
 const enableClickPulse = () => {
-  const clickTargets = document.querySelectorAll('.button-pill, .plan-phone, .primary-nav a, .sticky-actions a, .scroll-top, .contact-form-cancel, .contact-modal-close');
+  const clickTargets = document.querySelectorAll('.button-pill, .plan-phone, .primary-nav a, .sticky-actions a, .contact-form-cancel, .contact-modal-close');
 
   clickTargets.forEach((target) => {
     target.classList.add('pulse-target');
@@ -504,13 +394,43 @@ const enableClickPulse = () => {
   });
 };
 
-enableClickPulse();
+const setupRevealObserver = () => {
+  if (prefersReducedMotion) {
+    revealItems.forEach((item) => item.classList.add('is-visible'));
+    return;
+  }
 
-if (openContactModalBtn && contactModal) {
+  if (!('IntersectionObserver' in window)) {
+    revealItems.forEach((item) => item.classList.add('is-visible'));
+    return;
+  }
+
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach((entry) => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('is-visible');
+        observer.unobserve(entry.target);
+      }
+    });
+  }, {
+    threshold: 0.08,
+    rootMargin: '0px 0px -8% 0px',
+  });
+
+  revealItems.forEach((item) => {
+    observer.observe(item);
+  });
+};
+
+const setupContactModal = () => {
+  if (!openContactModalBtn || !contactModal) {
+    return;
+  }
+
   const toggleModal = (isOpen) => {
     contactModal.classList.toggle('is-open', isOpen);
     contactModal.setAttribute('aria-hidden', String(!isOpen));
-    document.body.style.overflow = isOpen ? 'hidden' : '';
+    body.style.overflow = isOpen ? 'hidden' : '';
   };
 
   openContactModalBtn.addEventListener('click', () => {
@@ -545,18 +465,59 @@ if (openContactModalBtn && contactModal) {
       }
 
       const subject = encodeURIComponent(`Demande de contact - ${name}`);
-      const body = encodeURIComponent(
+      const mailBody = encodeURIComponent(
         `Nom: ${name}\nEmail: ${email}\nTéléphone: ${phone || 'Non renseigné'}\n\nMessage:\n${message}`,
       );
 
       contactFeedback.textContent = 'Votre messagerie va s\'ouvrir pour envoyer la demande.';
-      window.location.href = `mailto:mecaeurope@orange.fr?subject=${subject}&body=${body}`;
+      window.location.href = `mailto:mecaeurope@orange.fr?subject=${subject}&body=${mailBody}`;
 
       contactForm.reset();
-      setTimeout(() => {
+      window.setTimeout(() => {
         toggleModal(false);
         contactFeedback.textContent = '';
       }, 350);
     });
   }
-}
+};
+
+const init = () => {
+  setupNavToggle();
+  setupCarousels();
+  enableClickPulse();
+  setupRevealObserver();
+  computeSectionOffsets();
+  updateActiveNavLink();
+  setupContactModal();
+
+  if (window.location.hash && window.location.hash.length > 1) {
+    window.setTimeout(() => {
+      scrollToHash(window.location.hash, false);
+    }, 0);
+  }
+
+  window.addEventListener('pageshow', () => {
+    computeSectionOffsets();
+    syncScrollState(true);
+
+    if (window.location.hash && window.location.hash.length > 1) {
+      window.setTimeout(() => {
+        scrollToHash(window.location.hash, false);
+      }, 0);
+    }
+  });
+
+  window.addEventListener('scroll', () => {
+    syncScrollState(false);
+  }, { passive: true });
+
+  window.addEventListener('resize', () => {
+    computeSectionOffsets();
+    syncScrollState(true);
+  }, { passive: true });
+
+  syncScrollState(true);
+};
+
+const readyPromise = document.fonts ? document.fonts.ready : Promise.resolve();
+readyPromise.then(init).catch(init);

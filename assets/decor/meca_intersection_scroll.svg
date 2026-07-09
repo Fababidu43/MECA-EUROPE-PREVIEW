@@ -1,0 +1,72 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="260" viewBox="0 0 1600 260" fill="none">
+  <defs>
+    <style>
+      .line{stroke:#d9dde2;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+      .line2{stroke:#e7eaee;stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round}
+      .dash{stroke:#cfd5db;stroke-width:1.5;stroke-dasharray:8 8;stroke-linecap:round}
+      .accent{fill:#f36a67}
+      .accent-stroke{stroke:#f36a67;stroke-width:1.5}
+      .soft{stroke:#eceff2;stroke-width:1.2}
+      .gridDot{fill:#d8dadd}
+      .tinyDot{fill:#f4a3a0}
+    </style>
+  </defs>
+
+  <!-- left large target -->
+  <circle cx="150" cy="130" r="82" class="soft" stroke-dasharray="10 10" opacity="0.45"/>
+  <circle cx="150" cy="130" r="58" class="soft" opacity="0.55"/>
+
+  <!-- left dotted grid -->
+  <g opacity="0.6">
+    <g transform="translate(25 115)">
+      <circle class="gridDot" cx="0" cy="0" r="1.7"/><circle class="gridDot" cx="16" cy="0" r="1.7"/><circle class="gridDot" cx="32" cy="0" r="1.7"/><circle class="gridDot" cx="48" cy="0" r="1.7"/><circle class="gridDot" cx="64" cy="0" r="1.7"/>
+      <circle class="gridDot" cx="0" cy="16" r="1.7"/><circle class="gridDot" cx="16" cy="16" r="1.7"/><circle class="gridDot" cx="32" cy="16" r="1.7"/><circle class="gridDot" cx="48" cy="16" r="1.7"/><circle class="gridDot" cx="64" cy="16" r="1.7"/>
+      <circle class="gridDot" cx="0" cy="32" r="1.7"/><circle class="gridDot" cx="16" cy="32" r="1.7"/><circle class="gridDot" cx="32" cy="32" r="1.7"/><circle class="gridDot" cx="48" cy="32" r="1.7"/><circle class="gridDot" cx="64" cy="32" r="1.7"/>
+      <circle class="gridDot" cx="0" cy="48" r="1.7"/><circle class="gridDot" cx="16" cy="48" r="1.7"/><circle class="gridDot" cx="32" cy="48" r="1.7"/><circle class="gridDot" cx="48" cy="48" r="1.7"/><circle class="gridDot" cx="64" cy="48" r="1.7"/>
+      <circle class="gridDot" cx="0" cy="64" r="1.7"/><circle class="gridDot" cx="16" cy="64" r="1.7"/><circle class="gridDot" cx="32" cy="64" r="1.7"/><circle class="gridDot" cx="48" cy="64" r="1.7"/><circle class="gridDot" cx="64" cy="64" r="1.7"/>
+    </g>
+  </g>
+
+  <!-- main line from left to center -->
+  <path d="M150 130 H675" class="line"/>
+  <circle cx="150" cy="130" r="8" fill="#fff" class="line"/>
+  <circle cx="415" cy="130" r="13" fill="#fff" class="line2"/>
+  <circle cx="415" cy="130" r="4.5" class="accent"/>
+  <circle cx="570" cy="130" r="6.5" fill="#fff" class="line2"/>
+
+  <!-- faint segment break before center -->
+  <path d="M692 130 H720" class="line2" opacity="0.7"/>
+
+  <!-- center target -->
+  <circle cx="780" cy="130" r="60" class="soft" opacity="0.65"/>
+  <circle cx="780" cy="130" r="38" class="soft" opacity="0.8"/>
+  <line x1="780" y1="20" x2="780" y2="85" class="dash"/>
+  <line x1="780" y1="175" x2="780" y2="212" class="dash"/>
+  <line x1="730" y1="130" x2="742" y2="130" class="line2" opacity="0.65"/>
+  <line x1="818" y1="130" x2="830" y2="130" class="line2" opacity="0.65"/>
+  <circle cx="780" cy="130" r="4.5" class="accent"/>
+
+  <!-- chevrons down -->
+  <path d="M772 208 L780 216 L788 208" class="line2"/>
+  <path d="M772 223 L780 231 L788 223" class="line2"/>
+  <path d="M772 238 L780 246 L788 238" class="line2"/>
+
+  <!-- short center to step line -->
+  <path d="M840 130 H950" class="line"/>
+  <path d="M950 130 L962 154 H1010 L1022 178 H1080 L1092 202 H1148" class="line"/>
+  <circle cx="1068" cy="178" r="6.5" fill="#fff" class="line2"/>
+
+  <!-- step continuation and right end -->
+  <path d="M1148 202 H1298 L1322 150 H1445" class="line"/>
+  <circle cx="1288" cy="202" r="6.5" fill="#fff" class="line2"/>
+  <circle cx="1445" cy="150" r="4.5" class="accent"/>
+
+  <!-- right dotted grid -->
+  <g opacity="0.6" transform="translate(1510 115)">
+    <circle class="gridDot" cx="0" cy="0" r="1.7"/><circle class="gridDot" cx="16" cy="0" r="1.7"/><circle class="gridDot" cx="32" cy="0" r="1.7"/><circle class="gridDot" cx="48" cy="0" r="1.7"/><circle class="gridDot" cx="64" cy="0" r="1.7"/>
+    <circle class="gridDot" cx="0" cy="16" r="1.7"/><circle class="gridDot" cx="16" cy="16" r="1.7"/><circle class="gridDot" cx="32" cy="16" r="1.7"/><circle class="gridDot" cx="48" cy="16" r="1.7"/><circle class="gridDot" cx="64" cy="16" r="1.7"/>
+    <circle class="gridDot" cx="0" cy="32" r="1.7"/><circle class="gridDot" cx="16" cy="32" r="1.7"/><circle class="gridDot" cx="32" cy="32" r="1.7"/><circle class="gridDot" cx="48" cy="32" r="1.7"/><circle class="gridDot" cx="64" cy="32" r="1.7"/>
+    <circle class="gridDot" cx="0" cy="48" r="1.7"/><circle class="gridDot" cx="16" cy="48" r="1.7"/><circle class="gridDot" cx="32" cy="48" r="1.7"/><circle class="gridDot" cx="48" cy="48" r="1.7"/><circle class="gridDot" cx="64" cy="48" r="1.7"/>
+    <circle class="gridDot" cx="0" cy="64" r="1.7"/><circle class="gridDot" cx="16" cy="64" r="1.7"/><circle class="gridDot" cx="32" cy="64" r="1.7"/><circle class="gridDot" cx="48" cy="64" r="1.7"/><circle class="gridDot" cx="64" cy="64" r="1.7"/>
+  </g>
+</svg>
