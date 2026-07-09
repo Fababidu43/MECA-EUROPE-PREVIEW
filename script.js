@@ -130,7 +130,6 @@ const updateScrollDynamics = () => {
   const viewportWidth = window.innerWidth || 0;
   const viewportHeight = window.innerHeight || 1;
   const mediaRange = viewportWidth <= 760 ? 6 : viewportWidth <= 1024 ? 10 : 14;
-  const contactRange = viewportWidth <= 760 ? 26 : viewportWidth <= 1024 ? 40 : 56;
 
   if (introParallaxImage) {
     const rect = introParallaxImage.getBoundingClientRect();
@@ -138,14 +137,6 @@ const updateScrollDynamics = () => {
     const ratio = clamp(-centerOffset / viewportHeight, -1, 1);
     const shift = clamp(ratio * mediaRange, -mediaRange, mediaRange);
     introParallaxImage.style.setProperty('--media-parallax-y', `${shift}px`);
-  }
-
-  if (contactShowcase) {
-    const rect = contactShowcase.getBoundingClientRect();
-    const centerOffset = (rect.top + (rect.height / 2)) - (viewportHeight * 0.72);
-    const ratio = clamp(-centerOffset / viewportHeight, -1, 1);
-    const shift = clamp(ratio * contactRange, -contactRange, contactRange);
-    contactShowcase.style.setProperty('--contact-scroll-y', `${shift}px`);
   }
 };
 
