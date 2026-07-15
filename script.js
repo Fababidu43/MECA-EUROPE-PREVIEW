@@ -4,7 +4,7 @@ const navLinks = primaryNav ? primaryNav.querySelectorAll('a') : [];
 const header = document.querySelector('.header');
 const hashLinks = document.querySelectorAll('a[href^="#"]');
 const sectionLinks = document.querySelectorAll('.primary-nav a[href^="#"]');
-const openContactModalBtn = document.querySelector('[data-open-contact-modal]');
+const openContactModalBtns = document.querySelectorAll('[data-open-contact-modal]');
 const contactModal = document.querySelector('#contact-modal');
 const closeContactModalBtns = document.querySelectorAll('[data-close-contact-modal]');
 const contactForm = document.querySelector('#contact-form');
@@ -205,6 +205,14 @@ const setupNavToggle = () => {
       primaryNav.classList.remove('is-open');
       navToggle.setAttribute('aria-expanded', 'false');
     });
+  });
+
+  document.addEventListener('keydown', (event) => {
+    if (event.key === 'Escape' && primaryNav.classList.contains('is-open')) {
+      primaryNav.classList.remove('is-open');
+      navToggle.setAttribute('aria-expanded', 'false');
+      navToggle.focus();
+    }
   });
 };
 
@@ -487,18 +495,34 @@ const setupRevealObserver = () => {
 };
 
 const setupContactModal = () => {
-  if (!openContactModalBtn || !contactModal) {
+  if (!openContactModalBtns.length || !contactModal) {
     return;
   }
+
+  const dialog = contactModal.querySelector('.contact-modal-dialog');
+  let modalTrigger = null;
 
   const toggleModal = (isOpen) => {
     contactModal.classList.toggle('is-open', isOpen);
     contactModal.setAttribute('aria-hidden', String(!isOpen));
     body.style.overflow = isOpen ? 'hidden' : '';
+
+    if (isOpen) {
+      window.requestAnimationFrame(() => {
+        const firstField = contactModal.querySelector('input, textarea, button');
+        if (firstField) firstField.focus();
+      });
+    } else if (modalTrigger) {
+      modalTrigger.focus();
+      modalTrigger = null;
+    }
   };
 
-  openContactModalBtn.addEventListener('click', () => {
-    toggleModal(true);
+  openContactModalBtns.forEach((button) => {
+    button.addEventListener('click', () => {
+      modalTrigger = button;
+      toggleModal(true);
+    });
   });
 
   closeContactModalBtns.forEach((btn) => {
@@ -510,6 +534,21 @@ const setupContactModal = () => {
   document.addEventListener('keydown', (event) => {
     if (event.key === 'Escape' && contactModal.classList.contains('is-open')) {
       toggleModal(false);
+    }
+
+    if (event.key === 'Tab' && contactModal.classList.contains('is-open') && dialog) {
+      const focusable = Array.from(dialog.querySelectorAll('button, input, textarea, a[href]'))
+        .filter((element) => !element.hasAttribute('disabled'));
+      const first = focusable[0];
+      const last = focusable[focusable.length - 1];
+
+      if (event.shiftKey && document.activeElement === first) {
+        event.preventDefault();
+        last.focus();
+      } else if (!event.shiftKey && document.activeElement === last) {
+        event.preventDefault();
+        first.focus();
+      }
     }
   });
 
