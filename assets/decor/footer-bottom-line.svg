@@ -1,0 +1,36 @@
+<svg
+  xmlns="http://www.w3.org/2000/svg"
+  viewBox="0 0 1600 72"
+  width="1600"
+  height="72"
+  fill="none"
+  role="img"
+  aria-label="Ligne décorative de bas de footer"
+>
+  <path
+    d="M0 18H1400L1432 50H1464"
+    stroke="#C9CDD2"
+    stroke-width="1.25"
+    stroke-linecap="round"
+    stroke-linejoin="round"
+    vector-effect="non-scaling-stroke"
+  />
+
+  <circle
+    cx="1474"
+    cy="50"
+    r="5"
+    fill="#FFFFFF"
+    stroke="#9EA4AA"
+    stroke-width="1.25"
+    vector-effect="non-scaling-stroke"
+  />
+
+  <path
+    d="M1484 50H1600"
+    stroke="#C9CDD2"
+    stroke-width="1.25"
+    stroke-linecap="round"
+    vector-effect="non-scaling-stroke"
+  />
+</svg>

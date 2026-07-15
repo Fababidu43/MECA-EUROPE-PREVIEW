@@ -9,8 +9,11 @@ const contactModal = document.querySelector('#contact-modal');
 const closeContactModalBtns = document.querySelectorAll('[data-close-contact-modal]');
 const contactForm = document.querySelector('#contact-form');
 const contactFeedback = document.querySelector('#contact-form-feedback');
-const introParallaxImage = document.querySelector('.intro-figure img');
+const heroParallaxImage = document.querySelector('.hero-video-bg');
+const parallaxImages = document.querySelectorAll('.intro-figure img, .engage-section .section-figure img, .experience-section .section-figure img');
 const contactShowcase = document.querySelector('.contact-showcase');
+const keyFiguresSection = document.querySelector('.key-figures-section');
+const keyFigureCounters = keyFiguresSection ? keyFiguresSection.querySelectorAll('[data-count]') : [];
 const body = document.body;
 
 const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -129,15 +132,27 @@ const updateScrollDynamics = () => {
 
   const viewportWidth = window.innerWidth || 0;
   const viewportHeight = window.innerHeight || 1;
-  const mediaRange = viewportWidth <= 760 ? 6 : viewportWidth <= 1024 ? 10 : 14;
+  const mediaRange = viewportWidth <= 760 ? 0 : viewportWidth <= 1024 ? 8 : 14;
 
-  if (introParallaxImage) {
-    const rect = introParallaxImage.getBoundingClientRect();
+  if (heroParallaxImage) {
+    const heroRect = heroParallaxImage.getBoundingClientRect();
+    const heroProgress = clamp(-heroRect.top / Math.max(heroRect.height, 1), 0, 1);
+    const heroShift = viewportWidth <= 760 ? 0 : heroProgress * 18;
+    heroParallaxImage.style.setProperty('--hero-parallax-y', `${heroShift}px`);
+  }
+
+  parallaxImages.forEach((image) => {
+    const rect = image.getBoundingClientRect();
+
+    if (rect.bottom < -80 || rect.top > viewportHeight + 80) {
+      return;
+    }
+
     const centerOffset = (rect.top + (rect.height / 2)) - (viewportHeight / 2);
     const ratio = clamp(-centerOffset / viewportHeight, -1, 1);
     const shift = clamp(ratio * mediaRange, -mediaRange, mediaRange);
-    introParallaxImage.style.setProperty('--media-parallax-y', `${shift}px`);
-  }
+    image.style.setProperty('--media-parallax-y', `${shift}px`);
+  });
 };
 
 const syncScrollState = (force = false) => {
@@ -148,6 +163,10 @@ const syncScrollState = (force = false) => {
   }
 
   scrollFrame = window.requestAnimationFrame(() => {
+    if (header) {
+      header.classList.toggle('is-scrolled', (window.scrollY || 0) > 28);
+    }
+
     updateActiveNavLink();
     syncIntersectionScrolls(forceScrollSync);
     updateScrollDynamics();
@@ -277,9 +296,15 @@ const setupCarousels = () => {
 
       slides.forEach((slide, index) => {
         const isActive = index >= currentIndex && index < currentIndex + slidesToShow;
+        const slot = isActive ? index - currentIndex : -1;
+        const isCenterSlot = slidesToShow === 1 ? slot === 0 : slot === 1;
         slide.classList.toggle('is-active', isActive);
+        slide.classList.toggle('is-carousel-start', isActive && slot === 0);
+        slide.classList.toggle('is-carousel-center', isActive && isCenterSlot);
+        slide.classList.toggle('is-carousel-end', isActive && slot === 2);
         slide.setAttribute('aria-hidden', String(!isActive));
         slide.style.setProperty('--slide-offset', String(Math.max(0, index - currentIndex)));
+        slide.style.setProperty('--slide-slot', String(slot));
 
         if (!isActive) {
           slide.classList.remove('is-entering-forward', 'is-entering-backward');
@@ -295,30 +320,6 @@ const setupCarousels = () => {
         dot.classList.toggle('is-active', isActive);
         dot.setAttribute('aria-current', isActive ? 'true' : 'false');
       });
-
-      if (!direction) {
-        return;
-      }
-
-      window.clearTimeout(slideMotionTimer);
-
-      slides.forEach((slide, index) => {
-        const isActive = index >= currentIndex && index < currentIndex + slidesToShow;
-
-        if (!isActive) {
-          return;
-        }
-
-        slide.classList.remove('is-entering-forward', 'is-entering-backward');
-        void slide.offsetWidth;
-        slide.classList.add(direction === 'forward' ? 'is-entering-forward' : 'is-entering-backward');
-      });
-
-      slideMotionTimer = window.setTimeout(() => {
-        slides.forEach((slide) => {
-          slide.classList.remove('is-entering-forward', 'is-entering-backward');
-        });
-      }, 900);
     };
 
     const stopAutoPlay = () => {
@@ -466,6 +467,86 @@ const enableClickPulse = () => {
   });
 };
 
+const setupKeyFigureCounters = () => {
+  if (!keyFiguresSection || !keyFigureCounters.length) {
+    return;
+  }
+
+  const numberFormatter = new Intl.NumberFormat('fr-FR', {
+    maximumFractionDigits: 0,
+  });
+  const formatValue = (value) => numberFormatter.format(Math.round(value)).replace(/\u202f/g, '\u00a0');
+  let hasStarted = false;
+
+  const showFinalValues = () => {
+    keyFigureCounters.forEach((counter) => {
+      counter.textContent = formatValue(Number(counter.dataset.count || 0));
+    });
+    keyFiguresSection.classList.add('counters-started');
+  };
+
+  if (prefersReducedMotion || !('IntersectionObserver' in window)) {
+    showFinalValues();
+    return;
+  }
+
+  keyFigureCounters.forEach((counter) => {
+    counter.textContent = '0';
+  });
+
+  const animateCounter = (counter, index) => {
+    const target = Number(counter.dataset.count || 0);
+    const duration = clamp(Number(counter.dataset.duration || 1800), 1500, 2200);
+    const delay = index * 90;
+    let startTime;
+
+    const tick = (timestamp) => {
+      if (startTime === undefined) {
+        startTime = timestamp + delay;
+      }
+
+      const elapsed = timestamp - startTime;
+      if (elapsed < 0) {
+        window.requestAnimationFrame(tick);
+        return;
+      }
+
+      const progress = clamp(elapsed / duration, 0, 1);
+      const easedProgress = progress < 0.5
+        ? 4 * progress * progress * progress
+        : 1 - (Math.pow(-2 * progress + 2, 3) / 2);
+
+      counter.textContent = formatValue(target * easedProgress);
+
+      if (progress < 1) {
+        window.requestAnimationFrame(tick);
+      } else {
+        counter.textContent = formatValue(target);
+      }
+    };
+
+    window.requestAnimationFrame(tick);
+  };
+
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach((entry) => {
+      if (!entry.isIntersecting || hasStarted) {
+        return;
+      }
+
+      hasStarted = true;
+      keyFiguresSection.classList.add('counters-started');
+      keyFigureCounters.forEach(animateCounter);
+      observer.unobserve(keyFiguresSection);
+    });
+  }, {
+    threshold: 0.12,
+    rootMargin: '0px 0px -8% 0px',
+  });
+
+  observer.observe(keyFiguresSection);
+};
+
 const setupRevealObserver = () => {
   if (prefersReducedMotion) {
     revealItems.forEach((item) => item.classList.add('is-visible'));
@@ -588,6 +669,7 @@ const init = () => {
   setupNavToggle();
   setupCarousels();
   enableClickPulse();
+  setupKeyFigureCounters();
   setupRevealObserver();
   computeSectionOffsets();
   updateActiveNavLink();
@@ -624,5 +706,15 @@ const init = () => {
   syncScrollState(true);
 };
 
-const readyPromise = document.fonts ? document.fonts.ready : Promise.resolve();
-readyPromise.then(init).catch(init);
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', init, { once: true });
+} else {
+  init();
+}
+
+if (document.fonts) {
+  document.fonts.ready.then(() => {
+    computeSectionOffsets();
+    syncScrollState(true);
+  }).catch(() => {});
+}

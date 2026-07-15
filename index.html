@@ -10,6 +10,12 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&family=Source+Sans+3:wght@400;500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="styles.css">
+  <noscript>
+    <style>
+      .reveal,
+      .reveal * { opacity: 1 !important; transform: none !important; clip-path: none !important; }
+    </style>
+  </noscript>
 </head>
 <body>
   <header class="header">
@@ -24,13 +30,27 @@
       </button>
 
       <nav id="primary-nav" class="primary-nav" aria-label="Navigation principale">
-        <a href="#top">Accueil</a>
-        <a href="#pieces-serie">Pièces de série</a>
-        <a href="#pieces-unitaires">Pièces unitaires</a>
-        <a href="#parc-machines">Parc machines</a>
+        <a href="#top" class="nav-home">
+          <img src="https://api.iconify.design/mdi:home.svg?color=%23e11616" alt="" aria-hidden="true">
+          <span>Accueil</span>
+        </a>
+        <a href="#pieces-serie">
+          <span>Pièces de série</span>
+          <span class="nav-chevron" aria-hidden="true"></span>
+        </a>
+        <a href="#pieces-unitaires">
+          <span>Pièces unitaires</span>
+          <span class="nav-chevron" aria-hidden="true"></span>
+        </a>
+        <a href="#parc-machines">
+          <span>Parc machines</span>
+          <span class="nav-chevron" aria-hidden="true"></span>
+        </a>
         <a href="#contact">Contact</a>
         <a href="#plan">Plan</a>
       </nav>
+
+      <a href="#contact" class="button-pill header-quote">Demander un devis</a>
     </div>
   </header>
 
@@ -49,12 +69,17 @@
     <section class="hero reveal">
       <img class="hero-video-bg" src="assets/images/background-hero.webp" alt="" aria-hidden="true">
       <div class="wrap hero-layout">
-        <div class="hero-shell">
+        <div class="hero-content">
           <div class="hero-copy">
-            <h1><span>Mécanique générale :</span> usinage, montage et décolletage</h1>
+            <h1>
+              <span class="hero-title-accent">Mécanique générale :</span>
+              <span>usinage, montage</span>
+              <span>et décolletage</span>
+            </h1>
+            <span class="hero-title-rule" aria-hidden="true"></span>
           </div>
 
-          <section id="activites" class="metiers-list">
+          <section id="activites" class="metiers-list" aria-label="Activités de MECA-EUROPE">
             <div class="metier-item">
               <span class="icon-wrap"><img src="https://api.iconify.design/mdi:cog-outline.svg?color=%23ffffff" alt=""></span>
               <span>Usinage de pièces mécaniques</span>
@@ -76,7 +101,7 @@
               <span>Travail de l'aluminium et de l'inox</span>
             </div>
             <div class="metier-item">
-              <span class="icon-wrap"><img src="https://api.iconify.design/mdi:ruler-square-compass.svg?color=%23ffffff" alt=""></span>
+              <span class="icon-wrap"><img src="https://api.iconify.design/mdi:compass-outline.svg?color=%23ffffff" alt=""></span>
               <span>Fabrication en série et sur mesure</span>
             </div>
           </section>
@@ -88,19 +113,25 @@
       <img src="assets/decor/meca_intersection_scroll.svg" alt="">
     </div>
 
-    <section id="pieces-serie" class="section intro-section reveal decor-surface decor-a">
-      <div class="wrap intro-grid">
-        <figure class="intro-figure">
+    <section id="pieces-serie" class="section intro-section series-section reveal decor-surface decor-a">
+      <div class="wrap intro-grid series-grid">
+        <figure class="intro-figure series-figure">
           <img src="assets/images/Tour CNC grande capacité_3.webp" alt="Tour CNC grande capacité MECA-EUROPE" width="1448" height="1086" loading="lazy" decoding="async">
         </figure>
-        <article class="intro-copy">
-          <h2>Pièces de série <mark>pour productions régulières et besoins récurrents</mark></h2>
-          <p class="intro-lead">
+        <article class="intro-copy series-copy">
+          <h2 class="series-title">
+            <span class="series-title-label">Pièces de série</span>
+            <mark>pour productions régulières<br>et besoins récurrents</mark>
+          </h2>
+          <p class="intro-lead series-lead">
             MECA-EUROPE fabrique des pièces de série destinées aux applications mécaniques nécessitant constance,
             précision et répétabilité. L'atelier intervient sur des références techniques avec un suivi attentif des côtes,
             des matières et des finitions.
           </p>
-          <p>Parmi les réalisations visibles sur le site d'origine figurent notamment des bagues quadrillées intérieures, des cages à billes ainsi que des tubes d'étanchéité de 10 mm à 500 mm de diamètre.</p>
+          <p class="series-text">
+            Parmi les réalisations visibles sur le site d'origine figurent notamment des bagues quadrillées intérieures,
+            des cages à billes ainsi que des tubes d'étanchéité de 10 mm à 500 mm de diamètre.
+          </p>
         </article>
       </div>
     </section>
@@ -112,7 +143,10 @@
     <section id="pieces-unitaires" class="section engage-section reveal decor-surface decor-b">
       <div class="wrap split-grid">
         <article class="text-content">
-          <h2>Pièces unitaires <mark>pour demandes spécifiques et fabrications ponctuelles</mark></h2>
+          <h2 class="series-title">
+            <span class="series-title-label">Pièces unitaires</span>
+            <mark>pour demandes spécifiques<br>et fabrications ponctuelles</mark>
+          </h2>
           <ul>
             <li>Fabrication de pièces dédiées au matériel agricole.</li>
             <li>Interventions pour la mécanique automobile.</li>
@@ -132,13 +166,75 @@
       <img src="assets/decor/meca_intersection_scroll_03.svg" alt="">
     </div>
 
+    <section id="chiffres-cles" class="section key-figures-section reveal decor-surface decor-c" aria-labelledby="key-figures-title">
+      <div class="wrap key-figures-wrap">
+        <header class="key-figures-heading">
+          <p class="section-kicker">Capacités &amp; savoir-faire</p>
+          <h2 id="key-figures-title">Les chiffres qui définissent <mark>MECA-EUROPE</mark></h2>
+          <p>Un atelier dimensionné pour accompagner les besoins unitaires comme les productions récurrentes.</p>
+        </header>
+
+        <div class="key-figures-grid" data-key-figures>
+          <article class="key-figure-card">
+            <p class="key-figure-value">
+              <span class="key-number" data-count="4" data-duration="1600" aria-label="4">4</span>
+            </p>
+            <h3>Tours principaux</h3>
+          </article>
+
+          <article class="key-figure-card">
+            <p class="key-figure-value">
+              <span class="key-prefix" aria-hidden="true">Ø</span>
+              <span class="key-number" data-count="82" data-duration="1750" aria-label="82">82</span>
+              <span class="key-unit">mm</span>
+            </p>
+            <h3>Passage en broche</h3>
+          </article>
+
+          <article class="key-figure-card">
+            <p class="key-figure-value">
+              <span class="key-number" data-count="1000" data-duration="2100" aria-label="1 000">1&nbsp;000</span>
+              <span class="key-unit">mm</span>
+            </p>
+            <h3>Longueur d’usinage</h3>
+          </article>
+
+          <article class="key-figure-card">
+            <p class="key-figure-value">
+              <span class="key-prefix" aria-hidden="true">Ø</span>
+              <span class="key-number" data-count="550" data-duration="1950" aria-label="550">550</span>
+              <span class="key-unit">mm</span>
+            </p>
+            <h3>Capacité maximale</h3>
+          </article>
+
+          <article class="key-figure-card key-figure-card--phrase">
+            <p class="key-figure-value key-figure-phrase" aria-label="Pièce unique vers série">
+              <span>Pièce unique</span><span class="key-arrow" aria-hidden="true">→</span><span>série</span>
+            </p>
+            <h3>Une production adaptée à chaque besoin</h3>
+          </article>
+
+          <article class="key-figure-card key-figure-card--date">
+            <p class="key-figure-value key-figure-date" aria-label="16 avril 2002">
+              <span>16</span><span>avril</span><span>2002</span>
+            </p>
+            <h3>Date de création</h3>
+          </article>
+        </div>
+      </div>
+    </section>
+
     <section id="parc-machines" class="section experience-section reveal decor-surface decor-c">
       <div class="wrap split-grid reverse">
         <figure class="section-figure">
           <img src="assets/images/Tour CNC grande capacité_2.webp" alt="Tour CNC grande capacité MECA-EUROPE" width="1448" height="1086" loading="lazy" decoding="async">
         </figure>
         <article class="text-content dark">
-          <h2>Parc machines <mark>pour l'usinage et la précision</mark></h2>
+          <h2 class="series-title">
+            <span class="series-title-label">Parc machines</span>
+            <mark>pour l'usinage et la précision</mark>
+          </h2>
           <ul>
             <li>Tour DANOBAT TCN11 avec embarreur, usinage jusqu'à 600 mm et passage en broche Ø 65.</li>
             <li>Tour LEADWELL LTC 25 pour usinage 450 x 1000 avec passage en broche Ø 82.</li>
@@ -160,6 +256,7 @@
     <section id="actualites" class="section news-section reveal decor-surface decor-a">
       <div class="wrap news-stage">
         <h2>Exemples de <mark>réalisations</mark></h2>
+        <p class="news-intro">Quelques exemples de pièces usinées en mécanique de précision.</p>
         <div class="works-carousel" data-carousel>
           <button type="button" class="carousel-btn carousel-btn-prev" data-carousel-prev aria-label="Image précédente">
             <span aria-hidden="true">‹</span>
@@ -168,42 +265,54 @@
           <div class="carousel-viewport">
             <div class="carousel-track" data-carousel-track>
               <figure class="carousel-slide is-active">
-                <img src="assets/images/corps-cylindrique-usinage-interieur.webp" alt="Corps cylindrique avec usinage intérieur de précision" width="1448" height="1086" loading="lazy" decoding="async">
+                <div class="carousel-media">
+                  <img src="assets/images/corps-cylindrique-usinage-interieur.webp" alt="Corps cylindrique avec usinage intérieur de précision" width="1448" height="1086" loading="lazy" decoding="async">
+                </div>
                 <figcaption>
                   <strong>Corps cylindrique</strong>
                   <span>Usinage intérieur de haute précision</span>
                 </figcaption>
               </figure>
               <figure class="carousel-slide">
-                <img src="assets/images/flasque-adaptation-usinee-cnc.webp" alt="Flasque d'adaptation usinée sur machine CNC" width="1087" height="1447" loading="lazy" decoding="async">
+                <div class="carousel-media">
+                  <img src="assets/images/flasque-adaptation-usinee-cnc.webp" alt="Flasque d'adaptation usinée sur machine CNC" width="1087" height="1447" loading="lazy" decoding="async">
+                </div>
                 <figcaption>
                   <strong>Flasque d'adaptation</strong>
                   <span>Usinage CNC - acier inoxydable</span>
                 </figcaption>
               </figure>
               <figure class="carousel-slide">
-                <img src="assets/images/piece-revolution-usinage-tour-cnc.webp" alt="Pièce de révolution usinée sur tour CNC" width="1537" height="1023" loading="lazy" decoding="async">
+                <div class="carousel-media">
+                  <img src="assets/images/piece-revolution-usinage-tour-cnc.webp" alt="Pièce de révolution usinée sur tour CNC" width="1537" height="1023" loading="lazy" decoding="async">
+                </div>
                 <figcaption>
                   <strong>Pièce de révolution</strong>
                   <span>Usinage multi-opérations - finition miroir</span>
                 </figcaption>
               </figure>
               <figure class="carousel-slide">
-                <img src="assets/images/axe-epaule-usine-cnc.webp" alt="Usinage d'axe à épaulement sur tour CNC" width="1122" height="1402" loading="lazy" decoding="async">
+                <div class="carousel-media">
+                  <img src="assets/images/axe-epaule-usine-cnc.webp" alt="Usinage d'axe à épaulement sur tour CNC" width="1122" height="1402" loading="lazy" decoding="async">
+                </div>
                 <figcaption>
                   <strong>Axe à épaulement</strong>
                   <span>Usinage CNC</span>
                 </figcaption>
               </figure>
               <figure class="carousel-slide">
-                <img src="assets/images/bride-mecanique-multi-percages.webp" alt="Bride mécanique avec multi-perçages usinés" width="1448" height="1086" loading="lazy" decoding="async">
+                <div class="carousel-media">
+                  <img src="assets/images/bride-mecanique-multi-percages.webp" alt="Bride mécanique avec multi-perçages usinés" width="1448" height="1086" loading="lazy" decoding="async">
+                </div>
                 <figcaption>
                   <strong>Bride mécanique</strong>
                   <span>Multi-perçages usinés</span>
                 </figcaption>
               </figure>
               <figure class="carousel-slide">
-                <img src="assets/images/usinage-cylindrique-tour-cnc.webp" alt="Usinage cylindrique réalisé sur tour CNC" width="1672" height="941" loading="lazy" decoding="async">
+                <div class="carousel-media">
+                  <img src="assets/images/usinage-cylindrique-tour-cnc.webp" alt="Usinage cylindrique réalisé sur tour CNC" width="1672" height="941" loading="lazy" decoding="async">
+                </div>
                 <figcaption>
                   <strong>Usinage cylindrique</strong>
                   <span>Réalisé sur tour CNC</span>
@@ -245,34 +354,36 @@
       <div class="wrap plan-grid">
         <div class="plan-copy">
           <p class="plan-kicker">Plan et accès</p>
-          <h2>Retrouvez <mark>MECA-EUROPE</mark> à Riotord</h2>
+          <h2 class="plan-title"><span>Retrouvez</span> <mark>MECA-EUROPE</mark> <span>à Riotord</span></h2>
           <p class="plan-lead">L'atelier est situé au 22 route du Midi, 43220 Riotord. La carte ci-contre reste interactive pour zoomer, dézoomer et mieux préparer votre trajet.</p>
           <div class="plan-details">
-            <p><strong>Adresse</strong><br>22 route du Midi<br>43220 Riotord</p>
-            <p><strong>Téléphone</strong><br><a href="tel:0471753155">04 71 75 31 55</a></p>
-            <p><strong>Email</strong><br><a href="mailto:mecaeurope@orange.fr">mecaeurope@orange.fr</a></p>
+            <div class="plan-detail">
+              <span class="plan-detail-icon" aria-hidden="true"><img src="https://api.iconify.design/mdi:map-marker-outline.svg?color=%23e11616" alt=""></span>
+              <p><strong>Adresse</strong><br>22 route du Midi<br>43220 Riotord</p>
+            </div>
+            <div class="plan-detail">
+              <span class="plan-detail-icon" aria-hidden="true"><img src="https://api.iconify.design/mdi:phone-outline.svg?color=%23e11616" alt=""></span>
+              <p><strong>Téléphone</strong><br><a href="tel:0471753155">04 71 75 31 55</a></p>
+            </div>
+            <div class="plan-detail">
+              <span class="plan-detail-icon" aria-hidden="true"><img src="https://api.iconify.design/mdi:email-outline.svg?color=%23e11616" alt=""></span>
+              <p><strong>Email</strong><br><a href="mailto:mecaeurope@orange.fr">mecaeurope@orange.fr</a></p>
+            </div>
           </div>
           <div class="plan-actions">
             <a href="https://www.google.com/maps/dir/?api=1&destination=22+route+du+Midi,+43220+Riotord" class="button-pill" target="_blank" rel="noopener noreferrer">Itinéraire</a>
           </div>
         </div>
 
-        <div class="plan-map-wrap" aria-label="Carte Google Maps de MECA-EUROPE">
-          <iframe
-            class="plan-map"
-            title="Plan MECA-EUROPE"
-            src="https://www.google.com/maps?q=22+route+du+Midi,+43220+Riotord&z=14&output=embed"
-            loading="lazy"
-            referrerpolicy="no-referrer-when-downgrade"
-            allowfullscreen>
-          </iframe>
+        <div class="plan-map-wrap">
+          <img class="plan-map" src="assets/images/map-section.png" alt="Carte de localisation de MECA-EUROPE à Riotord" width="1200" height="760" loading="lazy" decoding="async">
+          <a class="plan-map-link" href="https://www.google.com/maps/dir/?api=1&destination=22+route+du+Midi,+43220+Riotord" target="_blank" rel="noopener noreferrer">
+            <span>Voir sur Google Maps</span>
+          </a>
         </div>
       </div>
     </section>
 
-    <div class="intersection-scroll intersection-scroll--footer" aria-hidden="true">
-      <img src="assets/decor/meca_footer_intersection_red_v2.svg" alt="">
-    </div>
   </main>
 
   <div class="contact-modal" id="contact-modal" aria-hidden="true">
@@ -315,10 +426,6 @@
       <div class="footer-logo-wrap">
         <img src="assets/images/header_logo_meca.png" alt="MECA-EUROPE" width="1600" height="360" loading="lazy" decoding="async">
       </div>
-      <div class="footer-head-actions">
-        <a href="mailto:mecaeurope@orange.fr" class="social-ring" aria-label="Envoyer un email à MECA-EUROPE">@</a>
-        <a href="#contact" class="button-pill">Contact atelier</a>
-      </div>
     </div>
 
     <div class="wrap footer-main">
@@ -357,6 +464,7 @@
       </div>
     </div>
 
+    <img class="footer-bottom-line" src="assets/decor/footer-bottom-line.svg" alt="" aria-hidden="true">
     <div class="wrap legal">
       <p>© MECA-EUROPE 2026</p>
       <div>
