@@ -371,7 +371,14 @@
             </div>
           </div>
           <div class="plan-actions">
-            <a href="https://www.google.com/maps/dir/?api=1&destination=22+route+du+Midi,+43220+Riotord" class="button-pill" target="_blank" rel="noopener noreferrer">Itinéraire</a>
+            <a
+              href="https://www.google.com/maps/dir/?api=1&destination=22+route+du+Midi,+43220+Riotord"
+              class="button-angle"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              Itinéraire
+            </a>
           </div>
         </div>
 
@@ -422,22 +429,35 @@
   </div>
 
   <footer class="footer reveal">
-    <div class="wrap footer-head">
-      <div class="footer-logo-wrap">
-        <img src="assets/images/header_logo_meca.png" alt="MECA-EUROPE" width="1600" height="360" loading="lazy" decoding="async">
-      </div>
-    </div>
 
     <div class="wrap footer-main">
-      <div>
-        <h4>Informations</h4>
-        <p>MECA-EUROPE, 22 route du Midi, 43220 Riotord.</p>
-        <p>Mécanique générale, usinage, montage et décolletage.</p>
-        <p>Fabrication de pièces de série et de pièces unitaires.</p>
+
+      <!-- Colonne marque -->
+      <div class="footer-brand">
+        <div class="footer-logo-wrap">
+          <img
+            src="assets/images/header_logo_meca.png"
+            alt="MECA-EUROPE"
+            width="1600"
+            height="360"
+            loading="lazy"
+            decoding="async"
+          >
+        </div>
+
+        <p>
+          Mécanique générale, usinage, montage<br>
+          et décolletage. Fabrication de pièces<br>
+          de série et de pièces unitaires.
+        </p>
+
+        <span class="footer-brand-rule" aria-hidden="true"></span>
       </div>
 
-      <div>
+      <!-- Navigation -->
+      <div class="footer-column footer-navigation">
         <h4>Navigation</h4>
+
         <ul>
           <li><a href="#top">Accueil</a></li>
           <li><a href="#pieces-serie">Pièces de série</a></li>
@@ -448,31 +468,85 @@
         </ul>
       </div>
 
-      <div>
+      <!-- Matières -->
+      <div class="footer-column">
         <h4>Matières travaillées</h4>
-        <p>Aluminium</p>
-        <p>Inox</p>
-        <p>Bronze, laiton</p>
-        <p>Aciers spéciaux</p>
+
+        <div class="footer-materials">
+          <p>Aluminium</p>
+          <p>Inox</p>
+          <p>Bronze, laiton</p>
+          <p>Aciers spéciaux</p>
+        </div>
       </div>
 
-      <div>
+      <!-- Contact -->
+      <div class="footer-column footer-contact">
         <h4>Contact</h4>
-        <p><a href="tel:0471753155">Tél. 04 71 75 31 55</a></p>
-        <p>Fax 04 71 75 31 60</p>
-        <p><a href="mailto:mecaeurope@orange.fr">mecaeurope@orange.fr</a></p>
+
+        <p class="footer-contact-line">
+          <img
+            src="https://api.iconify.design/mdi:phone-outline.svg?color=%234b4f54"
+            alt=""
+            aria-hidden="true"
+          >
+          <a href="tel:0471753155">Tél. 04 71 75 31 55</a>
+        </p>
+
+        <p class="footer-contact-indent">
+          Fax 04 71 75 31 60
+        </p>
+
+        <p class="footer-contact-line footer-email">
+          <img
+            src="https://api.iconify.design/mdi:email-outline.svg?color=%234b4f54"
+            alt=""
+            aria-hidden="true"
+          >
+          <a href="mailto:mecaeurope@orange.fr">
+            mecaeurope@orange.fr
+          </a>
+        </p>
       </div>
+
     </div>
 
-    <img class="footer-bottom-line" src="assets/decor/footer-bottom-line.svg" alt="" aria-hidden="true">
+    <!-- Ligne technique inférieure -->
+    <svg
+      class="footer-rail"
+      viewBox="0 0 1440 34"
+      preserveAspectRatio="none"
+      aria-hidden="true"
+    >
+      <path
+        d="M0 1 H1322 L1352 31 H1440"
+        fill="none"
+        stroke="#b8bdc3"
+        stroke-width="1"
+        vector-effect="non-scaling-stroke"
+      />
+
+      <circle
+        cx="1404"
+        cy="31"
+        r="4"
+        fill="#f8f8f9"
+        stroke="#8f969d"
+        stroke-width="1.2"
+        vector-effect="non-scaling-stroke"
+      />
+    </svg>
+
     <div class="wrap legal">
       <p>© MECA-EUROPE 2026</p>
-      <div>
+
+      <div class="legal-links">
         <a href="mentions-legales.html">Mentions légales</a>
-        <span>-</span>
+        <span class="legal-dot" aria-hidden="true"></span>
         <a href="#plan">Plan du site</a>
       </div>
     </div>
+
   </footer>
 
   <script src="script.js"></script>

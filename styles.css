@@ -6355,3 +6355,342 @@ body.legal-page {
     padding-top: 10px;
   }
 }
+
+/* =========================================================
+   BOUTON ANGULAIRE — STYLE DE LA CAPTURE
+   ========================================================= */
+
+.button-angle {
+  min-width: 178px;
+  min-height: 46px;
+  padding: 0 27px 0 20px;
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 28px;
+
+  border: 0;
+  border-radius: 0;
+
+  color: #ffffff;
+  background: linear-gradient(135deg, #ef1b1b 0%, #e11616 58%, #d51010 100%);
+
+  clip-path: polygon(
+    0 0,
+    100% 0,
+    100% 54%,
+    88% 100%,
+    0 100%
+  );
+
+  font-family: "Source Sans 3", Arial, sans-serif;
+  font-size: 0.96rem;
+  font-weight: 700;
+  line-height: 1;
+  text-decoration: none;
+
+  cursor: pointer;
+  transition:
+    filter 180ms ease,
+    transform 180ms ease;
+}
+
+.button-angle::after {
+  content: "⟶";
+  display: block;
+  color: #ffffff;
+  font-size: 1.2rem;
+  font-weight: 400;
+  line-height: 1;
+  transform: translateY(-1px);
+  transition: transform 180ms ease;
+}
+
+.button-angle:hover,
+.button-angle:focus-visible {
+  color: #ffffff;
+  filter: brightness(0.94);
+  transform: translateY(-1px);
+}
+
+.button-angle:hover::after,
+.button-angle:focus-visible::after {
+  transform: translate(4px, -1px);
+}
+
+.button-angle:focus-visible {
+  outline: 2px solid rgba(225, 22, 22, 0.3);
+  outline-offset: 4px;
+}
+
+
+/* =========================================================
+   FOOTER — STYLE PROCHE DE LA CAPTURE
+   ========================================================= */
+
+.footer {
+  position: relative;
+  overflow: hidden;
+
+  padding: 0 0 16px;
+
+  color: #555a60;
+  background:
+    linear-gradient(
+      180deg,
+      #fbfbfc 0%,
+      #f8f8f9 45%,
+      #f6f6f7 100%
+    );
+
+  border-top: 0;
+  box-shadow: 0 -10px 28px rgba(20, 24, 28, 0.06);
+}
+
+/* Supprime l'ancien grand rectangle blanc placé au-dessus */
+
+.footer::before {
+  content: none;
+}
+
+/* L'ancien footer-head ne doit plus occuper d'espace */
+
+.footer-head {
+  display: none;
+}
+
+/* Grille principale */
+
+.footer-main {
+  display: grid;
+  grid-template-columns:
+    minmax(250px, 1.42fr)
+    minmax(160px, 0.88fr)
+    minmax(180px, 0.92fr)
+    minmax(220px, 1fr);
+
+  align-items: start;
+  gap: clamp(42px, 5.6vw, 92px);
+
+  padding-top: 42px;
+  padding-bottom: 40px;
+
+  border-bottom: 0;
+}
+
+/* Logo et présentation */
+
+.footer-logo-wrap {
+  display: block;
+  padding: 0;
+  background: transparent;
+  border: 0;
+}
+
+.footer-logo-wrap img {
+  display: block;
+  width: 220px;
+  max-width: 100%;
+  max-height: none;
+  height: auto;
+
+  object-fit: contain;
+  filter: none;
+}
+
+.footer-brand > p {
+  max-width: 330px;
+  margin: 24px 0 0;
+
+  color: #555a60;
+  font-size: 0.94rem;
+  font-weight: 400;
+  line-height: 1.65;
+}
+
+.footer-brand-rule {
+  display: block;
+  width: 26px;
+  height: 2px;
+  margin-top: 15px;
+  background: #e11616;
+}
+
+/* Titres des colonnes */
+
+.footer h4 {
+  position: relative;
+
+  margin: 7px 0 32px;
+  padding-bottom: 17px;
+
+  color: #202020;
+  font-family: "Montserrat", Arial, sans-serif;
+  font-size: 0.76rem;
+  font-weight: 700;
+  line-height: 1;
+  letter-spacing: 0.13em;
+  text-transform: uppercase;
+}
+
+.footer h4::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: 0;
+
+  width: 26px;
+  height: 1.5px;
+
+  background: #e11616;
+}
+
+/* Texte général */
+
+.footer p,
+.footer li,
+.footer a {
+  color: #555a60;
+  font-size: 0.92rem;
+  line-height: 1.5;
+}
+
+.footer a {
+  text-decoration: none;
+  transition:
+    color 160ms ease,
+    transform 160ms ease;
+}
+
+.footer a:hover,
+.footer a:focus-visible {
+  color: #e11616;
+}
+
+/* Navigation */
+
+.footer ul {
+  margin: 0;
+  padding: 0;
+
+  display: grid;
+  gap: 13px;
+
+  list-style: none;
+}
+
+.footer-navigation li {
+  margin: 0;
+}
+
+.footer-navigation a {
+  width: 100%;
+  min-width: 180px;
+
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 22px;
+}
+
+.footer-navigation a::after {
+  content: "›";
+  color: #2f3438;
+  font-size: 1.35rem;
+  font-weight: 300;
+  line-height: 0.8;
+  transition: transform 160ms ease;
+}
+
+.footer-navigation a:hover::after {
+  transform: translateX(4px);
+}
+
+/* Matières */
+
+.footer-materials {
+  display: grid;
+  gap: 13px;
+}
+
+.footer-materials p {
+  margin: 0;
+}
+
+/* Contact */
+
+.footer-contact {
+  min-width: 235px;
+}
+
+.footer-contact p {
+  margin: 0;
+}
+
+.footer-contact-line {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
+.footer-contact-line img {
+  flex: 0 0 auto;
+  width: 17px;
+  height: 17px;
+}
+
+.footer-contact-indent {
+  padding-left: 32px;
+  margin-top: 15px !important;
+}
+
+.footer-email {
+  margin-top: 26px !important;
+}
+
+/* Ligne technique */
+
+.footer-rail {
+  display: block;
+
+  width: calc(100% - 80px);
+  height: 34px;
+  margin: 0 auto;
+
+  overflow: visible;
+  pointer-events: none;
+}
+
+/* Mentions légales */
+
+.legal {
+  min-height: 45px;
+  padding-top: 5px;
+
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+
+  font-size: 0.86rem;
+}
+
+.legal p {
+  margin: 0;
+}
+
+.legal-links {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.legal-dot {
+  display: block;
+  width: 4px;
+  height: 4px;
+
+  border-radius: 50%;
+  background: #e11616;
+}
