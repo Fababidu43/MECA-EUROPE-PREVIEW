@@ -1584,14 +1584,12 @@ mark {
   overflow: hidden;
   border-radius: 30px;
   background: transparent;
-  perspective: 1400px;
 }
 
 .carousel-track {
   display: flex;
   transition: transform 0.5s ease;
   will-change: transform;
-  transform-style: preserve-3d;
 }
 
 .carousel-slide {
@@ -1602,33 +1600,30 @@ mark {
   padding: 18px 16px 16px;
   background: #fff;
   border-radius: 22px;
-  box-shadow: 0 12px 28px rgb(0 0 0 / 8%);
   overflow: hidden;
-  backface-visibility: hidden;
-  transform-origin: center center;
+  transform: none;
+  opacity: 1;
+  transition: opacity 0.45s ease;
 }
 
 .carousel-slide.is-entering-forward {
-  transform-origin: right center;
-  animation: carousel-card-enter-forward 760ms cubic-bezier(0.22, 1, 0.36, 1) both;
-  animation-delay: calc(var(--slide-offset, 0) * 75ms);
+  animation: none;
 }
 
 .carousel-slide.is-entering-backward {
-  transform-origin: left center;
-  animation: carousel-card-enter-backward 760ms cubic-bezier(0.22, 1, 0.36, 1) both;
-  animation-delay: calc(var(--slide-offset, 0) * 75ms);
+  animation: none;
 }
 
 .carousel-slide img {
   width: 100%;
   aspect-ratio: 4 / 3;
   height: auto;
-  object-fit: cover;
+  object-fit: contain;
   object-position: center center;
   display: block;
   transform: none;
   border-radius: 14px;
+  background: #f7f7f7;
 }
 
 .carousel-slide figcaption {
@@ -1672,7 +1667,6 @@ mark {
   place-items: center;
   background: rgb(255 255 255 / 96%);
   color: var(--c-mint);
-  box-shadow: 0 12px 24px rgb(0 0 0 / 10%);
   cursor: pointer;
   z-index: 2;
   transition: transform 0.2s ease, background-color 0.2s ease;
@@ -4831,11 +4825,10 @@ body.legal-page {
   padding: 0;
   background: #fff;
   border-radius: 28px;
-  box-shadow: 0 18px 44px rgb(14 20 26 / 14%);
   overflow: hidden;
-  transition: transform 0.5s cubic-bezier(0.22, 1, 0.36, 1), box-shadow 0.45s ease, opacity 0.45s ease;
-  transform: translate3d(0, 14px, 0) scale(0.92);
-  opacity: 0.9;
+  transition: opacity 0.45s ease;
+  transform: none;
+  opacity: 1;
   z-index: 1;
 }
 
@@ -4847,16 +4840,15 @@ body.legal-page {
 
 #actualites .carousel-slide.is-carousel-start,
 #actualites .carousel-slide.is-carousel-end {
-  transform: translate3d(0, 18px, 0) scale(0.88);
-  opacity: 0.82;
+  transform: none;
+  opacity: 1;
   z-index: 1;
 }
 
 #actualites .carousel-slide.is-carousel-center {
-  transform: translate3d(0, -10px, 0) scale(1.08);
   opacity: 1;
   z-index: 3;
-  box-shadow: 0 26px 54px rgb(14 20 26 / 16%);
+  border-radius: 30px;
 }
 
 #actualites .carousel-slide img {
@@ -4877,15 +4869,7 @@ body.legal-page {
 }
 
 #actualites .carousel-slide figcaption::before {
-  content: "";
-  flex: 0 0 auto;
-  width: 42px;
-  height: 42px;
-  border-radius: 50%;
-  background:
-    radial-gradient(circle at center, transparent 56%, rgb(225 22 22 / 14%) 57%, rgb(225 22 22 / 14%) 66%, transparent 67%),
-    linear-gradient(180deg, #fff 0%, #f7f7f7 100%);
-  box-shadow: inset 0 0 0 1px rgb(225 22 22 / 14%), 0 8px 18px rgb(14 20 26 / 8%);
+  content: none;
 }
 
 #actualites .carousel-slide figcaption strong {
@@ -4958,11 +4942,11 @@ body.legal-page {
   }
 
   #actualites .carousel-slide {
-    transform: translate3d(0, 12px, 0) scale(0.94);
+    transform: none;
   }
 
   #actualites .carousel-slide.is-carousel-center {
-    transform: translate3d(0, -6px, 0) scale(1.05);
+    transform: none;
   }
 }
 
@@ -5008,11 +4992,6 @@ body.legal-page {
   #actualites .carousel-slide figcaption {
     padding: 14px 14px 16px;
     gap: 12px;
-  }
-
-  #actualites .carousel-slide figcaption::before {
-    width: 36px;
-    height: 36px;
   }
 
   #actualites .carousel-btn {
