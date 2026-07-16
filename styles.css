@@ -2384,6 +2384,7 @@ mark {
   border: 0;
   border-radius: 20px;
   filter: saturate(0.94) contrast(1.04);
+  margin-top: 45px;
 }
 
 .social-dot,
