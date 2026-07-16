@@ -863,21 +863,14 @@ a {
   opacity: 0.34;
   background-image:
     url("assets/decor/motif-points-gris.svg"),
-    url("assets/decor/motif-ligne-technique.svg"),
     url("assets/decor/motif-grand-cercle-fin.svg"),
-    url("assets/decor/motif-croix-rouge.svg"),
-    url("assets/decor/motif-ligne-droite-point.svg"),
-    url("assets/decor/motif-angle-plan.svg"),
     url("assets/decor/motif-repere-cible.svg");
   background-repeat: no-repeat;
-  background-size: 138px, 320px, 420px, 18px, 240px, 118px, 88px;
+  background-size: 138px, 420px, 240px, 88px;
   background-position:
     5% calc(14% + var(--decor-shift)),
-    97% calc(17% - var(--decor-shift)),
     92% calc(72% + var(--decor-shift)),
-    12% calc(77% - var(--decor-shift)),
     9% calc(90% + var(--decor-shift)),
-    86% calc(90% - var(--decor-shift)),
     74% calc(38% + var(--decor-shift));
 }
 
@@ -885,40 +878,27 @@ a {
   background-image:
     url("assets/decor/motif-points-rouges.svg"),
     url("assets/decor/motif-cercle-technique.svg"),
-    url("assets/decor/motif-ligne-technique.svg"),
     url("assets/decor/motif-chevrons.svg"),
-    url("assets/decor/motif-grand-cercle-fin.svg"),
-    url("assets/decor/motif-cadre-technique.svg"),
-    url("assets/decor/motif-croix-rouge.svg");
-  background-size: 104px, 108px, 284px, 92px, 360px, 144px, 16px;
+    url("assets/decor/motif-grand-cercle-fin.svg");
+  background-size: 104px, 108px, 92px, 360px;
   background-position:
     8% calc(16% + var(--decor-shift)),
     88% calc(14% - var(--decor-shift)),
-    95% calc(52% + var(--decor-shift)),
     14% calc(58% - var(--decor-shift)),
-    2% calc(88% + var(--decor-shift)),
-    79% calc(82% - var(--decor-shift)),
-    91% calc(72% + var(--decor-shift));
+    2% calc(88% + var(--decor-shift));
 }
 
 .decor-surface.decor-c::after {
   background-image:
-    url("assets/decor/motif-angle-plan.svg"),
     url("assets/decor/motif-points-gris.svg"),
-    url("assets/decor/motif-ligne-droite-point.svg"),
     url("assets/decor/motif-grand-cercle-fin.svg"),
-    url("assets/decor/motif-repere-cible.svg"),
-    url("assets/decor/motif-cadre-technique.svg"),
-    url("assets/decor/motif-croix-rouge.svg");
-  background-size: 126px, 132px, 264px, 340px, 92px, 118px, 16px;
+    url("assets/decor/motif-repere-cible.svg");
+  background-size: 132px, 264px, 340px, 92px;
   background-position:
-    4% calc(18% + var(--decor-shift)),
     91% calc(10% - var(--decor-shift)),
     8% calc(48% + var(--decor-shift)),
     92% calc(84% - var(--decor-shift)),
-    74% calc(34% + var(--decor-shift)),
-    18% calc(82% - var(--decor-shift)),
-    88% calc(58% + var(--decor-shift));
+    74% calc(34% + var(--decor-shift));
 }
 
 .intro-section {
@@ -6446,6 +6426,8 @@ body.legal-page {
 
   border-top: 0;
   box-shadow: 0 -10px 28px rgba(20, 24, 28, 0.06);
+  isolation: isolate;
+  padding-bottom: 10px;
 }
 
 /* Supprime l'ancien grand rectangle blanc placé au-dessus */
@@ -6655,7 +6637,7 @@ body.legal-page {
   display: block;
 
   width: calc(100% - 80px);
-  height: 34px;
+  height: 100%;
   margin: 0 auto;
 
   overflow: visible;
@@ -6666,7 +6648,7 @@ body.legal-page {
 
 .legal {
   min-height: 45px;
-  padding-top: 5px;
+  margin-top: -40px;
 
   display: flex;
   align-items: center;
@@ -6674,6 +6656,7 @@ body.legal-page {
   gap: 24px;
 
   font-size: 0.86rem;
+  z-index: 1;
 }
 
 .legal p {
