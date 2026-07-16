@@ -483,7 +483,6 @@ a {
 
   .menu-toggle {
     display: inline-flex;
-    margin-left: auto;
     grid-column: 3;
     min-height: 44px;
     position: absolute;
@@ -526,7 +525,6 @@ a {
 
   .hero-copy h1 {
     overflow-wrap: anywhere;
-    text-wrap: balance;
     max-width: none;
     line-height: 1.1;
     font-size: clamp(1.75rem, 8vw, 2.2rem);
@@ -1199,6 +1197,8 @@ mark {
     linear-gradient(rgb(255 255 255 / 5.5%) 1px, transparent 1px),
     linear-gradient(90deg, rgb(255 255 255 / 5.5%) 1px, transparent 1px);
   background-size: 80px 80px;
+  /* stylelint-disable-next-line property-no-vendor-prefix */
+  -webkit-mask-image: linear-gradient(90deg, transparent, #000 20%, #000 80%, transparent);
   mask-image: linear-gradient(90deg, transparent, #000 20%, #000 80%, transparent);
 }
 
@@ -1238,7 +1238,6 @@ mark {
   font-family: Montserrat, Arial, sans-serif;
   line-height: 1.02;
   letter-spacing: -0.045em;
-  text-wrap: balance;
   font-size: clamp(2rem, 3.7vw, 3.7rem);
 }
 
@@ -2062,6 +2061,8 @@ mark {
   position: absolute;
   inset: 0;
   background: rgb(2 8 15 / 62%);
+  /* stylelint-disable-next-line property-no-vendor-prefix */
+  -webkit-backdrop-filter: blur(2px);
   backdrop-filter: blur(2px);
 }
 
@@ -2624,14 +2625,14 @@ mark {
   will-change: clip-path;
 }
 
-.intersection-scroll--footer {
+.intersection-scroll-footer {
   z-index: 3;
   margin: 0;
   padding: 0;
   background: #fff;
 }
 
-.intersection-scroll--footer img {
+.intersection-scroll-footer img {
   clip-path: none;
   width: 100%;
   display: block;
@@ -2710,11 +2711,11 @@ mark {
     clip-path: none;
   }
 
-  .intersection-scroll--footer {
+  .intersection-scroll-footer {
     margin: -14px auto -16px;
   }
 
-  .intersection-scroll--footer img {
+  .intersection-scroll-footer img {
     clip-path: none;
   }
 
@@ -3001,12 +3002,8 @@ body.legal-page {
 
   .hero-shell {
     min-height: 500px;
-    border-top-left-radius: 96px;
-    border-top-right-radius: 96px;
-    border-bottom-right-radius: 96px;
-    border-radius: 34px;
+    border-radius: 96px 96px 96px 34px;
     padding: 34px 24px 24px;
-    margin-bottom: 0;
   }
 
   .hero-layout {
@@ -3112,6 +3109,8 @@ body.legal-page {
     top: 0;
     z-index: 80;
     background: rgb(255 255 255 / 98%);
+    /* stylelint-disable-next-line property-no-vendor-prefix */
+    -webkit-backdrop-filter: blur(10px);
     backdrop-filter: blur(10px);
   }
 
@@ -3203,7 +3202,6 @@ body.legal-page {
   }
 
   .hero-shell {
-    margin-bottom: 0;
     margin: 0;
     padding: 18px 12px 14px;
     min-height: 0;
@@ -3250,7 +3248,6 @@ body.legal-page {
   }
 
   .pre-footer {
-    padding-bottom: 46px;
     padding: 24px 0 100px;
   }
 
@@ -3273,14 +3270,12 @@ body.legal-page {
     font-size: clamp(1.18rem, 5.6vw, 1.5rem);
     line-height: 1.06;
     overflow-wrap: anywhere;
-    text-wrap: balance;
   }
 
   .plan-copy h2 {
     font-size: clamp(1.1rem, 5.4vw, 1.42rem);
     line-height: 1.08;
     overflow-wrap: anywhere;
-    text-wrap: balance;
   }
 
   .contact-showcase-lead {
@@ -3335,7 +3330,6 @@ body.legal-page {
   }
 
   .intro-figure {
-    padding-top: 50px;
     order: 2;
     margin: 0;
     padding: 0;
@@ -3424,7 +3418,6 @@ body.legal-page {
     margin-bottom: 8px;
     line-height: 1.08;
     overflow-wrap: anywhere;
-    text-wrap: balance;
   }
 
   .intro-copy h2 mark,
@@ -3434,6 +3427,8 @@ body.legal-page {
   .contact-showcase h2 mark {
     display: inline;
     line-height: 1.08;
+    /* stylelint-disable-next-line property-no-vendor-prefix */
+    -webkit-box-decoration-break: clone;
     box-decoration-break: clone;
     padding: 0.01em 0.1em 0.06em;
     font-size: 0.88em;
@@ -3452,11 +3447,9 @@ body.legal-page {
   }
 
   .works-carousel {
-
     --slides-to-show: 1;
 
     touch-action: pan-y;
-    overscroll-behavior-x: contain;
     margin-top: 14px;
     gap: 8px;
     padding-inline: 0;
@@ -3487,7 +3480,6 @@ body.legal-page {
   }
 
   .carousel-slide figcaption {
-    padding-top: 10px;
     font-size: 0.8rem;
     padding: 14px 10px 8px;
   }
@@ -4122,7 +4114,6 @@ body.legal-page {
 }
 
 @media (width <= 760px) {
-
   .intro-copy,
   #pieces-unitaires .text-content,
   #parc-machines .text-content.dark,
@@ -4226,7 +4217,6 @@ body.legal-page {
     font-size: clamp(1.02rem, 5.2vw, 1.35rem);
     line-height: 1.08;
     overflow-wrap: anywhere;
-    text-wrap: balance;
   }
 
   .intro-lead,
@@ -4323,7 +4313,6 @@ body.legal-page {
 }
 
 @media (width <= 1250px) {
-
   .hero .metiers-list {
     grid-template-columns: repeat(3, minmax(0, 1fr));
     row-gap: 30px;
@@ -4333,7 +4322,6 @@ body.legal-page {
 }
 
 @media (width <= 760px) {
-
   .hero .metiers-list {
     margin-top: 38px;
     gap: 24px 0;
@@ -4366,7 +4354,6 @@ body.legal-page {
 }
 
 @media (width >= 1251px) {
-
   .hero-content {
     padding-top: clamp(145px, 17vh, 180px);
   }
@@ -4387,11 +4374,7 @@ body.legal-page {
   }
 }
 
-@media (width <= 1250px) {
-}
-
 @media (width <= 760px) {
-
   .hero-content,
   .hero .metiers-list,
   .hero .metier-item {
@@ -4416,11 +4399,7 @@ body.legal-page {
   padding: clamp(58px, 6vw, 82px) 0;
 }
 
-@media (width <= 1024px) {
-}
-
 @media (width <= 540px) {
-
   .key-figures-heading {
     gap: 12px;
     margin-bottom: 28px;
@@ -4627,7 +4606,6 @@ body.legal-page {
   font-weight: 700;
   line-height: 1.18;
   letter-spacing: -0.04em;
-  text-wrap: balance;
 }
 
 #pieces-serie .series-title-label {
@@ -4743,7 +4721,6 @@ body.legal-page {
   font-size: clamp(1.55rem, 2.1vw, 2.4rem);
   line-height: 1.12;
   letter-spacing: -0.04em;
-  text-wrap: balance;
 }
 
 #pieces-unitaires .text-content h2 .series-title-label,
@@ -5322,9 +5299,6 @@ body.legal-page {
 }
 
 /* Final cleanup for the lower page block: restore visibility and remove the gray divider. */
-
-@media (width <= 760px) {
-}
 
 /* =========================================================
    BOUTON ANGULAIRE — STYLE DE LA CAPTURE

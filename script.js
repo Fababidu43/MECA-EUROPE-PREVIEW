@@ -27,6 +27,7 @@ let scrollFrame = 0;
 let forceScrollSync = false;
 
 const clamp = (value, min, max) => Math.min(Math.max(value, min), max);
+const NAV_ACTIVE_LOOKAHEAD = 120;
 
 const getScrollOffset = () => (header ? header.offsetHeight : 0) + 18;
 
@@ -51,7 +52,7 @@ const updateActiveNavLink = () => {
     return;
   }
 
-  const probeY = window.scrollY + getScrollOffset() + 28;
+  const probeY = window.scrollY + getScrollOffset() + NAV_ACTIVE_LOOKAHEAD;
   let activeHash = '#top';
 
   sectionTargets.forEach((section, hash) => {
