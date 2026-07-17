@@ -6,3 +6,4 @@ package.json
 tmp
 node_modules
 postcss.config.cjs
+.claude

@@ -166,12 +166,17 @@
       <img src="assets/decor/meca_intersection_scroll_03.svg" alt="">
     </div>
 
-    <section id="savoir-faire" class="section key-figures-section reveal decor-surface decor-c" aria-labelledby="savoir-faire-title">
+    <section id="savoir-faire" class="section key-figures-section reveal" aria-labelledby="savoir-faire-title">
+      <div class="key-figures-motifs" aria-hidden="true">
+        <img class="key-figures-motif key-figures-motif-right" src="assets/decor/motif_haut_droite_savoir_faire.svg" alt="">
+      </div>
       <div class="wrap key-figures-wrap">
         <header class="key-figures-heading">
           <p class="section-kicker">Savoir-faire</p>
-          <h2 id="savoir-faire-title">Les capacités qui définissent <mark>MECA-EUROPE</mark></h2>
-          <p>Un atelier dimensionné pour accompagner les besoins unitaires comme les productions récurrentes.</p>
+          <h2 id="savoir-faire-title">
+            <span>Les capacités qui</span>
+            <span>définissent <mark>MECA-EUROPE</mark></span>
+          </h2>
         </header>
 
         <div class="key-figures-grid" data-key-figures>
@@ -210,14 +215,16 @@
 
           <article class="key-figure-card key-figure-card--phrase">
             <p class="key-figure-value key-figure-phrase" aria-label="Pièce unique vers série">
-              <span>Pièce unique</span><span class="key-arrow" aria-hidden="true">→</span><span>série</span>
+              <span class="key-line">Pièce unique</span>
+              <span class="key-line"><span class="key-arrow" aria-hidden="true">→</span>série</span>
             </p>
             <h3>Une production adaptée à chaque besoin</h3>
           </article>
 
           <article class="key-figure-card key-figure-card--date">
             <p class="key-figure-value key-figure-date" aria-label="16 avril 2002">
-              <span>16</span><span>avril</span><span>2002</span>
+              <span class="key-line key-date-row"><span>16</span><span class="key-date-month">avril</span></span>
+              <span class="key-line">2002</span>
             </p>
             <h3>Date de création</h3>
           </article>
@@ -317,7 +324,20 @@
               <span aria-hidden="true">›</span>
             </button>
           </div>
-          <div class="carousel-dots" data-carousel-dots aria-label="Sélecteur d'images"></div>
+          <div class="carousel-indicator" aria-hidden="true">
+            <span class="carousel-indicator-line carousel-indicator-line-left"></span>
+            <svg class="carousel-indicator-svg" viewBox="0 0 180 120" focusable="false" aria-hidden="true">
+              <g class="carousel-indicator-rotor" data-carousel-indicator-rotor>
+                <circle class="carousel-indicator-ring" cx="90" cy="60" r="38"></circle>
+                <path class="carousel-indicator-arrow carousel-indicator-arrow-forward" d="M91 25 A35 35 0 0 1 120 42"></path>
+                <path class="carousel-indicator-arrow carousel-indicator-arrow-backward" d="M89 95 A35 35 0 0 1 60 78"></path>
+              </g>
+              <circle class="carousel-indicator-core" cx="90" cy="60" r="10"></circle>
+              <path class="carousel-indicator-tip carousel-indicator-tip-forward" d="M119 42 l10 2 l-7 6 z"></path>
+              <path class="carousel-indicator-tip carousel-indicator-tip-backward" d="M61 78 l-10 -2 l7 -6 z"></path>
+            </svg>
+            <span class="carousel-indicator-line carousel-indicator-line-right"></span>
+          </div>
         </div>
       </div>
     </section>
@@ -327,7 +347,7 @@
         <div class="contact-showcase">
           <div class="contact-showcase-content">
             <p class="contact-showcase-kicker">Contact atelier</p>
-            <h2>Un projet d'usinage <span>sur mesure</span> ?</h2>
+            <h2>Un projet d'usinage <mark>sur mesure ?</mark></h2>
             <p class="contact-showcase-lead">
               Confiez-nous vos contraintes techniques, vos plans et vos délais : notre équipe vous accompagne
               pour réaliser des pièces fiables, précises et prêtes à l'emploi.

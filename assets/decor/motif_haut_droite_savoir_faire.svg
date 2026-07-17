@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 520 420" role="img" aria-labelledby="title desc">
+  <title id="title">Motif circulaire haut droite</title>
+  <desc id="desc">Trois grands cercles concentriques très fins avec une grille de points.</desc>
+  <g fill="none" stroke="#D9DDE2" stroke-width="1.25" opacity="0.65">
+    <circle cx="395" cy="125" r="118"/>
+    <circle cx="395" cy="125" r="196"/>
+    <circle cx="395" cy="125" r="270"/>
+  </g>
+  <g fill="#D9DDE2" opacity="0.72">
+    <circle cx="350" cy="78" r="2.5"/><circle cx="364" cy="78" r="2.5"/><circle cx="378" cy="78" r="2.5"/><circle cx="392" cy="78" r="2.5"/><circle cx="406" cy="78" r="2.5"/><circle cx="420" cy="78" r="2.5"/><circle cx="434" cy="78" r="2.5"/>
+    <circle cx="350" cy="92" r="2.5"/><circle cx="364" cy="92" r="2.5"/><circle cx="378" cy="92" r="2.5"/><circle cx="392" cy="92" r="2.5"/><circle cx="406" cy="92" r="2.5"/><circle cx="420" cy="92" r="2.5"/><circle cx="434" cy="92" r="2.5"/>
+    <circle cx="350" cy="106" r="2.5"/><circle cx="364" cy="106" r="2.5"/><circle cx="378" cy="106" r="2.5"/><circle cx="392" cy="106" r="2.5"/><circle cx="406" cy="106" r="2.5"/><circle cx="420" cy="106" r="2.5"/><circle cx="434" cy="106" r="2.5"/>
+    <circle cx="350" cy="120" r="2.5"/><circle cx="364" cy="120" r="2.5"/><circle cx="378" cy="120" r="2.5"/><circle cx="392" cy="120" r="2.5"/><circle cx="406" cy="120" r="2.5"/><circle cx="420" cy="120" r="2.5"/><circle cx="434" cy="120" r="2.5"/>
+    <circle cx="350" cy="134" r="2.5"/><circle cx="364" cy="134" r="2.5"/><circle cx="378" cy="134" r="2.5"/><circle cx="392" cy="134" r="2.5"/><circle cx="406" cy="134" r="2.5"/><circle cx="420" cy="134" r="2.5"/><circle cx="434" cy="134" r="2.5"/>
+    <circle cx="350" cy="148" r="2.5"/><circle cx="364" cy="148" r="2.5"/><circle cx="378" cy="148" r="2.5"/><circle cx="392" cy="148" r="2.5"/><circle cx="406" cy="148" r="2.5"/><circle cx="420" cy="148" r="2.5"/><circle cx="434" cy="148" r="2.5"/>
+    <circle cx="350" cy="162" r="2.5"/><circle cx="364" cy="162" r="2.5"/><circle cx="378" cy="162" r="2.5"/><circle cx="392" cy="162" r="2.5"/><circle cx="406" cy="162" r="2.5"/><circle cx="420" cy="162" r="2.5"/><circle cx="434" cy="162" r="2.5"/>
+  </g>
+</svg>

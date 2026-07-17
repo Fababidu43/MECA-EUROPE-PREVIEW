@@ -21,6 +21,8 @@ const revealItems = document.querySelectorAll('.reveal');
 const intersectionScrollItems = Array.from(document.querySelectorAll('[data-intersection-scroll]'));
 const sectionTargets = new Map();
 const intersectionStates = new Map();
+const tintStates = new Map();
+let tintScrollItems = [];
 
 let lastScrollY = window.scrollY || 0;
 let scrollFrame = 0;
@@ -126,6 +128,57 @@ const syncIntersectionScrolls = (force = false) => {
   lastScrollY = currentScrollY;
 };
 
+const getTintState = (element) => {
+  if (!tintStates.has(element)) {
+    tintStates.set(element, {
+      progress: 0,
+      locked: false,
+    });
+  }
+
+  return tintStates.get(element);
+};
+
+const syncTintReveal = (force = false) => {
+  if (!tintScrollItems.length) {
+    return;
+  }
+
+  const currentScrollY = window.scrollY || 0;
+  const scrollingDown = currentScrollY > lastScrollY;
+
+  if (!force && !scrollingDown) {
+    return;
+  }
+
+  const viewportHeight = window.innerHeight || 1;
+  const revealStart = viewportHeight * 0.7;
+  const revealEnd = viewportHeight * 0.38;
+  const span = Math.max(1, revealStart - revealEnd);
+
+  tintScrollItems.forEach((item) => {
+    const state = getTintState(item);
+
+    if (state.locked) {
+      return;
+    }
+
+    const rect = item.getBoundingClientRect();
+    const rawProgress = clamp((revealStart - rect.top) / span, 0, 1);
+    const nextProgress = Math.max(state.progress, rawProgress);
+
+    if (nextProgress !== state.progress) {
+      state.progress = nextProgress;
+      item.style.setProperty('--tint-reveal', String(nextProgress));
+    }
+
+    if (nextProgress >= 1) {
+      state.locked = true;
+      item.style.setProperty('--tint-reveal', '1');
+    }
+  });
+};
+
 const updateScrollDynamics = () => {
   if (prefersReducedMotion) {
     return;
@@ -170,6 +223,7 @@ const syncScrollState = (force = false) => {
 
     updateActiveNavLink();
     syncIntersectionScrolls(forceScrollSync);
+    syncTintReveal(forceScrollSync);
     updateScrollDynamics();
     lastScrollY = window.scrollY || 0;
     scrollFrame = 0;
@@ -241,23 +295,31 @@ const setupCarousels = () => {
 
   carousels.forEach((carousel) => {
     const track = carousel.querySelector('[data-carousel-track]');
-    const slides = track ? Array.from(track.querySelectorAll('.carousel-slide')) : [];
     const prevBtn = carousel.querySelector('[data-carousel-prev]');
     const nextBtn = carousel.querySelector('[data-carousel-next]');
-    const dotsWrap = carousel.querySelector('[data-carousel-dots]');
+    const indicatorRotor = carousel.querySelector('[data-carousel-indicator-rotor]');
 
-    if (!track || slides.length === 0) {
+    if (!track) {
       return;
     }
 
-    let currentIndex = 0;
+    let slidesToShow = 3;
+    let isAnimating = false;
+    let pendingDirection = null;
     let autoPlayTimer;
     let touchStartX = 0;
     let touchEndX = 0;
-    let slidesToShow = 3;
-    let maxIndex = Math.max(0, slides.length - slidesToShow);
-    let dots = [];
-    let slideMotionTimer = 0;
+    let indicatorRotation = 0;
+    let resizeDebounce;
+
+    // Le déplacement d'un slide est calculé en CSS (calc()), avec exactement
+    // la même formule que le flex-basis des slides dans le CSS. Comme ça, le
+    // navigateur fait le calcul lui-même : impossible d'avoir un écart de
+    // sous-pixel entre "ce que le JS croit" et "ce que le CSS affiche
+    // réellement" (c'était la cause du micro-recentrage visible au wrap).
+    const SLIDE_STEP_EXPR = 'calc((100% - (var(--slides-to-show) - 1) * var(--carousel-gap)) / var(--slides-to-show) + var(--carousel-gap))';
+
+    const getSlides = () => Array.from(track.children).filter((slide) => slide.classList.contains('carousel-slide'));
 
     const getSlidesToShow = () => {
       if (window.innerWidth <= 760) {
@@ -278,73 +340,14 @@ const setupCarousels = () => {
       return Number.isFinite(parsed) ? parsed : 18;
     };
 
-    const renderDots = () => {
-      if (!dotsWrap) {
-        return;
-      }
-
-      dotsWrap.innerHTML = '';
-      dots = [];
-
-      for (let index = 0; index <= maxIndex; index += 1) {
-        const dot = document.createElement('button');
-        dot.type = 'button';
-        dot.className = 'carousel-dot';
-        dot.setAttribute('aria-label', `Aller au groupe ${index + 1}`);
-        dot.addEventListener('click', () => {
-          goToSlide(index, true);
-        });
-        dotsWrap.appendChild(dot);
-        dots.push(dot);
-      }
-    };
-
-    const updateSlides = (direction = null) => {
-      const viewport = carousel.querySelector('.carousel-viewport');
-      const viewportWidth = viewport ? viewport.getBoundingClientRect().width : 0;
-      const gap = getCarouselGap();
-      const slideWidth = slidesToShow > 0
-        ? (viewportWidth - (gap * (slidesToShow - 1))) / slidesToShow
-        : viewportWidth;
-      const step = slideWidth + gap;
-
-      track.style.transform = `translateX(-${currentIndex * step}px)`;
-
-      slides.forEach((slide, index) => {
-        const isActive = index >= currentIndex && index < currentIndex + slidesToShow;
-        const slot = isActive ? index - currentIndex : -1;
-        const isCenterSlot = slidesToShow === 1 ? slot === 0 : slot === 1;
-        slide.classList.toggle('is-active', isActive);
-        slide.classList.toggle('is-carousel-start', isActive && slot === 0);
-        slide.classList.toggle('is-carousel-center', isActive && isCenterSlot);
-        slide.classList.toggle('is-carousel-end', isActive && slot === 2);
-        slide.setAttribute('aria-hidden', String(!isActive));
-        slide.style.setProperty('--slide-offset', String(Math.max(0, index - currentIndex)));
-        slide.style.setProperty('--slide-slot', String(slot));
-
-        if (!isActive) {
-          slide.classList.remove('is-entering-forward', 'is-entering-backward');
-        }
-      });
-
-      dots.forEach((dot, index) => {
-        if (!dot) {
-          return;
-        }
-
-        const isActive = index === currentIndex;
-        dot.classList.toggle('is-active', isActive);
-        dot.setAttribute('aria-current', isActive ? 'true' : 'false');
-      });
-    };
-
     const stopAutoPlay = () => {
       if (autoPlayTimer) {
         window.clearInterval(autoPlayTimer);
+        autoPlayTimer = undefined;
       }
     };
 
-    const shouldAutoPlay = () => !prefersReducedMotion && window.innerWidth > 1250 && slides.length > 1;
+    const shouldAutoPlay = () => !prefersReducedMotion && window.innerWidth > 1250 && getSlides().length > 1;
 
     const startAutoPlay = () => {
       if (!shouldAutoPlay()) {
@@ -354,34 +357,120 @@ const setupCarousels = () => {
 
       stopAutoPlay();
       autoPlayTimer = window.setInterval(() => {
-        goToSlide(currentIndex + 1);
-      }, 5000);
+        goNext(false);
+      }, 8000);
     };
 
-    const goToSlide = (nextIndex, fromInteraction = false) => {
-      const lastIndex = maxIndex;
-      const direction = nextIndex === currentIndex
-        ? null
-        : (nextIndex > currentIndex || (currentIndex === lastIndex && nextIndex === 0))
-          ? 'forward'
-          : 'backward';
-
-      if (nextIndex < 0) {
-        currentIndex = lastIndex;
-      } else if (nextIndex > lastIndex) {
-        currentIndex = 0;
-      } else {
-        currentIndex = nextIndex;
+    const rotateIndicator = (direction) => {
+      if (!indicatorRotor || !direction) {
+        return;
       }
 
-      updateSlides(direction);
+      indicatorRotation += direction === 'next' ? 90 : -90;
+      indicatorRotor.style.setProperty('--indicator-rotation', `${indicatorRotation}deg`);
+    };
+
+    const syncVisibleState = () => {
+      const slides = getSlides();
+
+      slides.forEach((slide, index) => {
+        const isVisible = index < slidesToShow;
+        const slot = isVisible ? index : -1;
+        const isCenterSlot = slidesToShow === 1 ? slot === 0 : slot === 1;
+
+        slide.classList.toggle('is-active', isVisible);
+        slide.classList.toggle('is-carousel-start', isVisible && slot === 0);
+        slide.classList.toggle('is-carousel-center', isVisible && isCenterSlot);
+        slide.classList.toggle('is-carousel-end', isVisible && slot === slidesToShow - 1);
+        slide.setAttribute('aria-hidden', String(!isVisible));
+      });
+    };
+
+    const measureLayout = () => {
+      const gap = getCarouselGap();
+
+      carousel.style.setProperty('--slides-to-show', String(slidesToShow));
+      carousel.style.setProperty('--carousel-gap', `${gap}px`);
+      // Le pas de déplacement n'est plus mesuré en JS : il est délégué au CSS
+      // via calc(), en pointant vers les mêmes variables que le flex-basis.
+      carousel.style.setProperty('--slide-step', SLIDE_STEP_EXPR);
+    };
+
+    const resetPosition = () => {
+      track.style.transition = 'none';
+      track.style.transform = 'translateX(0)';
+    };
+
+    const finalizeMove = (direction) => {
+      track.style.transition = 'none';
+
+      if (direction === 'next') {
+        const firstSlide = track.firstElementChild;
+
+        if (firstSlide) {
+          track.append(firstSlide);
+        }
+
+        track.style.transform = 'translateX(0)';
+      }
+
+      pendingDirection = null;
+      isAnimating = false;
+    };
+
+    const goNext = (fromInteraction = false) => {
+      if (isAnimating || getSlides().length <= 1) {
+        return;
+      }
+
+      isAnimating = true;
+      pendingDirection = 'next';
+      rotateIndicator('next');
+      track.style.transition = 'transform 0.5s ease';
+      track.style.transform = 'translateX(calc(-1 * var(--slide-step)))';
 
       if (fromInteraction) {
         startAutoPlay();
       }
     };
 
-    if (slides.length < 2) {
+    const goPrev = (fromInteraction = false) => {
+      if (isAnimating || getSlides().length <= 1) return;
+
+      isAnimating = true;
+      pendingDirection = 'prev';
+      rotateIndicator('prev');
+
+      track.style.transition = 'none';
+
+      const lastSlide = track.lastElementChild;
+
+      if (lastSlide) {
+        track.prepend(lastSlide);
+      }
+
+      track.style.transform = 'translateX(calc(-1 * var(--slide-step)))';
+
+      // Force le navigateur à appliquer la position initiale
+      track.offsetHeight;
+
+      track.style.transition = 'transform 0.5s ease';
+      track.style.transform = 'translateX(0)';
+
+      if (fromInteraction) {
+        startAutoPlay();
+      }
+    };
+
+    const onMoveRequest = (step, fromInteraction = false) => {
+      if (step > 0) {
+        goNext(fromInteraction);
+      } else {
+        goPrev(fromInteraction);
+      }
+    };
+
+    if (getSlides().length < 2) {
       if (prevBtn) {
         prevBtn.hidden = true;
       }
@@ -389,38 +478,27 @@ const setupCarousels = () => {
       if (nextBtn) {
         nextBtn.hidden = true;
       }
-
-      if (dotsWrap) {
-        dotsWrap.hidden = true;
-      }
     }
-
-    const syncLayout = () => {
-      slidesToShow = getSlidesToShow();
-      maxIndex = Math.max(0, slides.length - slidesToShow);
-      carousel.style.setProperty('--slides-to-show', String(slidesToShow));
-      carousel.style.setProperty('--carousel-gap', window.innerWidth <= 760 ? '12px' : window.innerWidth <= 1250 ? '16px' : '18px');
-      currentIndex = Math.min(currentIndex, maxIndex);
-
-      if (dotsWrap) {
-        dotsWrap.hidden = maxIndex === 0;
-      }
-
-      renderDots();
-      updateSlides();
-    };
 
     if (prevBtn) {
       prevBtn.addEventListener('click', () => {
-        goToSlide(currentIndex - 1, true);
+        onMoveRequest(-1, true);
       });
     }
 
     if (nextBtn) {
       nextBtn.addEventListener('click', () => {
-        goToSlide(currentIndex + 1, true);
+        onMoveRequest(1, true);
       });
     }
+
+    track.addEventListener('transitionend', (event) => {
+      if (event.propertyName !== 'transform' || !isAnimating) {
+        return;
+      }
+
+      finalizeMove(pendingDirection);
+    });
 
     track.addEventListener('touchstart', (event) => {
       touchStartX = event.changedTouches[0].clientX;
@@ -434,11 +512,7 @@ const setupCarousels = () => {
         return;
       }
 
-      if (delta > 0) {
-        goToSlide(currentIndex + 1, true);
-      } else {
-        goToSlide(currentIndex - 1, true);
-      }
+      onMoveRequest(delta > 0 ? 1 : -1, true);
     }, { passive: true });
 
     carousel.addEventListener('mouseenter', stopAutoPlay);
@@ -446,16 +520,66 @@ const setupCarousels = () => {
     carousel.addEventListener('focusin', stopAutoPlay);
     carousel.addEventListener('focusout', startAutoPlay);
 
+    const syncLayout = () => {
+      slidesToShow = getSlidesToShow();
+      measureLayout();
+      resetPosition();
+      syncVisibleState();
+      isAnimating = false;
+      pendingDirection = null;
+    };
+
+    const handleResize = () => {
+      window.clearTimeout(resizeDebounce);
+      resizeDebounce = window.setTimeout(() => {
+        syncLayout();
+        if (shouldAutoPlay()) {
+          startAutoPlay();
+        } else {
+          stopAutoPlay();
+        }
+      }, 50);
+    };
+
+    const refreshAfterAssets = () => {
+      syncLayout();
+    };
+
     syncLayout();
     startAutoPlay();
 
-    window.addEventListener('resize', () => {
-      syncLayout();
-      if (shouldAutoPlay()) {
-        startAutoPlay();
-      } else {
-        stopAutoPlay();
+    // Toujours utile pour re-synchroniser --slides-to-show quand on passe
+    // un breakpoint (1 / 2 / 3 slides visibles).
+    const viewportEl = carousel.querySelector('.carousel-viewport');
+
+    if (viewportEl && 'ResizeObserver' in window) {
+      const resizeObserver = new ResizeObserver(() => {
+        handleResize();
+      });
+
+      resizeObserver.observe(viewportEl);
+    } else {
+      window.addEventListener('resize', handleResize);
+    }
+
+    if (document.readyState === 'complete') {
+      refreshAfterAssets();
+    } else {
+      window.addEventListener('load', refreshAfterAssets, { once: true });
+    }
+
+    if (document.fonts && typeof document.fonts.ready?.then === 'function') {
+      document.fonts.ready.then(refreshAfterAssets).catch(() => {});
+    }
+
+    const carouselImages = Array.from(carousel.querySelectorAll('img'));
+
+    carouselImages.forEach((image) => {
+      if (image.complete) {
+        return;
       }
+
+      image.addEventListener('load', refreshAfterAssets, { once: true });
     });
   });
 };
@@ -592,6 +716,81 @@ const setupRevealObserver = () => {
   });
 };
 
+const setupTintReveal = () => {
+  const tintSelectors = '.section-kicker, .key-prefix, .key-figure-phrase .key-arrow, .key-date-month, .focus-note';
+
+  if (prefersReducedMotion) {
+    tintScrollItems = [];
+    return;
+  }
+
+  tintScrollItems = Array.from(document.querySelectorAll(tintSelectors));
+};
+
+const enhanceHeadingWords = () => {
+  if (prefersReducedMotion) {
+    return;
+  }
+
+  document.querySelectorAll('.reveal h2').forEach((heading) => {
+    if (heading.dataset.wordReveal) {
+      return;
+    }
+
+    // Les titres qui contiennent déjà des éléments inline "riches" (mark,
+    // spans de surlignage, etc.) sont laissés intacts. Le découpage mot par mot
+    // les casse visuellement en doublant/masquant certaines couches de texte.
+    if (heading.closest('.contact-showcase') || heading.querySelector('mark, .contact-highlight')) {
+      return;
+    }
+
+    heading.dataset.wordReveal = 'true';
+
+    const nodes = Array.from(heading.childNodes);
+    heading.textContent = '';
+    let index = 0;
+
+    nodes.forEach((node) => {
+      if (node.nodeType === Node.TEXT_NODE) {
+        const parts = node.textContent.split(/(\s+)/).filter((part) => part.length);
+
+        parts.forEach((part) => {
+          if (/^\s+$/.test(part)) {
+            heading.appendChild(document.createTextNode(part));
+            return;
+          }
+
+          const wrapper = document.createElement('span');
+          wrapper.className = 'word-reveal';
+          wrapper.style.setProperty('--word-index', String(index));
+          index += 1;
+
+          const inner = document.createElement('span');
+          inner.textContent = part;
+          wrapper.appendChild(inner);
+          heading.appendChild(wrapper);
+        });
+
+        return;
+      }
+
+      if (node.nodeType === Node.ELEMENT_NODE && node.tagName === 'BR') {
+        heading.appendChild(node.cloneNode(true));
+        return;
+      }
+
+      if (node.nodeType === Node.ELEMENT_NODE) {
+        const wrapper = document.createElement('span');
+        wrapper.className = 'word-reveal';
+        wrapper.style.setProperty('--word-index', String(index));
+        index += 1;
+        wrapper.appendChild(node.cloneNode(true));
+        heading.appendChild(wrapper);
+      }
+    });
+  });
+};
+
 const setupContactModal = () => {
   if (!openContactModalBtns.length || !contactModal) {
     return;
@@ -687,6 +886,8 @@ const init = () => {
   setupCarousels();
   enableClickPulse();
   setupKeyFigureCounters();
+  setupTintReveal();
+  enhanceHeadingWords();
   setupRevealObserver();
   computeSectionOffsets();
   updateActiveNavLink();
