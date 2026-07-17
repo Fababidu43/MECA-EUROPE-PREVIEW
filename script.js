@@ -271,6 +271,13 @@ const setupCarousels = () => {
       return 3;
     };
 
+    const getCarouselGap = () => {
+      const value = window.getComputedStyle(carousel).getPropertyValue('--carousel-gap');
+      const parsed = Number.parseFloat(value);
+
+      return Number.isFinite(parsed) ? parsed : 18;
+    };
+
     const renderDots = () => {
       if (!dotsWrap) {
         return;
@@ -293,7 +300,15 @@ const setupCarousels = () => {
     };
 
     const updateSlides = (direction = null) => {
-      track.style.transform = `translateX(-${(currentIndex * 100) / slidesToShow}%)`;
+      const viewport = carousel.querySelector('.carousel-viewport');
+      const viewportWidth = viewport ? viewport.getBoundingClientRect().width : 0;
+      const gap = getCarouselGap();
+      const slideWidth = slidesToShow > 0
+        ? (viewportWidth - (gap * (slidesToShow - 1))) / slidesToShow
+        : viewportWidth;
+      const step = slideWidth + gap;
+
+      track.style.transform = `translateX(-${currentIndex * step}px)`;
 
       slides.forEach((slide, index) => {
         const isActive = index >= currentIndex && index < currentIndex + slidesToShow;
@@ -384,6 +399,7 @@ const setupCarousels = () => {
       slidesToShow = getSlidesToShow();
       maxIndex = Math.max(0, slides.length - slidesToShow);
       carousel.style.setProperty('--slides-to-show', String(slidesToShow));
+      carousel.style.setProperty('--carousel-gap', window.innerWidth <= 760 ? '12px' : window.innerWidth <= 1250 ? '16px' : '18px');
       currentIndex = Math.min(currentIndex, maxIndex);
 
       if (dotsWrap) {
