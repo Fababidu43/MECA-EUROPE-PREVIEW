@@ -4,17 +4,23 @@ const navLinks = primaryNav ? primaryNav.querySelectorAll('a') : [];
 const header = document.querySelector('.header');
 const hashLinks = document.querySelectorAll('a[href^="#"]');
 const sectionLinks = document.querySelectorAll('.primary-nav a[href^="#"]');
-const openContactModalBtns = document.querySelectorAll('[data-open-contact-modal]');
-const contactModal = document.querySelector('#contact-modal');
-const closeContactModalBtns = document.querySelectorAll('[data-close-contact-modal]');
 const contactForm = document.querySelector('#contact-form');
 const contactFeedback = document.querySelector('#contact-form-feedback');
 const heroParallaxImage = document.querySelector('.hero-video-bg');
 const parallaxImages = document.querySelectorAll('.intro-figure img, .engage-section .section-figure img, .experience-section .section-figure img');
-const contactShowcase = document.querySelector('.contact-showcase');
 const keyFiguresSection = document.querySelector('.key-figures-section');
 const keyFigureCounters = keyFiguresSection ? keyFiguresSection.querySelectorAll('[data-count]') : [];
 const body = document.body;
+const machinesShowcase = document.querySelector('[data-horizontal-showcase]');
+const showcaseViewport = machinesShowcase ? machinesShowcase.querySelector('.machines-showcase-sticky') : null;
+const showcaseTrack = machinesShowcase ? machinesShowcase.querySelector('[data-showcase-track]') : null;
+const showcaseSlides = document.querySelectorAll('[data-showcase-slide]');
+const machineModal = document.querySelector('[data-machine-modal]');
+const machineModalImage = machineModal ? machineModal.querySelector('[data-machine-modal-image]') : null;
+const machineModalTitle = machineModal ? machineModal.querySelector('[data-machine-modal-title]') : null;
+const machineModalSpecs = machineModal ? machineModal.querySelector('[data-machine-modal-specs]') : null;
+const machineModalDetail = machineModal ? machineModal.querySelector('[data-machine-modal-detail]') : null;
+let machineModalTrigger = null;
 
 const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 const revealItems = document.querySelectorAll('.reveal');
@@ -27,6 +33,8 @@ let tintScrollItems = [];
 let lastScrollY = window.scrollY || 0;
 let scrollFrame = 0;
 let forceScrollSync = false;
+let showcaseScrollDistance = 0;
+let showcaseActive = false;
 
 const clamp = (value, min, max) => Math.min(Math.max(value, min), max);
 const NAV_ACTIVE_LOOKAHEAD = 120;
@@ -209,6 +217,34 @@ const updateScrollDynamics = () => {
   });
 };
 
+const measureShowcase = () => {
+  if (!machinesShowcase || !showcaseViewport || !showcaseTrack) {
+    return;
+  }
+
+  showcaseActive = !prefersReducedMotion && window.innerWidth > 760;
+
+  if (!showcaseActive) {
+    showcaseScrollDistance = 0;
+    machinesShowcase.style.height = '';
+    showcaseTrack.style.transform = '';
+    return;
+  }
+
+  showcaseScrollDistance = Math.max(0, showcaseTrack.scrollWidth - showcaseViewport.clientWidth);
+  machinesShowcase.style.height = `${window.innerHeight + showcaseScrollDistance}px`;
+};
+
+const updateShowcaseProgress = () => {
+  if (!showcaseActive || !showcaseScrollDistance) {
+    return;
+  }
+
+  const rect = machinesShowcase.getBoundingClientRect();
+  const progress = clamp(-rect.top / showcaseScrollDistance, 0, 1);
+  showcaseTrack.style.transform = `translate3d(${-progress * showcaseScrollDistance}px, 0, 0)`;
+};
+
 const syncScrollState = (force = false) => {
   forceScrollSync = forceScrollSync || force;
 
@@ -225,6 +261,7 @@ const syncScrollState = (force = false) => {
     syncIntersectionScrolls(forceScrollSync);
     syncTintReveal(forceScrollSync);
     updateScrollDynamics();
+    updateShowcaseProgress();
     lastScrollY = window.scrollY || 0;
     scrollFrame = 0;
     forceScrollSync = false;
@@ -290,302 +327,8 @@ const setupNavToggle = () => {
   });
 };
 
-const setupCarousels = () => {
-  const carousels = document.querySelectorAll('[data-carousel]');
-
-  carousels.forEach((carousel) => {
-    const track = carousel.querySelector('[data-carousel-track]');
-    const prevBtn = carousel.querySelector('[data-carousel-prev]');
-    const nextBtn = carousel.querySelector('[data-carousel-next]');
-    const indicatorRotor = carousel.querySelector('[data-carousel-indicator-rotor]');
-
-    if (!track) {
-      return;
-    }
-
-    let slidesToShow = 3;
-    let isAnimating = false;
-    let pendingDirection = null;
-    let autoPlayTimer;
-    let touchStartX = 0;
-    let touchEndX = 0;
-    let indicatorRotation = 0;
-    let resizeDebounce;
-
-    // Le déplacement d'un slide est calculé en CSS (calc()), avec exactement
-    // la même formule que le flex-basis des slides dans le CSS. Comme ça, le
-    // navigateur fait le calcul lui-même : impossible d'avoir un écart de
-    // sous-pixel entre "ce que le JS croit" et "ce que le CSS affiche
-    // réellement" (c'était la cause du micro-recentrage visible au wrap).
-    const SLIDE_STEP_EXPR = 'calc((100% - (var(--slides-to-show) - 1) * var(--carousel-gap)) / var(--slides-to-show) + var(--carousel-gap))';
-
-    const getSlides = () => Array.from(track.children).filter((slide) => slide.classList.contains('carousel-slide'));
-
-    const getSlidesToShow = () => {
-      if (window.innerWidth <= 760) {
-        return 1;
-      }
-
-      if (window.innerWidth <= 1250) {
-        return 2;
-      }
-
-      return 3;
-    };
-
-    const getCarouselGap = () => {
-      const value = window.getComputedStyle(carousel).getPropertyValue('--carousel-gap');
-      const parsed = Number.parseFloat(value);
-
-      return Number.isFinite(parsed) ? parsed : 18;
-    };
-
-    const stopAutoPlay = () => {
-      if (autoPlayTimer) {
-        window.clearInterval(autoPlayTimer);
-        autoPlayTimer = undefined;
-      }
-    };
-
-    const shouldAutoPlay = () => !prefersReducedMotion && window.innerWidth > 1250 && getSlides().length > 1;
-
-    const startAutoPlay = () => {
-      if (!shouldAutoPlay()) {
-        stopAutoPlay();
-        return;
-      }
-
-      stopAutoPlay();
-      autoPlayTimer = window.setInterval(() => {
-        goNext(false);
-      }, 8000);
-    };
-
-    const rotateIndicator = (direction) => {
-      if (!indicatorRotor || !direction) {
-        return;
-      }
-
-      indicatorRotation += direction === 'next' ? 90 : -90;
-      indicatorRotor.style.setProperty('--indicator-rotation', `${indicatorRotation}deg`);
-    };
-
-    const syncVisibleState = () => {
-      const slides = getSlides();
-
-      slides.forEach((slide, index) => {
-        const isVisible = index < slidesToShow;
-        const slot = isVisible ? index : -1;
-        const isCenterSlot = slidesToShow === 1 ? slot === 0 : slot === 1;
-
-        slide.classList.toggle('is-active', isVisible);
-        slide.classList.toggle('is-carousel-start', isVisible && slot === 0);
-        slide.classList.toggle('is-carousel-center', isVisible && isCenterSlot);
-        slide.classList.toggle('is-carousel-end', isVisible && slot === slidesToShow - 1);
-        slide.setAttribute('aria-hidden', String(!isVisible));
-      });
-    };
-
-    const measureLayout = () => {
-      const gap = getCarouselGap();
-
-      carousel.style.setProperty('--slides-to-show', String(slidesToShow));
-      carousel.style.setProperty('--carousel-gap', `${gap}px`);
-      // Le pas de déplacement n'est plus mesuré en JS : il est délégué au CSS
-      // via calc(), en pointant vers les mêmes variables que le flex-basis.
-      carousel.style.setProperty('--slide-step', SLIDE_STEP_EXPR);
-    };
-
-    const resetPosition = () => {
-      track.style.transition = 'none';
-      track.style.transform = 'translateX(0)';
-    };
-
-    const finalizeMove = (direction) => {
-      track.style.transition = 'none';
-
-      if (direction === 'next') {
-        const firstSlide = track.firstElementChild;
-
-        if (firstSlide) {
-          track.append(firstSlide);
-        }
-
-        track.style.transform = 'translateX(0)';
-      }
-
-      pendingDirection = null;
-      isAnimating = false;
-    };
-
-    const goNext = (fromInteraction = false) => {
-      if (isAnimating || getSlides().length <= 1) {
-        return;
-      }
-
-      isAnimating = true;
-      pendingDirection = 'next';
-      rotateIndicator('next');
-      track.style.transition = 'transform 0.5s ease';
-      track.style.transform = 'translateX(calc(-1 * var(--slide-step)))';
-
-      if (fromInteraction) {
-        startAutoPlay();
-      }
-    };
-
-    const goPrev = (fromInteraction = false) => {
-      if (isAnimating || getSlides().length <= 1) return;
-
-      isAnimating = true;
-      pendingDirection = 'prev';
-      rotateIndicator('prev');
-
-      track.style.transition = 'none';
-
-      const lastSlide = track.lastElementChild;
-
-      if (lastSlide) {
-        track.prepend(lastSlide);
-      }
-
-      track.style.transform = 'translateX(calc(-1 * var(--slide-step)))';
-
-      // Force le navigateur à appliquer la position initiale
-      track.offsetHeight;
-
-      track.style.transition = 'transform 0.5s ease';
-      track.style.transform = 'translateX(0)';
-
-      if (fromInteraction) {
-        startAutoPlay();
-      }
-    };
-
-    const onMoveRequest = (step, fromInteraction = false) => {
-      if (step > 0) {
-        goNext(fromInteraction);
-      } else {
-        goPrev(fromInteraction);
-      }
-    };
-
-    if (getSlides().length < 2) {
-      if (prevBtn) {
-        prevBtn.hidden = true;
-      }
-
-      if (nextBtn) {
-        nextBtn.hidden = true;
-      }
-    }
-
-    if (prevBtn) {
-      prevBtn.addEventListener('click', () => {
-        onMoveRequest(-1, true);
-      });
-    }
-
-    if (nextBtn) {
-      nextBtn.addEventListener('click', () => {
-        onMoveRequest(1, true);
-      });
-    }
-
-    track.addEventListener('transitionend', (event) => {
-      if (event.propertyName !== 'transform' || !isAnimating) {
-        return;
-      }
-
-      finalizeMove(pendingDirection);
-    });
-
-    track.addEventListener('touchstart', (event) => {
-      touchStartX = event.changedTouches[0].clientX;
-    }, { passive: true });
-
-    track.addEventListener('touchend', (event) => {
-      touchEndX = event.changedTouches[0].clientX;
-      const delta = touchStartX - touchEndX;
-
-      if (Math.abs(delta) < 45) {
-        return;
-      }
-
-      onMoveRequest(delta > 0 ? 1 : -1, true);
-    }, { passive: true });
-
-    carousel.addEventListener('mouseenter', stopAutoPlay);
-    carousel.addEventListener('mouseleave', startAutoPlay);
-    carousel.addEventListener('focusin', stopAutoPlay);
-    carousel.addEventListener('focusout', startAutoPlay);
-
-    const syncLayout = () => {
-      slidesToShow = getSlidesToShow();
-      measureLayout();
-      resetPosition();
-      syncVisibleState();
-      isAnimating = false;
-      pendingDirection = null;
-    };
-
-    const handleResize = () => {
-      window.clearTimeout(resizeDebounce);
-      resizeDebounce = window.setTimeout(() => {
-        syncLayout();
-        if (shouldAutoPlay()) {
-          startAutoPlay();
-        } else {
-          stopAutoPlay();
-        }
-      }, 50);
-    };
-
-    const refreshAfterAssets = () => {
-      syncLayout();
-    };
-
-    syncLayout();
-    startAutoPlay();
-
-    // Toujours utile pour re-synchroniser --slides-to-show quand on passe
-    // un breakpoint (1 / 2 / 3 slides visibles).
-    const viewportEl = carousel.querySelector('.carousel-viewport');
-
-    if (viewportEl && 'ResizeObserver' in window) {
-      const resizeObserver = new ResizeObserver(() => {
-        handleResize();
-      });
-
-      resizeObserver.observe(viewportEl);
-    } else {
-      window.addEventListener('resize', handleResize);
-    }
-
-    if (document.readyState === 'complete') {
-      refreshAfterAssets();
-    } else {
-      window.addEventListener('load', refreshAfterAssets, { once: true });
-    }
-
-    if (document.fonts && typeof document.fonts.ready?.then === 'function') {
-      document.fonts.ready.then(refreshAfterAssets).catch(() => {});
-    }
-
-    const carouselImages = Array.from(carousel.querySelectorAll('img'));
-
-    carouselImages.forEach((image) => {
-      if (image.complete) {
-        return;
-      }
-
-      image.addEventListener('load', refreshAfterAssets, { once: true });
-    });
-  });
-};
-
 const enableClickPulse = () => {
-  const clickTargets = document.querySelectorAll('.button-pill, .plan-phone, .primary-nav a, .sticky-actions a, .contact-form-cancel, .contact-modal-close');
+  const clickTargets = document.querySelectorAll('.button-pill, .plan-phone, .primary-nav a, .sticky-actions a, .contact-form-cancel');
 
   clickTargets.forEach((target) => {
     target.classList.add('pulse-target');
@@ -717,7 +460,7 @@ const setupRevealObserver = () => {
 };
 
 const setupTintReveal = () => {
-  const tintSelectors = '.section-kicker, .key-prefix, .key-figure-phrase .key-arrow, .key-date-month, .focus-note';
+  const tintSelectors = '.section-kicker, .key-prefix, .key-figure-phrase .key-arrow, .key-date-month';
 
   if (prefersReducedMotion) {
     tintScrollItems = [];
@@ -791,99 +534,120 @@ const enhanceHeadingWords = () => {
   });
 };
 
-const setupContactModal = () => {
-  if (!openContactModalBtns.length || !contactModal) {
+const setupContactForm = () => {
+  if (!contactForm || !contactFeedback) {
     return;
   }
 
-  const dialog = contactModal.querySelector('.contact-modal-dialog');
-  let modalTrigger = null;
+  contactForm.addEventListener('submit', (event) => {
+    event.preventDefault();
 
-  const toggleModal = (isOpen) => {
-    contactModal.classList.toggle('is-open', isOpen);
-    contactModal.setAttribute('aria-hidden', String(!isOpen));
-    body.style.overflow = isOpen ? 'hidden' : '';
+    const formData = new FormData(contactForm);
+    const name = String(formData.get('name') || '').trim();
+    const email = String(formData.get('email') || '').trim();
+    const phone = String(formData.get('phone') || '').trim();
+    const message = String(formData.get('message') || '').trim();
 
-    if (isOpen) {
-      window.requestAnimationFrame(() => {
-        const firstField = contactModal.querySelector('input, textarea, button');
-        if (firstField) firstField.focus();
-      });
-    } else if (modalTrigger) {
-      modalTrigger.focus();
-      modalTrigger = null;
+    if (!name || !email || !message) {
+      contactFeedback.textContent = 'Merci de remplir les champs obligatoires.';
+      return;
     }
-  };
 
-  openContactModalBtns.forEach((button) => {
-    button.addEventListener('click', () => {
-      modalTrigger = button;
-      toggleModal(true);
-    });
+    const subject = encodeURIComponent(`Demande de contact - ${name}`);
+    const mailBody = encodeURIComponent(
+      `Nom: ${name}\nEmail: ${email}\nTéléphone: ${phone || 'Non renseigné'}\n\nMessage:\n${message}`,
+    );
+
+    contactFeedback.textContent = 'Votre messagerie va s\'ouvrir pour envoyer la demande.';
+    window.location.href = `mailto:mecaeurope@orange.fr?subject=${subject}&body=${mailBody}`;
+
+    contactForm.reset();
+    window.setTimeout(() => {
+      contactFeedback.textContent = '';
+    }, 4000);
+  });
+};
+
+const openMachineModal = (slide) => {
+  if (!machineModal) {
+    return;
+  }
+
+  const image = slide.querySelector('img');
+  const title = slide.querySelector('.showcase-caption-title');
+  const specs = slide.querySelector('.showcase-caption-spec');
+
+  if (machineModalImage && image) {
+    machineModalImage.src = image.currentSrc || image.src;
+    machineModalImage.alt = image.alt;
+  }
+
+  if (machineModalTitle) {
+    machineModalTitle.textContent = title ? title.textContent : '';
+  }
+
+  if (machineModalSpecs) {
+    machineModalSpecs.textContent = specs ? specs.textContent : '';
+  }
+
+  if (machineModalDetail) {
+    machineModalDetail.textContent = slide.dataset.detail || '';
+  }
+
+  machineModalTrigger = slide;
+  machineModal.hidden = false;
+  body.classList.add('modal-open');
+
+  window.requestAnimationFrame(() => {
+    machineModal.classList.add('is-open');
   });
 
-  closeContactModalBtns.forEach((btn) => {
-    btn.addEventListener('click', () => {
-      toggleModal(false);
-    });
+  const closeBtn = machineModal.querySelector('.machine-modal-close');
+  if (closeBtn) {
+    closeBtn.focus();
+  }
+};
+
+const closeMachineModal = () => {
+  if (!machineModal || !machineModal.classList.contains('is-open')) {
+    return;
+  }
+
+  machineModal.classList.remove('is-open');
+  body.classList.remove('modal-open');
+
+  window.setTimeout(() => {
+    machineModal.hidden = true;
+  }, 280);
+
+  if (machineModalTrigger) {
+    machineModalTrigger.focus();
+    machineModalTrigger = null;
+  }
+};
+
+const setupMachineModal = () => {
+  if (!machineModal || !showcaseSlides.length) {
+    return;
+  }
+
+  showcaseSlides.forEach((slide) => {
+    slide.addEventListener('click', () => openMachineModal(slide));
+  });
+
+  machineModal.querySelectorAll('[data-machine-modal-dismiss]').forEach((el) => {
+    el.addEventListener('click', closeMachineModal);
   });
 
   document.addEventListener('keydown', (event) => {
-    if (event.key === 'Escape' && contactModal.classList.contains('is-open')) {
-      toggleModal(false);
-    }
-
-    if (event.key === 'Tab' && contactModal.classList.contains('is-open') && dialog) {
-      const focusable = Array.from(dialog.querySelectorAll('button, input, textarea, a[href]'))
-        .filter((element) => !element.hasAttribute('disabled'));
-      const first = focusable[0];
-      const last = focusable[focusable.length - 1];
-
-      if (event.shiftKey && document.activeElement === first) {
-        event.preventDefault();
-        last.focus();
-      } else if (!event.shiftKey && document.activeElement === last) {
-        event.preventDefault();
-        first.focus();
-      }
+    if (event.key === 'Escape' && machineModal.classList.contains('is-open')) {
+      closeMachineModal();
     }
   });
-
-  if (contactForm && contactFeedback) {
-    contactForm.addEventListener('submit', (event) => {
-      event.preventDefault();
-
-      const formData = new FormData(contactForm);
-      const name = String(formData.get('name') || '').trim();
-      const email = String(formData.get('email') || '').trim();
-      const phone = String(formData.get('phone') || '').trim();
-      const message = String(formData.get('message') || '').trim();
-
-      if (!name || !email || !message) {
-        contactFeedback.textContent = 'Merci de remplir les champs obligatoires.';
-        return;
-      }
-
-      const subject = encodeURIComponent(`Demande de contact - ${name}`);
-      const mailBody = encodeURIComponent(
-        `Nom: ${name}\nEmail: ${email}\nTéléphone: ${phone || 'Non renseigné'}\n\nMessage:\n${message}`,
-      );
-
-      contactFeedback.textContent = 'Votre messagerie va s\'ouvrir pour envoyer la demande.';
-      window.location.href = `mailto:mecaeurope@orange.fr?subject=${subject}&body=${mailBody}`;
-
-      contactForm.reset();
-      window.setTimeout(() => {
-        toggleModal(false);
-        contactFeedback.textContent = '';
-      }, 350);
-    });
-  }
 };
 
 const init = () => {
   setupNavToggle();
-  setupCarousels();
   enableClickPulse();
   setupKeyFigureCounters();
   setupTintReveal();
@@ -891,8 +655,10 @@ const init = () => {
   setupRevealObserver();
   computeSectionOffsets();
   updateActiveNavLink();
-  setupContactModal();
+  setupContactForm();
+  setupMachineModal();
   updateScrollDynamics();
+  measureShowcase();
 
   if (window.location.hash && window.location.hash.length > 1) {
     window.setTimeout(() => {
@@ -917,6 +683,7 @@ const init = () => {
 
   window.addEventListener('resize', () => {
     computeSectionOffsets();
+    measureShowcase();
     syncScrollState(true);
     updateScrollDynamics();
   }, { passive: true });

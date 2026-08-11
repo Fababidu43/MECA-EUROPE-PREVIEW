@@ -1,0 +1,314 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Contactez MECA-EUROPE : demande de devis, coordonnées, accès à l'atelier de mécanique générale de Riotord.">
+  <title>Contact | MECA-EUROPE</title>
+  <link rel="icon" type="image/png" sizes="32x32" href="assets/images/favicon-32x32.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&family=Source+Sans+3:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+  <noscript>
+    <style>
+      .reveal,
+      .reveal * { opacity: 1 !important; transform: none !important; clip-path: none !important; }
+    </style>
+  </noscript>
+</head>
+<body>
+  <header class="header">
+    <div class="header-main wrap">
+      <a href="index.html#top" class="brand" aria-label="Page d'accueil">
+        <img src="assets/images/header_logo_meca.png" alt="MECA-EUROPE" width="1600" height="360">
+      </a>
+
+      <button type="button" class="menu-toggle" aria-controls="primary-nav" aria-expanded="false">
+        <span class="menu-toggle-icon" aria-hidden="true"></span>
+        <span class="menu-toggle-label">Menu</span>
+      </button>
+
+      <nav id="primary-nav" class="primary-nav" aria-label="Navigation principale">
+        <a href="index.html#top" class="nav-home">
+          <img src="https://api.iconify.design/mdi:home.svg?color=%23e11616" alt="" aria-hidden="true">
+          <span>Accueil</span>
+        </a>
+        <a href="pieces-serie.html">
+          <span>Pièces de série</span>
+        </a>
+        <a href="pieces-unitaires.html">
+          <span>Pièces unitaires</span>
+        </a>
+        <a href="a-propos.html">
+          <span>À propos</span>
+        </a>
+        <a href="parc-machines.html">
+          <span>Parc machines</span>
+        </a>
+        <a href="contact.html" class="is-active" aria-current="page">Contact</a>
+      </nav>
+
+      <a href="#formulaire" class="button-pill header-quote">Demander un devis</a>
+    </div>
+  </header>
+
+  <aside class="sticky-actions" aria-label="Actions rapides">
+    <a href="#formulaire">
+      <img src="https://api.iconify.design/mdi:email-outline.svg?color=%23ffffff" alt="Contact">
+      <span>Contact</span>
+    </a>
+    <a href="#plan">
+      <img src="https://api.iconify.design/mdi:map-marker-path.svg?color=%23ffffff" alt="Plan">
+      <span>Plan</span>
+    </a>
+  </aside>
+
+  <main>
+    <section class="page-hero reveal">
+      <div class="wrap page-hero-inner">
+        <p class="page-kicker">Contact</p>
+        <h1>Contactez MECA-EUROPE</h1>
+        <p>
+          Une question, un plan à chiffrer, un besoin en série ou en pièce unitaire ? L'atelier vous répond
+          rapidement.
+        </p>
+      </div>
+    </section>
+
+    <div class="intersection-scroll" data-intersection-scroll aria-hidden="true">
+      <img src="assets/decor/meca_intersection_scroll.svg" alt="">
+    </div>
+
+    <section class="pre-footer reveal decor-surface decor-b">
+      <div class="wrap pre-footer-grid">
+        <div class="contact-showcase">
+          <div class="contact-showcase-content">
+            <p class="contact-showcase-kicker">Contact atelier</p>
+            <h2>Un projet d'usinage <mark>sur mesure ?</mark></h2>
+            <p class="contact-showcase-lead">
+              Confiez-nous vos contraintes techniques, vos plans et vos délais : notre équipe vous accompagne
+              pour réaliser des pièces fiables, précises et prêtes à l'emploi.
+            </p>
+            <div class="contact-showcase-tags" aria-label="Types de prestations">
+              <span><img src="https://api.iconify.design/mdi:file-document-outline.svg?color=%23e11616" alt="">Pièce sur plan</span>
+              <span><img src="https://api.iconify.design/mdi:crosshairs-gps.svg?color=%23e11616" alt="">Usinage CNC</span>
+              <span><img src="https://api.iconify.design/mdi:layers-triple-outline.svg?color=%23e11616" alt="">Petite série</span>
+            </div>
+            <a href="#formulaire" class="button-pill contact-showcase-btn">Envoyer une demande</a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="formulaire" class="section contact-form-section reveal decor-surface decor-a">
+      <div class="wrap">
+        <p class="section-kicker">Formulaire</p>
+        <h2>Envoyez votre <mark>demande</mark></h2>
+        <p class="about-intro">Indiquez vos besoins, nous vous répondons rapidement.</p>
+
+        <div class="contact-form-card">
+          <form class="contact-form" id="contact-form">
+            <label>
+              Nom
+              <input type="text" name="name" required placeholder="Votre nom">
+            </label>
+            <label>
+              Email
+              <input type="email" name="email" required placeholder="vous@exemple.fr">
+            </label>
+            <label>
+              Téléphone
+              <input type="tel" name="phone" placeholder="06 00 00 00 00">
+            </label>
+            <label>
+              Message
+              <textarea name="message" required rows="4" placeholder="Décrivez votre besoin (série, unitaire, matière, délais)..."></textarea>
+            </label>
+            <div class="contact-form-actions">
+              <button type="submit" class="button-pill">Envoyer</button>
+            </div>
+          </form>
+
+          <p class="contact-form-feedback" id="contact-form-feedback" aria-live="polite"></p>
+        </div>
+      </div>
+    </section>
+
+    <div class="intersection-scroll" data-intersection-scroll aria-hidden="true">
+      <img src="assets/decor/meca_intersection_scroll_04.svg" alt="">
+    </div>
+
+    <section id="plan" class="plan-section reveal decor-surface decor-c">
+      <div class="wrap plan-grid">
+        <div class="plan-copy">
+          <p class="plan-kicker">Plan et accès</p>
+          <h2 class="plan-title"><span>Retrouvez</span> <mark>MECA-EUROPE</mark> <span>à Riotord</span></h2>
+          <p class="plan-lead">L'atelier est situé au 22 route du Midi, 43220 Riotord. La carte ci-contre reste interactive pour zoomer, dézoomer et mieux préparer votre trajet.</p>
+          <div class="plan-details">
+            <div class="plan-detail">
+              <span class="plan-detail-icon" aria-hidden="true"><img src="https://api.iconify.design/mdi:map-marker-outline.svg?color=%23e11616" alt=""></span>
+              <p><strong>Adresse</strong><br>22 route du Midi<br>43220 Riotord</p>
+            </div>
+            <div class="plan-detail">
+              <span class="plan-detail-icon" aria-hidden="true"><img src="https://api.iconify.design/mdi:phone-outline.svg?color=%23e11616" alt=""></span>
+              <p><strong>Téléphone</strong><br><a href="tel:0471753155">04 71 75 31 55</a></p>
+            </div>
+            <div class="plan-detail">
+              <span class="plan-detail-icon" aria-hidden="true"><img src="https://api.iconify.design/mdi:email-outline.svg?color=%23e11616" alt=""></span>
+              <p><strong>Email</strong><br><a href="mailto:mecaeurope@orange.fr">mecaeurope@orange.fr</a></p>
+            </div>
+          </div>
+          <div class="plan-actions">
+            <a
+              href="https://www.google.com/maps/dir/?api=1&destination=22+route+du+Midi,+43220+Riotord"
+              class="button-angle"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              Itinéraire
+            </a>
+          </div>
+        </div>
+
+        <div class="plan-media">
+          <figure class="section-figure plan-devanture">
+            <img src="assets/images/devanture-atelier.webp" alt="Façade de l'atelier MECA-EUROPE à Riotord" width="1448" height="1086" loading="lazy" decoding="async">
+            <figcaption>L'atelier MECA-EUROPE, 22 route du Midi à Riotord.</figcaption>
+          </figure>
+
+          <div class="plan-map-wrap">
+            <img class="plan-map" src="assets/images/map-section.png" alt="Carte de localisation de MECA-EUROPE à Riotord" width="1200" height="760" loading="lazy" decoding="async">
+            <a class="plan-map-link" href="https://www.google.com/maps/dir/?api=1&destination=22+route+du+Midi,+43220+Riotord" target="_blank" rel="noopener noreferrer">
+              <span>Voir sur Google Maps</span>
+            </a>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer reveal">
+
+    <div class="wrap footer-main">
+
+      <!-- Colonne marque -->
+      <div class="footer-brand">
+        <div class="footer-logo-wrap">
+          <img
+            src="assets/images/header_logo_meca.png"
+            alt="MECA-EUROPE"
+            width="1600"
+            height="360"
+            loading="lazy"
+            decoding="async"
+          >
+        </div>
+
+        <p>
+          Mécanique générale, usinage, montage<br>
+          et décolletage. Fabrication de pièces<br>
+          de série et de pièces unitaires.
+        </p>
+
+        <span class="footer-brand-rule" aria-hidden="true"></span>
+      </div>
+
+      <!-- Navigation -->
+      <div class="footer-column footer-navigation">
+        <h4>Navigation</h4>
+
+        <ul>
+          <li><a href="index.html#top">Accueil</a></li>
+          <li><a href="pieces-serie.html">Pièces de série</a></li>
+          <li><a href="pieces-unitaires.html">Pièces unitaires</a></li>
+          <li><a href="a-propos.html">À propos</a></li>
+          <li><a href="parc-machines.html">Parc machines</a></li>
+          <li><a href="contact.html">Contact</a></li>
+        </ul>
+      </div>
+
+      <!-- Matières -->
+      <div class="footer-column">
+        <h4>Matières travaillées</h4>
+
+        <div class="footer-materials">
+          <p>Aluminium</p>
+          <p>Inox</p>
+          <p>Bronze, laiton</p>
+          <p>Aciers spéciaux</p>
+        </div>
+      </div>
+
+      <!-- Contact -->
+      <div class="footer-column footer-contact">
+        <h4>Contact</h4>
+
+        <p class="footer-contact-line">
+          <img
+            src="https://api.iconify.design/mdi:phone-outline.svg?color=%234b4f54"
+            alt=""
+            aria-hidden="true"
+          >
+          <a href="tel:0471753155">Tél. 04 71 75 31 55</a>
+        </p>
+
+        <p class="footer-contact-indent">
+          Fax 04 71 75 31 60
+        </p>
+
+        <p class="footer-contact-line footer-email">
+          <img
+            src="https://api.iconify.design/mdi:email-outline.svg?color=%234b4f54"
+            alt=""
+            aria-hidden="true"
+          >
+          <a href="mailto:mecaeurope@orange.fr">
+            mecaeurope@orange.fr
+          </a>
+        </p>
+      </div>
+
+    </div>
+
+    <!-- Ligne technique inférieure -->
+    <svg
+      class="footer-rail"
+      viewBox="0 0 1440 34"
+      preserveAspectRatio="none"
+      aria-hidden="true"
+    >
+      <path
+        d="M0 1 H1322 L1352 31 H1440"
+        fill="none"
+        stroke="#b8bdc3"
+        stroke-width="1"
+        vector-effect="non-scaling-stroke"
+      />
+
+      <circle
+        cx="1404"
+        cy="31"
+        r="4"
+        fill="#f8f8f9"
+        stroke="#8f969d"
+        stroke-width="1.2"
+        vector-effect="non-scaling-stroke"
+      />
+    </svg>
+
+    <div class="wrap legal">
+      <p>© MECA-EUROPE 2026</p>
+
+      <div class="legal-links">
+        <a href="mentions-legales.html">Mentions légales</a>
+        <span class="legal-dot" aria-hidden="true"></span>
+        <a href="#plan">Plan d'accès</a>
+      </div>
+    </div>
+
+  </footer>
+
+  <script src="script.js"></script>
+</body>
+</html>

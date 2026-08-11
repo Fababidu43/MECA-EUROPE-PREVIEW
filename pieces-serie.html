@@ -3,8 +3,8 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="description" content="MECA-EUROPE - Mécanique générale, pièces de série, pièces unitaires et parc machines à Riotord.">
-  <title>MECA-EUROPE | Mécanique générale</title>
+  <meta name="description" content="Fabrication de pièces de série par MECA-EUROPE : tournage, fraisage et perçage en petite et moyenne série sur aluminium, inox, bronze et aciers spéciaux.">
+  <title>Pièces de série | MECA-EUROPE</title>
   <link rel="icon" type="image/png" sizes="32x32" href="assets/images/favicon-32x32.png">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -20,7 +20,7 @@
 <body>
   <header class="header">
     <div class="header-main wrap">
-      <a href="#top" class="brand" aria-label="Page d'accueil">
+      <a href="index.html#top" class="brand" aria-label="Page d'accueil">
         <img src="assets/images/header_logo_meca.png" alt="MECA-EUROPE" width="1600" height="360">
       </a>
 
@@ -30,11 +30,11 @@
       </button>
 
       <nav id="primary-nav" class="primary-nav" aria-label="Navigation principale">
-        <a href="#top" class="nav-home">
+        <a href="index.html#top" class="nav-home">
           <img src="https://api.iconify.design/mdi:home.svg?color=%23e11616" alt="" aria-hidden="true">
           <span>Accueil</span>
         </a>
-        <a href="pieces-serie.html">
+        <a href="pieces-serie.html" class="is-active" aria-current="page">
           <span>Pièces de série</span>
         </a>
         <a href="pieces-unitaires.html">
@@ -64,47 +64,15 @@
     </a>
   </aside>
 
-  <main id="top">
-    <section class="hero reveal">
-      <img class="hero-video-bg" src="assets/images/background-hero.webp" alt="" aria-hidden="true">
-      <div class="wrap hero-layout">
-        <div class="hero-content">
-          <div class="hero-copy">
-            <h1>
-              <span class="hero-title-accent">Mécanique générale :</span>
-              <span>usinage, montage</span>
-              <span>et décolletage</span>
-            </h1>
-            <span class="hero-title-rule" aria-hidden="true"></span>
-          </div>
-
-          <section id="activites" class="metiers-list" aria-label="Activités de MECA-EUROPE">
-            <div class="metier-item">
-              <span class="icon-wrap"><img src="https://api.iconify.design/mdi:cog-outline.svg?color=%23ffffff" alt=""></span>
-              <span>Usinage de pièces mécaniques</span>
-            </div>
-            <div class="metier-item">
-              <span class="icon-wrap"><img src="https://api.iconify.design/mdi:tools.svg?color=%23ffffff" alt=""></span>
-              <span>Tournage, fraisage et perçage</span>
-            </div>
-            <div class="metier-item">
-              <span class="icon-wrap"><img src="https://api.iconify.design/mdi:nut.svg?color=%23ffffff" alt=""></span>
-              <span>Montage d'ensembles mécaniques</span>
-            </div>
-            <div class="metier-item">
-              <span class="icon-wrap"><img src="https://api.iconify.design/mdi:hammer-wrench.svg?color=%23ffffff" alt=""></span>
-              <span>Décolletage et pièces techniques</span>
-            </div>
-            <div class="metier-item">
-              <span class="icon-wrap"><img src="https://api.iconify.design/mdi:layers-triple-outline.svg?color=%23ffffff" alt=""></span>
-              <span>Travail de l'aluminium et de l'inox</span>
-            </div>
-            <div class="metier-item">
-              <span class="icon-wrap"><img src="https://api.iconify.design/mdi:compass-outline.svg?color=%23ffffff" alt=""></span>
-              <span>Fabrication en série et sur mesure</span>
-            </div>
-          </section>
-        </div>
+  <main>
+    <section class="page-hero reveal">
+      <div class="wrap page-hero-inner">
+        <p class="page-kicker">Fabrication</p>
+        <h1>Pièces de série</h1>
+        <p>
+          Tournage, fraisage et perçage pour vos productions régulières : petites et moyennes séries,
+          précision constante et suivi rigoureux des cotes, des matières et des finitions.
+        </p>
       </div>
     </section>
 
@@ -112,68 +80,80 @@
       <img src="assets/decor/meca_intersection_scroll.svg" alt="">
     </div>
 
-    <section id="apercu" class="section reveal decor-surface decor-a" aria-labelledby="apercu-title">
-      <div class="wrap">
-        <p class="section-kicker">Découvrir l'atelier</p>
-        <h2 id="apercu-title">Nos <mark>savoir-faire</mark></h2>
-
-        <div class="overview-grid">
-          <a class="overview-card" href="pieces-serie.html">
-            <div class="overview-card-media">
-              <img src="assets/images/tour-doosan-puma-400m.webp" alt="Tour Doosan Puma 400M" loading="lazy" decoding="async">
-            </div>
-            <div class="overview-card-body">
-              <h3>Pièces de série</h3>
-              <p>Petites et moyennes séries, précision et répétabilité.</p>
-              <span class="overview-card-cta">Découvrir</span>
-            </div>
-          </a>
-
-          <a class="overview-card" href="pieces-unitaires.html">
-            <div class="overview-card-media">
-              <img src="assets/images/tour-cmz.webp" alt="Tour CMZ" loading="lazy" decoding="async">
-            </div>
-            <div class="overview-card-body">
-              <h3>Pièces unitaires</h3>
-              <p>Demandes spécifiques et fabrications ponctuelles, étudiées au cas par cas.</p>
-              <span class="overview-card-cta">Découvrir</span>
-            </div>
-          </a>
-
-          <a class="overview-card" href="parc-machines.html">
-            <div class="overview-card-media">
-              <img src="assets/images/robot-muratec-mt20.webp" alt="Robot Muratec MT20" loading="lazy" decoding="async">
-            </div>
-            <div class="overview-card-body">
-              <h3>Parc machines</h3>
-              <p>Tours CN, centre d'usinage et robot multi-broches.</p>
-              <span class="overview-card-cta">Découvrir</span>
-            </div>
-          </a>
-
-          <a class="overview-card" href="a-propos.html">
-            <div class="overview-card-media">
-              <img src="assets/images/devanture-atelier.webp" alt="Atelier MECA-EUROPE à Riotord" loading="lazy" decoding="async">
-            </div>
-            <div class="overview-card-body">
-              <h3>À propos</h3>
-              <p>Depuis 1969 à Riotord, l'histoire de l'atelier.</p>
-              <span class="overview-card-cta">Découvrir</span>
-            </div>
-          </a>
-        </div>
+    <section id="pieces-serie" class="section intro-section series-section reveal decor-surface decor-a">
+      <div class="wrap intro-grid series-grid">
+        <figure class="intro-figure series-figure">
+          <img src="assets/images/tour-doosan-puma-400m.webp" alt="Tour Doosan Puma 400M de l'atelier MECA-EUROPE" width="1448" height="1086" loading="lazy" decoding="async">
+        </figure>
+        <article class="intro-copy series-copy">
+          <h2 class="series-title">
+            <span class="series-title-label">Pièces de série</span>
+            <mark>pour productions régulières<br>et besoins récurrents</mark>
+          </h2>
+          <p class="intro-lead series-lead">
+            MECA-EUROPE fabrique des pièces de série destinées aux applications mécaniques nécessitant constance,
+            précision et répétabilité. Depuis la reprise de l'atelier en avril 2021, l'équipe accompagne les besoins
+            en petite et moyenne série avec un suivi attentif des côtes, des matières et des finitions.
+          </p>
+          <p class="series-text">
+            Le savoir-faire de l'atelier couvre le tournage, le fraisage et le perçage sur une large variété de
+            matières : aluminium, inox, bronze et aciers spéciaux. Chaque référence est produite avec le même
+            niveau d'exigence, de la première à la dernière pièce de la série.
+          </p>
+          <a class="button-pill" href="contact.html#formulaire">Demander un devis</a>
+        </article>
       </div>
     </section>
 
     <div class="intersection-scroll" data-intersection-scroll aria-hidden="true">
-      <img src="assets/decor/meca_intersection_scroll_05.svg" alt="">
+      <img src="assets/decor/meca_intersection_scroll_02.svg" alt="">
     </div>
 
-    <section class="cta-band reveal decor-surface decor-c">
-      <div class="wrap cta-band-inner">
-        <h2>Un projet d'usinage <mark>sur mesure ?</mark></h2>
-        <p>Confiez-nous vos plans, vos contraintes et vos délais : l'atelier vous répond rapidement.</p>
-        <a href="contact.html#formulaire" class="button-pill">Nous contacter</a>
+    <section class="section engage-section reveal decor-surface decor-b">
+      <div class="wrap split-grid reverse">
+        <figure class="section-figure">
+          <img src="assets/images/tour-doosan-puma-4100.webp" alt="Tour Doosan Puma 4100 de l'atelier MECA-EUROPE" width="1086" height="1448" loading="lazy" decoding="async">
+        </figure>
+        <article class="text-content">
+          <h2 class="series-title">
+            <span class="series-title-label">Doosan Puma 4100</span>
+            <mark>un second tour dédié<br>à la production de série</mark>
+          </h2>
+          <p>
+            Le tour Doosan Puma 4100 complète le parc dédié aux pièces de série : capacité usinable
+            Ø 555 mm, longueur 900 mm, 2 axes. De quoi absorber les volumes et diversifier les références
+            produites en atelier.
+          </p>
+        </article>
+      </div>
+    </section>
+
+    <div class="intersection-scroll" data-intersection-scroll aria-hidden="true">
+      <img src="assets/decor/meca_intersection_scroll_06.svg" alt="">
+    </div>
+
+    <section class="section legal-section reveal decor-surface decor-a">
+      <div class="wrap legal-grid">
+        <article class="legal-card">
+          <h2>Précision &amp; répétabilité</h2>
+          <div class="legal-stack">
+            <p>Suivi rigoureux des cotes sur chaque pièce, pour une qualité constante d'une série à l'autre.</p>
+          </div>
+        </article>
+
+        <article class="legal-card">
+          <h2>Matières maîtrisées</h2>
+          <div class="legal-stack">
+            <p>Aluminium, inox, bronze et aciers spéciaux : l'atelier adapte les réglages à chaque matière travaillée.</p>
+          </div>
+        </article>
+
+        <article class="legal-card">
+          <h2>Petites et moyennes séries</h2>
+          <div class="legal-stack">
+            <p>Une organisation d'atelier pensée pour répondre aux volumes intermédiaires, sans les contraintes d'une grande série industrielle.</p>
+          </div>
+        </article>
       </div>
     </section>
   </main>
@@ -209,7 +189,7 @@
         <h4>Navigation</h4>
 
         <ul>
-          <li><a href="#top">Accueil</a></li>
+          <li><a href="index.html#top">Accueil</a></li>
           <li><a href="pieces-serie.html">Pièces de série</a></li>
           <li><a href="pieces-unitaires.html">Pièces unitaires</a></li>
           <li><a href="a-propos.html">À propos</a></li>
