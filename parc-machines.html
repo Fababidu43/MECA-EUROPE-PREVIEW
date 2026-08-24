@@ -14,6 +14,10 @@
     <style>
       .reveal,
       .reveal * { opacity: 1 !important; transform: none !important; clip-path: none !important; }
+      .story-card-body,
+      .story-card-body > *,
+      .story-card-title mark { clip-path: none !important; }
+      .story-card-media img { filter: none !important; transform: none !important; }
     </style>
   </noscript>
 </head>
@@ -68,7 +72,7 @@
     <section class="page-hero reveal">
       <div class="wrap page-hero-inner">
         <p class="page-kicker">Atelier</p>
-        <h1>Parc machines</h1>
+        <h1>Parc <mark>machines</mark></h1>
         <p>
           Un parc de tours CN, un centre d'usinage et un robot multi-broches, pour répondre aux exigences
           de précision de la mécanique industrielle. Faites défiler pour découvrir chaque machine, cliquez
@@ -77,82 +81,113 @@
       </div>
     </section>
 
-    <section class="machines-showcase" data-horizontal-showcase aria-label="Les machines de l'atelier, en images">
-      <div class="machines-showcase-sticky">
-        <div class="machines-showcase-track" data-showcase-track>
-          <button type="button" class="showcase-slide" data-showcase-slide data-detail="Le plus grand tour de l'atelier, réservé aux pièces qui demandent le plus de longueur usinable." aria-label="Voir le détail : Tour Puma 5100" aria-haspopup="dialog">
-            <img src="assets/images/tour-puma-5100.webp" alt="Tour Puma 5100" width="1448" height="1086" loading="lazy" decoding="async">
-            <span class="showcase-caption">
-              <span class="showcase-caption-title">Tour Puma 5100</span>
-              <span class="showcase-caption-spec">Lunette Ø 40 à 350 mm · capacité usinable Ø 650 mm · longueur 2000 mm · outil tournant, axe C</span>
-            </span>
-            <span class="showcase-expand" aria-hidden="true">+</span>
-          </button>
-
-          <button type="button" class="showcase-slide" data-showcase-slide data-detail="Dédié à la production de pièces de série, aux côtés du Puma 4100." aria-label="Voir le détail : Tour Doosan Puma 400M" aria-haspopup="dialog">
-            <img src="assets/images/tour-doosan-puma-400m.webp" alt="Tour Doosan Puma 400M" width="1448" height="1086" loading="lazy" decoding="async">
-            <span class="showcase-caption">
-              <span class="showcase-caption-title">Tour Doosan Puma 400M</span>
-              <span class="showcase-caption-spec">Capacité usinable Ø 555 mm, longueur 900 mm</span>
-            </span>
-            <span class="showcase-expand" aria-hidden="true">+</span>
-          </button>
-
-          <button type="button" class="showcase-slide" data-showcase-slide data-detail="Complète le parc dédié aux pièces de série et permet d'absorber les volumes de production." aria-label="Voir le détail : Tour Doosan Puma 4100" aria-haspopup="dialog">
-            <img src="assets/images/tour-doosan-puma-4100.webp" alt="Tour Doosan Puma 4100" width="1086" height="1448" loading="lazy" decoding="async">
-            <span class="showcase-caption">
-              <span class="showcase-caption-title">Tour Doosan Puma 4100</span>
-              <span class="showcase-caption-spec">Capacité usinable Ø 555 mm, longueur 900 mm, 2 axes</span>
-            </span>
-            <span class="showcase-expand" aria-hidden="true">+</span>
-          </button>
-
-          <button type="button" class="showcase-slide" data-showcase-slide data-detail="Utilisé notamment pour les pièces unitaires et les fabrications ponctuelles." aria-label="Voir le détail : Tour CMZ" aria-haspopup="dialog">
-            <img src="assets/images/tour-cmz.webp" alt="Tour CMZ" width="1448" height="1086" loading="lazy" decoding="async">
-            <span class="showcase-caption">
-              <span class="showcase-caption-title">Tour CMZ</span>
-              <span class="showcase-caption-spec">Capacité usinable Ø 350 mm, longueur 1000 mm</span>
-            </span>
-            <span class="showcase-expand" aria-hidden="true">+</span>
-          </button>
-
-          <button type="button" class="showcase-slide" data-showcase-slide aria-label="Voir le détail : Tour Leadwell" aria-haspopup="dialog">
-            <img src="assets/images/tour-leadwell.webp" alt="Tour Leadwell" width="1448" height="1086" loading="lazy" decoding="async">
-            <span class="showcase-caption">
-              <span class="showcase-caption-title">Tour Leadwell</span>
-              <span class="showcase-caption-spec">Capacité usinable Ø 300 mm, longueur 900 mm</span>
-            </span>
-            <span class="showcase-expand" aria-hidden="true">+</span>
-          </button>
-
-          <button type="button" class="showcase-slide" data-showcase-slide aria-label="Voir le détail : Centre d'usinage Leadwell" aria-haspopup="dialog">
-            <img src="assets/images/centre-usinage-leadwell.webp" alt="Centre d'usinage Leadwell" width="1448" height="1086" loading="lazy" decoding="async">
-            <span class="showcase-caption">
-              <span class="showcase-caption-title">Centre d'usinage Leadwell</span>
-              <span class="showcase-caption-spec">3 axes, diviseur manuel, table 1400 x 700 mm</span>
-            </span>
-            <span class="showcase-expand" aria-hidden="true">+</span>
-          </button>
-
-          <button type="button" class="showcase-slide" data-showcase-slide data-detail="Un robot multi-broches qui automatise la production de pièces de série." aria-label="Voir le détail : Robot Muratec MT20" aria-haspopup="dialog">
-            <img src="assets/images/robot-muratec-mt20.webp" alt="Robot Muratec MT20" width="1086" height="1448" loading="lazy" decoding="async">
-            <span class="showcase-caption">
-              <span class="showcase-caption-title">Robot Muratec MT20</span>
-              <span class="showcase-caption-spec">3 tourelles outils tournants, axes C et Y, broche de reprise</span>
-            </span>
-            <span class="showcase-expand" aria-hidden="true">+</span>
-          </button>
-        </div>
+    <section class="machines-story" data-story aria-label="Le parc machines, en images">
+      <div class="wrap machines-story-head reveal">
+        <p class="machines-story-kicker">Visite d'atelier</p>
+        <h2 class="machines-story-title">Machine après machine, <mark>la fabrication prend forme</mark></h2>
       </div>
-    </section>
 
-    <div class="intersection-scroll" data-intersection-scroll aria-hidden="true">
-      <img src="assets/decor/meca_intersection_scroll_02.svg" alt="">
-    </div>
+      <div class="machines-story-body">
+        <div class="machines-story-rail" aria-hidden="true">
+          <span class="machines-story-rail-fill" data-story-rail></span>
+        </div>
 
-    <section class="section reveal decor-surface decor-a">
+        <ol class="machines-story-list" data-story-list>
+          <li class="story-item" data-story-item>
+            <button type="button" class="story-card" data-story-slide data-detail="Le plus grand tour de l'atelier, réservé aux pièces qui demandent le plus de longueur usinable." aria-label="Voir le détail : Tour Puma 5100" aria-haspopup="dialog">
+              <span class="story-card-media">
+                <img src="assets/images/tour-puma-5100.webp" alt="Tour Puma 5100" width="1448" height="1086" loading="lazy" decoding="async">
+              </span>
+              <span class="story-card-body">
+                <span class="story-card-title">Tour <mark>Puma 5100</mark></span>
+                <span class="story-card-spec">Lunette Ø 40 à 350 mm · capacité usinable Ø 650 mm · longueur 2000 mm · outil tournant, axe C</span>
+                <span class="story-card-cta">Voir le détail <span aria-hidden="true">+</span></span>
+              </span>
+            </button>
+          </li>
+
+          <li class="story-item" data-story-item>
+            <button type="button" class="story-card" data-story-slide data-detail="Dédié à la production de pièces de série, aux côtés du Puma 4100." aria-label="Voir le détail : Tour Doosan Puma 400M" aria-haspopup="dialog">
+              <span class="story-card-media">
+                <img src="assets/images/tour-doosan-puma-400m.webp" alt="Tour Doosan Puma 400M" width="1448" height="1086" loading="lazy" decoding="async">
+              </span>
+              <span class="story-card-body">
+                <span class="story-card-title">Tour <mark>Doosan Puma 400M</mark></span>
+                <span class="story-card-spec">Capacité usinable Ø 555 mm, longueur 900 mm</span>
+                <span class="story-card-cta">Voir le détail <span aria-hidden="true">+</span></span>
+              </span>
+            </button>
+          </li>
+
+          <li class="story-item" data-story-item>
+            <button type="button" class="story-card" data-story-slide data-detail="Complète le parc dédié aux pièces de série et permet d'absorber les volumes de production." aria-label="Voir le détail : Tour Doosan Puma 4100" aria-haspopup="dialog">
+              <span class="story-card-media">
+                <img src="assets/images/tour-doosan-puma-4100.webp" alt="Tour Doosan Puma 4100" width="1086" height="1448" loading="lazy" decoding="async">
+              </span>
+              <span class="story-card-body">
+                <span class="story-card-title">Tour <mark>Doosan Puma 4100</mark></span>
+                <span class="story-card-spec">Capacité usinable Ø 555 mm, longueur 900 mm, 2 axes</span>
+                <span class="story-card-cta">Voir le détail <span aria-hidden="true">+</span></span>
+              </span>
+            </button>
+          </li>
+
+          <li class="story-item" data-story-item>
+            <button type="button" class="story-card" data-story-slide data-detail="Utilisé notamment pour les pièces unitaires et les fabrications ponctuelles." aria-label="Voir le détail : Tour CMZ" aria-haspopup="dialog">
+              <span class="story-card-media">
+                <img src="assets/images/tour-cmz.webp" alt="Tour CMZ" width="1448" height="1086" loading="lazy" decoding="async">
+              </span>
+              <span class="story-card-body">
+                <span class="story-card-title">Tour <mark>CMZ</mark></span>
+                <span class="story-card-spec">Capacité usinable Ø 350 mm, longueur 1000 mm</span>
+                <span class="story-card-cta">Voir le détail <span aria-hidden="true">+</span></span>
+              </span>
+            </button>
+          </li>
+
+          <li class="story-item" data-story-item>
+            <button type="button" class="story-card" data-story-slide aria-label="Voir le détail : Tour Leadwell" aria-haspopup="dialog">
+              <span class="story-card-media">
+                <img src="assets/images/tour-leadwell.webp" alt="Tour Leadwell" width="1448" height="1086" loading="lazy" decoding="async">
+              </span>
+              <span class="story-card-body">
+                <span class="story-card-title">Tour <mark>Leadwell</mark></span>
+                <span class="story-card-spec">Capacité usinable Ø 300 mm, longueur 900 mm</span>
+                <span class="story-card-cta">Voir le détail <span aria-hidden="true">+</span></span>
+              </span>
+            </button>
+          </li>
+
+          <li class="story-item" data-story-item>
+            <button type="button" class="story-card" data-story-slide aria-label="Voir le détail : Centre d'usinage Leadwell" aria-haspopup="dialog">
+              <span class="story-card-media">
+                <img src="assets/images/centre-usinage-leadwell.webp" alt="Centre d'usinage Leadwell" width="1448" height="1086" loading="lazy" decoding="async">
+              </span>
+              <span class="story-card-body">
+                <span class="story-card-title">Centre d'usinage <mark>Leadwell</mark></span>
+                <span class="story-card-spec">3 axes, diviseur manuel, table 1400 x 700 mm</span>
+                <span class="story-card-cta">Voir le détail <span aria-hidden="true">+</span></span>
+              </span>
+            </button>
+          </li>
+
+          <li class="story-item" data-story-item>
+            <button type="button" class="story-card" data-story-slide data-detail="Un robot multi-broches qui automatise la production de pièces de série." aria-label="Voir le détail : Robot Muratec MT20" aria-haspopup="dialog">
+              <span class="story-card-media">
+                <img src="assets/images/robot-muratec-mt20.webp" alt="Robot Muratec MT20" width="1086" height="1448" loading="lazy" decoding="async">
+              </span>
+              <span class="story-card-body">
+                <span class="story-card-title">Robot <mark>Muratec MT20</mark></span>
+                <span class="story-card-spec">3 tourelles outils tournants, axes C et Y, broche de reprise</span>
+                <span class="story-card-cta">Voir le détail <span aria-hidden="true">+</span></span>
+              </span>
+            </button>
+          </li>
+        </ol>
+      </div>
+
       <div class="wrap">
-        <p class="focus-note">
+        <p class="focus-note focus-note-dark">
           <img src="https://api.iconify.design/mdi:crane.svg?color=%23e11616" alt="">
           L'atelier est également équipé d'un pont roulant de 2,5 tonnes pour la manutention des pièces
           et des matières premières.

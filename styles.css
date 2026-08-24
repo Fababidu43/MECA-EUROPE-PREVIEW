@@ -832,6 +832,15 @@ a {
     74% calc(34% + var(--decor-shift));
 }
 
+/* Variante gris clair : ponctue chaque page d'un chapitre plus marqué entre
+   deux sections blanches (le noir reste réservé à "Parc machines"), pour
+   éviter l'effet "tout blanc" plutôt que de multiplier les nuances
+   quasi-identiques de decor-b / decor-c. Texte inchangé : assez clair pour
+   rester lisible avec les couleurs sombres par défaut. */
+.decor-surface.decor-gray {
+  background: linear-gradient(175deg, #eef0f1 0%, #e4e7e9 55%, #eaecee 100%);
+}
+
 .intro-section {
   background: #fff;
   position: relative;
@@ -854,6 +863,14 @@ a {
     rgb(255 255 255 / 100%) 100%
   );
   pointer-events: none;
+}
+
+/* Quand un intro-section suit directement le page-hero (noir plein), cette
+   bande "gomme" déborde de 92px vers le haut et recouvre donc une partie du
+   texte du hero (repeindre par-dessus en noir cache toujours le texte, même
+   sans que ça se voie) : on la supprime complètement dans ce cas précis. */
+.page-hero + .intro-section::before {
+  content: none;
 }
 
 .intro-grid {
@@ -886,27 +903,16 @@ a {
   will-change: transform;
 }
 
-.intro-section.reveal .intro-copy {
-  opacity: 0;
-  transform: translate3d(clamp(140px, 34vw, 720px), 0, 0) rotate(7deg) scale(0.94);
-  filter: blur(6px);
-  transition:
-    opacity 1.65s cubic-bezier(0.16, 1, 0.3, 1),
-    transform 1.85s cubic-bezier(0.16, 1, 0.3, 1),
-    filter 1.7s cubic-bezier(0.16, 1, 0.3, 1);
-  will-change: opacity, transform, filter;
-}
-
+/* Cette section est la toute première de la page pieces-serie.html, déjà
+   visible sans scroll au chargement : le grand glissement/rotation/flou de
+   section (identique aux autres .intro-section/.engage-section) y ressemblait
+   à un bug plutôt qu'à un effet voulu. On la laisse donc statique — seuls le
+   reveal en cascade du texte et le surlignage rouge (non touchés) animent. */
+.intro-section.reveal .intro-copy,
 .intro-section.reveal .intro-figure {
-  opacity: 0;
-  transform: translate3d(clamp(-720px, -34vw, -140px), 0, 0) rotate(-7deg) scale(0.94);
-  filter: blur(6px);
-  transition:
-    opacity 1.7s cubic-bezier(0.16, 1, 0.3, 1),
-    transform 1.95s cubic-bezier(0.16, 1, 0.3, 1),
-    filter 1.8s cubic-bezier(0.16, 1, 0.3, 1);
-  transition-delay: 140ms;
-  will-change: opacity, transform, filter;
+  opacity: 1;
+  transform: none;
+  filter: none;
 }
 
 .intro-section.reveal.is-visible .intro-copy,
@@ -944,6 +950,40 @@ a {
   opacity: 1;
   transform: translate3d(0, 0, 0) rotate(0deg) scale(1);
   filter: blur(0);
+}
+
+/* Toute première section de pieces-unitaires.html, déjà visible au
+   chargement : même correctif que .intro-section plus haut, on neutralise
+   le grand glissement de section (le reveal du texte à l'intérieur et le
+   surlignage rouge restent inchangés). Scopé par id pour ne pas toucher les
+   autres .engage-section du site (Doosan Puma 4100, Exemple de réalisation...). */
+#pieces-unitaires.engage-section.reveal .text-content,
+#pieces-unitaires.engage-section.reveal .section-figure {
+  opacity: 1;
+  transform: none;
+  filter: none;
+}
+
+/* En layout inversé (photo à gauche, texte à droite — cf. .split-grid.reverse
+   sur pieces-serie.html et pieces-unitaires.html), le texte et la photo
+   doivent glisser depuis LEUR côté visuel respectif, sinon ils se croisent
+   en plein milieu de l'animation : on inverse simplement les deux glissades. */
+.engage-section.reveal .split-grid.reverse .text-content {
+  transform: translate3d(clamp(140px, 32vw, 680px), 0, 0) rotate(6deg) scale(0.94);
+}
+
+.engage-section.reveal .split-grid.reverse .section-figure {
+  transform: translate3d(clamp(-680px, -32vw, -140px), 0, 0) rotate(-6deg) scale(0.94);
+}
+
+/* .split-grid.reverse ajoute 2 classes de plus que .text-content /
+   .section-figure seuls : sans ceci, ces sélecteurs plus spécifiques
+   continuaient à imposer la position de départ même une fois .is-visible
+   ajouté, et les éléments restaient bloqués sur le côté au lieu de revenir
+   au centre. */
+.engage-section.reveal.is-visible .split-grid.reverse .text-content,
+.engage-section.reveal.is-visible .split-grid.reverse .section-figure {
+  transform: translate3d(0, 0, 0) rotate(0deg) scale(1);
 }
 
 .experience-section.reveal .section-figure {
@@ -1006,15 +1046,12 @@ a {
   filter: blur(0);
 }
 
+/* Toute première section de contact.html, déjà visible au chargement : même
+   correctif que .intro-section / #pieces-unitaires plus haut. */
 .pre-footer.reveal .contact-showcase {
-  opacity: 0;
-  transform: translate3d(0, 90px, 0) rotate(3deg) scale(0.94);
-  filter: blur(5px);
-  transition:
-    opacity 1.65s cubic-bezier(0.16, 1, 0.3, 1),
-    transform 1.85s cubic-bezier(0.16, 1, 0.3, 1),
-    filter 1.7s cubic-bezier(0.16, 1, 0.3, 1);
-  will-change: opacity, transform, filter;
+  opacity: 1;
+  transform: none;
+  filter: none;
 }
 
 .pre-footer.reveal.is-visible .contact-showcase {
@@ -1054,6 +1091,34 @@ mark {
   -webkit-box-decoration-break: clone;
 }
 
+/* Étiquette rouge au-dessus de chaque titre de section : taille et graisse
+   harmonisées ici pour toutes les pages (avant, seul le dégradé de couleur
+   était défini globalement, la taille dépendait du contexte local). */
+.section-kicker {
+  display: inline-block;
+  margin: 0 0 14px;
+  font-family: Montserrat, Arial, sans-serif;
+  font-size: 0.88rem;
+  font-weight: 800;
+  letter-spacing: 0.18em;
+  line-height: 1;
+  text-transform: uppercase;
+}
+
+/* Titres de section « nus » (juste un kicker + un h2 dans .wrap, sans
+   .intro-copy / .text-content / .plan-copy / .key-figures-heading autour) :
+   harmonisés sur la même taille que les autres titres de section du site. */
+.legal-section > .wrap > h2,
+#apercu-title,
+.contact-form-section > .wrap > h2 {
+  margin: 0 0 18px;
+  max-width: 720px;
+  color: #1f1f1f;
+  font-family: Montserrat, Arial, sans-serif;
+  font-size: clamp(1.9rem, 3.2vw, 3rem);
+  line-height: 1.2;
+}
+
 .section-kicker,
 .key-prefix,
 .key-figure-phrase .key-arrow,
@@ -1076,22 +1141,31 @@ mark {
   -webkit-text-fill-color: transparent;
 }
 
-/* Les titres marqués gardent un vrai surlignage rouge lisible,
-   avec une entrée légère au moment du reveal. */
+/* Les titres marqués gardent un vrai surlignage rouge lisible : le bandeau
+   rouge se remplit de haut en bas au moment du reveal (clip-path), plutôt
+   qu'un simple fondu — y compris les h1 des en-têtes de page (page-hero),
+   même traitement que les h2. */
+.reveal h1 mark,
 .reveal h2 mark {
-  transform: translate3d(0, 0.3em, 0) scale(0.96);
-  opacity: 0;
+  clip-path: inset(0 0 100% 0);
   transition:
-    opacity 1.05s cubic-bezier(0.16, 1, 0.3, 1),
-    transform 1.25s cubic-bezier(0.16, 1, 0.3, 1),
+    clip-path 0.4s cubic-bezier(0.65, 0, 0.35, 1),
     background-color 0.4s ease,
     color 0.4s ease;
   transition-delay: 320ms;
 }
 
+.reveal.is-visible h1 mark,
 .reveal.is-visible h2 mark {
-  opacity: 1;
-  transform: translate3d(0, 0, 0) scale(1);
+  clip-path: inset(0 0 0% 0);
+}
+
+/* Sur les en-têtes de page (rideau rouge + titre qui monte), le surlignage
+   du h1 ne doit se remplir qu'une fois le titre arrivé, sinon il se remplit
+   pendant que le texte est encore invisible et l'effet est perdu. */
+.legal-hero h1 mark,
+.page-hero h1 mark {
+  transition-delay: 1.55s;
 }
 
 .contact-showcase-kicker {
@@ -1113,9 +1187,9 @@ mark {
     --tint-reveal: 1;
   }
 
+  .reveal h1 mark,
   .reveal h2 mark {
-    opacity: 1;
-    transform: none;
+    clip-path: none;
     transition: none;
   }
 }
@@ -1150,6 +1224,12 @@ mark {
   height: 72px;
   background: #fff;
   pointer-events: none;
+}
+
+/* Même correctif que .page-hero + .intro-section::before plus haut : cette
+   bande déborde de 72px vers le haut et cachait le bas du texte du hero. */
+.page-hero + .engage-section::before {
+  content: none;
 }
 
 .split-grid {
@@ -1648,23 +1728,24 @@ mark {
 .focus-note {
   display: flex;
   align-items: center;
-  gap: 16px;
+  gap: 22px;
+  width: 100%;
   margin: 0 auto;
-  max-width: 640px;
-  padding: 20px 26px;
+  padding: clamp(26px, 3vw, 36px) clamp(28px, 4vw, 48px);
   background: #fff;
   border: 1px solid rgb(0 0 0 / 10%);
   border-radius: 18px;
   box-shadow: 0 16px 34px rgb(0 0 0 / 7%);
   color: #5a5a5a;
-  font-size: 0.98rem;
+  font-size: clamp(1.1rem, 1.7vw, 1.4rem);
+  font-weight: 500;
   line-height: 1.5;
 }
 
 .focus-note img {
   flex: 0 0 auto;
-  width: 24px;
-  height: 24px;
+  width: 34px;
+  height: 34px;
 }
 
 @media (width <= 540px) {
@@ -1681,16 +1762,9 @@ mark {
   padding: 42px 0 150px;
 }
 
-.pre-footer::before {
-  content: "";
-  position: absolute;
-  left: 0;
-  right: 0;
-  top: -72px;
-  height: 72px;
-  background: #fff;
-  pointer-events: none;
-}
+/* .pre-footer suit toujours directement le page-hero (noir plein) sur
+   contact.html : même correctif que .intro-section / .engage-section plus
+   haut, cette bande "gomme" ne doit pas déborder sur le texte du hero. */
 
 .pre-footer-grid {
   display: grid;
@@ -2472,39 +2546,6 @@ mark {
   transform: translate3d(0, 0, 0) rotate(0deg);
 }
 
-.intersection-scroll {
-  --intersection-reveal: 0;
-
-  position: relative;
-  z-index: 2;
-  width: min(100%, 1600px);
-  margin: -34px auto -18px;
-  line-height: 0;
-  pointer-events: none;
-  overflow: hidden;
-}
-
-.intersection-scroll img {
-  display: block;
-  width: 100%;
-  height: auto;
-  clip-path: inset(0 calc((1 - var(--intersection-reveal)) * 100%) 0 0);
-  will-change: clip-path;
-}
-
-.intersection-scroll-footer {
-  z-index: 3;
-  margin: 0;
-  padding: 0;
-  background: #fff;
-}
-
-.intersection-scroll-footer img {
-  clip-path: none;
-  width: 100%;
-  display: block;
-}
-
 .title-split {
   display: block;
 }
@@ -2565,22 +2606,6 @@ mark {
     clip-path: none;
   }
 
-  .intersection-scroll {
-    margin: -20px auto -10px;
-  }
-
-  .intersection-scroll img {
-    clip-path: none;
-  }
-
-  .intersection-scroll-footer {
-    margin: -14px auto -16px;
-  }
-
-  .intersection-scroll-footer img {
-    clip-path: none;
-  }
-
   .hero-video-bg,
   .intro-figure img,
   .section-figure img,
@@ -2608,13 +2633,71 @@ body.legal-page {
 
 .legal-hero,
 .page-hero {
-  background: linear-gradient(180deg, #1e1e1e 0%, #2c2c2c 100%);
+  position: relative;
+  overflow: hidden;
+  isolation: isolate;
+  background: linear-gradient(170deg, var(--c-deep) 0%, var(--c-deep-2) 100%);
   padding: 54px 0 46px;
   color: #fff;
 }
 
+/* Rideau rouge qui balaie l'en-tête de gauche à droite puis se lève pour
+   révéler le fond noir : déclenché par .is-visible (ajouté par l'observer
+   au chargement, immédiat ici puisque l'en-tête est tout en haut de page). */
+.legal-hero::before,
+.page-hero::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  background: linear-gradient(120deg, #a80710, var(--c-teal) 60%);
+  clip-path: inset(0 100% 0 0);
+}
+
+.legal-hero::after,
+.page-hero::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  background: linear-gradient(100deg, transparent 40%, rgb(255 255 255 / 25%) 50%, transparent 60%);
+  background-size: 250% 100%;
+  background-position: 100% 0;
+  clip-path: inset(0 100% 0 0);
+}
+
+.legal-hero::before,
+.reveal.is-visible.page-hero::before {
+  animation:
+    hero-curtain-wipe 0.85s cubic-bezier(0.6, 0, 0.3, 1) 0.05s forwards,
+    hero-curtain-lift 0.55s cubic-bezier(0.6, 0, 0.3, 1) 1.05s forwards;
+}
+
+.legal-hero::after,
+.reveal.is-visible.page-hero::after {
+  animation:
+    hero-curtain-wipe 0.85s cubic-bezier(0.6, 0, 0.3, 1) 0.05s forwards,
+    hero-curtain-sheen 0.85s ease 0.05s forwards;
+}
+
+@keyframes hero-curtain-wipe {
+  from { clip-path: inset(0 100% 0 0); }
+  to { clip-path: inset(0 0 0 0); }
+}
+
+@keyframes hero-curtain-lift {
+  to { clip-path: inset(0 0 100% 0); }
+}
+
+@keyframes hero-curtain-sheen {
+  from { background-position: 100% 0; }
+  to { background-position: -50% 0; }
+}
+
 .legal-hero-inner,
 .page-hero-inner {
+  position: relative;
+  z-index: 2;
   display: grid;
   gap: 14px;
 }
@@ -2627,6 +2710,8 @@ body.legal-page {
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.12em;
+  opacity: 0;
+  transform: translateY(14px);
 }
 
 .legal-hero h1,
@@ -2635,6 +2720,8 @@ body.legal-page {
   color: #fff;
   font-size: clamp(2.2rem, 4vw, 4rem);
   line-height: 1.08;
+  opacity: 0;
+  transform: translateY(18px);
 }
 
 .legal-hero p,
@@ -2644,6 +2731,48 @@ body.legal-page {
   color: rgb(255 255 255 / 86%);
   font-size: 1.06rem;
   line-height: 1.65;
+  opacity: 0;
+  transform: translateY(14px);
+}
+
+.legal-hero .legal-kicker,
+.page-hero.reveal.is-visible .page-kicker {
+  animation: hero-content-rise 0.55s ease 1.15s forwards;
+}
+
+.legal-hero h1,
+.page-hero.reveal.is-visible h1 {
+  animation: hero-content-rise 0.6s ease 1.25s forwards;
+}
+
+.legal-hero p,
+.page-hero.reveal.is-visible p {
+  animation: hero-content-rise 0.55s ease 1.35s forwards;
+}
+
+@keyframes hero-content-rise {
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .legal-hero::before,
+  .page-hero::before,
+  .legal-hero::after,
+  .page-hero::after {
+    animation: none !important;
+    clip-path: inset(0 0 100% 0) !important;
+  }
+
+  .legal-kicker,
+  .page-kicker,
+  .legal-hero h1,
+  .page-hero h1,
+  .legal-hero p,
+  .page-hero p {
+    animation: none !important;
+    opacity: 1 !important;
+    transform: none !important;
+  }
 }
 
 .legal-section {
@@ -2706,6 +2835,128 @@ body.legal-page {
 .legal-note {
   color: #7a7a7a;
   font-size: 0.96rem;
+}
+
+/* Trio d'arguments de fin de page (pieces-serie.html / pieces-unitaires.html) :
+   grille à 3 colonnes fixes (jamais d'orpheline en 2e ligne), carte à icône
+   avec entrée animée en cascade au scroll, cf. le même principe que
+   .key-figure-card plus haut (--feature-index pilote le délai). */
+.feature-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: clamp(20px, 2.4vw, 28px);
+}
+
+.feature-card {
+  position: relative;
+  background: #fff;
+  border-radius: 24px;
+  padding: clamp(28px, 2.8vw, 36px) clamp(24px, 2.4vw, 30px);
+  border: 1px solid rgb(0 0 0 / 10%);
+  box-shadow: 0 18px 40px rgb(0 0 0 / 8%);
+  transition: transform 0.32s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.32s ease, border-color 0.32s ease;
+}
+
+.feature-card:hover {
+  transform: translateY(-6px);
+  border-color: rgb(225 22 22 / 30%);
+  box-shadow: 0 26px 54px rgb(0 0 0 / 14%);
+}
+
+.feature-card-icon {
+  display: inline-grid;
+  place-items: center;
+  width: 52px;
+  height: 52px;
+  margin-bottom: 20px;
+  border-radius: 15px;
+  background: linear-gradient(135deg, #e11616 0%, #a80f0f 100%);
+  box-shadow: 0 10px 22px rgb(225 22 22 / 30%);
+}
+
+.feature-card-icon img {
+  width: 26px;
+  height: 26px;
+}
+
+.feature-card h2 {
+  margin: 0 0 12px;
+  color: #1f1f1f;
+  font-family: Montserrat, Arial, sans-serif;
+  font-size: clamp(1.2rem, 1.6vw, 1.4rem);
+  line-height: 1.2;
+}
+
+.feature-card p {
+  margin: 0;
+  color: #5a5a5a;
+  font-size: 1rem;
+  line-height: 1.6;
+}
+
+/* Même dynamisme d'arrivée que la section d'intro (.intro-copy / .intro-figure) :
+   glissade + rotation + zoom + flou, une carte de chaque côté et celle du
+   milieu qui remonte comme une bulle — adapté à 3 éléments plutôt qu'à un
+   duo photo/texte, mais avec les mêmes courbes et durées. */
+.reveal .feature-card {
+  opacity: 0;
+  filter: blur(6px);
+  transition:
+    opacity 1.65s cubic-bezier(0.16, 1, 0.3, 1),
+    transform 1.85s cubic-bezier(0.16, 1, 0.3, 1),
+    filter 1.7s cubic-bezier(0.16, 1, 0.3, 1),
+    box-shadow 0.32s ease,
+    border-color 0.32s ease;
+  transition-delay: calc(120ms + (var(--feature-index, 0) * 160ms));
+  will-change: opacity, transform, filter;
+}
+
+.reveal.is-visible .feature-card {
+  opacity: 1;
+  transform: translate3d(0, 0, 0) rotate(0deg) scale(1);
+  filter: blur(0);
+}
+
+.reveal.is-visible .feature-card:hover {
+  transform: translateY(-6px);
+}
+
+.feature-card:nth-child(1) {
+  --feature-index: 0;
+
+  transform: translate3d(clamp(-220px, -14vw, -90px), 36px, 0) rotate(-6deg) scale(0.94);
+}
+
+.feature-card:nth-child(2) {
+  --feature-index: 1;
+
+  transform: translate3d(0, 90px, 0) rotate(3deg) scale(0.94);
+}
+
+.feature-card:nth-child(3) {
+  --feature-index: 2;
+
+  transform: translate3d(clamp(90px, 14vw, 220px), 36px, 0) rotate(6deg) scale(0.94);
+}
+
+/* Le surlignage rouge du titre « éclôt » juste après la carte elle-même,
+   pour ne pas retomber avant que la carte ne soit visible. */
+.reveal .feature-card h2 mark {
+  transition-delay: calc(560ms + (var(--feature-index, 0) * 150ms));
+}
+
+@media (width <= 900px) {
+  .feature-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .reveal .feature-card {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
 }
 
 @media (width <= 1250px) {
@@ -3035,6 +3286,19 @@ body.legal-page {
 
   .engage-section.reveal .section-figure {
     transform: translate3d(34px, 0, 0) scale(0.985);
+  }
+
+  .engage-section.reveal .split-grid.reverse .text-content {
+    transform: translate3d(34px, 0, 0) scale(0.985);
+  }
+
+  .engage-section.reveal .split-grid.reverse .section-figure {
+    transform: translate3d(-34px, 0, 0) scale(0.985);
+  }
+
+  .engage-section.reveal.is-visible .split-grid.reverse .text-content,
+  .engage-section.reveal.is-visible .split-grid.reverse .section-figure {
+    transform: translate3d(0, 0, 0) scale(1);
   }
 
   .experience-section.reveal .section-figure {
@@ -3938,10 +4202,6 @@ body.legal-page {
   .footer a {
     font-size: 0.9rem;
   }
-
-  .intersection-scroll {
-    margin: -10px auto -8px;
-  }
 }
 
 /* Priorités finales du nouveau header/hero après les paliers historiques. */
@@ -4233,6 +4493,39 @@ body.legal-page {
   border-radius: 0 30px 30px;
 }
 
+/* Même liseré rouge sur les sections en layout inversé (photo à gauche,
+   cf. .split-grid.reverse) : "Doosan Puma 4100" (pieces-serie.html) et
+   "Exemple de réalisation" (pieces-unitaires.html) — la photo y est du même
+   côté que #pieces-serie .series-figure, donc même variante du cadre. */
+.split-grid.reverse .section-figure {
+  position: relative;
+  z-index: 2;
+  margin: 0;
+  background: transparent;
+  box-shadow: none;
+  overflow: visible;
+  border-radius: 30px;
+}
+
+.split-grid.reverse .section-figure::before {
+  content: "";
+  position: absolute;
+  inset: 28px -14px -14px -18px;
+  border-left: 1.5px solid rgb(225 22 22 / 75%);
+  border-bottom: 1.5px solid rgb(225 22 22 / 75%);
+  border-top: 0;
+  border-right: 0;
+  border-radius: 30px 0 30px 30px;
+  pointer-events: none;
+}
+
+.split-grid.reverse .section-figure img {
+  position: relative;
+  z-index: 1;
+  border-radius: 28px;
+  box-shadow: 0 18px 42px rgb(0 0 0 / 22%);
+}
+
 #pieces-serie .series-figure img,
 #pieces-unitaires .section-figure img,
 #parc-machines .section-figure img {
@@ -4279,7 +4572,8 @@ body.legal-page {
 
   #pieces-serie .series-figure::before,
   #pieces-unitaires .section-figure::before,
-  #parc-machines .section-figure::before {
+  #parc-machines .section-figure::before,
+  .split-grid.reverse .section-figure::before {
     inset: 18px -10px -10px;
     border-width: 1.25px;
   }
@@ -4416,132 +4710,300 @@ body.legal-page {
   line-height: 1.6;
 }
 
-/* Showcase plein écran du parc machines : le scroll vertical fait défiler les
-   photos horizontalement (page parc-machines.html). Repli en scroll tactile
-   natif sur mobile et pour prefers-reduced-motion (voir media query plus bas). */
-.machines-showcase {
+/* Récit vertical du parc machines (page parc-machines.html) : chaque machine
+   est une étape que le scroll révèle et « allume » en couleur au passage,
+   sur un fond atelier noir/gris avec rappel rouge — cf. .story-item.is-active
+   piloté par IntersectionObserver dans script.js, et le rail latéral rempli
+   au fil du scroll (--story-progress). */
+.machines-story {
   position: relative;
-}
-
-.machines-showcase-sticky {
-  position: sticky;
-  top: 0;
-  height: 100vh;
-  display: flex;
-  align-items: center;
+  padding: clamp(64px, 9vw, 108px) 0 clamp(48px, 7vw, 84px);
+  background: linear-gradient(180deg, #14161a 0%, #1b1d22 50%, #14161a 100%);
   overflow: hidden;
-  background: #14161a;
 }
 
-.machines-showcase-track {
-  display: flex;
-  gap: 32px;
-  padding: 0 8vw;
+.machines-story::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  opacity: 0.5;
+  background-image: radial-gradient(1px 1px at center, rgb(255 255 255 / 14%) 1px, transparent 1.5px);
+  background-size: 26px 26px;
+}
+
+.machines-story-head {
+  position: relative;
+  z-index: 1;
+  margin-bottom: clamp(36px, 5vw, 56px);
+}
+
+.machines-story-kicker {
+  margin: 0 0 10px;
+  color: var(--c-teal);
+  font-family: Montserrat, Arial, sans-serif;
+  font-size: 0.78rem;
+  font-weight: 800;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+}
+
+.machines-story-title {
+  margin: 0;
+  max-width: 720px;
+  color: #fff;
+  font-size: clamp(1.7rem, 3vw, 2.5rem);
+  line-height: 1.2;
+}
+
+.machines-story-body {
+  position: relative;
+  z-index: 1;
+  width: min(calc(100% - 36px), var(--max));
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: 30px minmax(0, 1fr);
+  gap: clamp(20px, 3vw, 40px);
+}
+
+.machines-story-rail {
+  position: relative;
+  width: 3px;
+  margin: 10px auto 0;
+  background: rgb(255 255 255 / 12%);
+  border-radius: 2px;
+}
+
+.machines-story-rail-fill {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  transform: scaleY(0);
+  transform-origin: top;
+  background: linear-gradient(180deg, var(--c-teal) 0%, #ff8b85 100%);
+  border-radius: 2px;
+  box-shadow: 0 0 14px rgb(225 22 22 / 55%);
   will-change: transform;
 }
 
-.showcase-slide {
+.machines-story-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: clamp(40px, 6vw, 72px);
+}
+
+.story-item {
+  --story-active: 0;
+}
+
+.story-card {
   position: relative;
-  flex: 0 0 min(76vw, 900px);
-  height: min(72vh, 620px);
+  display: grid;
+  grid-template-columns: minmax(0, 1.05fr) minmax(0, 0.95fr);
+  align-items: center;
+  gap: clamp(28px, 4vw, 56px);
+  width: 100%;
   margin: 0;
   padding: 0;
   border: 0;
-  border-radius: 26px;
-  overflow: hidden;
-  box-shadow: 0 30px 60px rgb(0 0 0 / 30%);
   background: none;
-  cursor: pointer;
+  color: inherit;
   font: inherit;
   text-align: left;
-  display: block;
-  transition: transform 0.32s ease, box-shadow 0.32s ease;
+  cursor: pointer;
 }
 
-.showcase-slide:hover,
-.showcase-slide:focus-visible {
-  transform: translateY(-4px);
-  box-shadow: 0 36px 70px rgb(0 0 0 / 38%);
+.story-item:nth-child(even) .story-card {
+  grid-template-columns: minmax(0, 0.95fr) minmax(0, 1.05fr);
 }
 
-.showcase-slide img {
+.story-item:nth-child(even) .story-card-media {
+  order: 2;
+}
+
+.story-card-media {
+  position: relative;
+  border-radius: 20px;
+  overflow: hidden;
+  aspect-ratio: 4 / 3;
+  box-shadow: 0 30px 60px rgb(0 0 0 / 45%);
+}
+
+.story-card-media img {
   width: 100%;
   height: 100%;
   object-fit: cover;
   display: block;
-  transition: transform 0.5s ease;
+  filter: grayscale(0.85) brightness(0.72) contrast(1.05);
+  transform: scale(1.08);
+  transition: filter 0.9s cubic-bezier(0.16, 1, 0.3, 1), transform 1.1s cubic-bezier(0.16, 1, 0.3, 1);
+  will-change: filter, transform;
 }
 
-.showcase-slide:hover img,
-.showcase-slide:focus-visible img {
-  transform: scale(1.05);
+.story-item.is-active .story-card-media img {
+  filter: grayscale(0) brightness(1) contrast(1);
+  transform: scale(1);
 }
 
-.showcase-caption {
+.story-card-media::after {
+  content: "";
   position: absolute;
-  inset: auto 0 0 0;
-  padding: 28px 30px;
-  background: linear-gradient(180deg, transparent 0%, rgb(0 0 0 / 80%) 100%);
-  color: #fff;
-  display: block;
+  inset: 0;
+  background: linear-gradient(180deg, transparent 55%, rgb(0 0 0 / 55%) 100%);
+  opacity: 1;
+  transition: opacity 0.6s ease;
 }
 
-.showcase-caption-title {
+.story-item.is-active .story-card-media::after {
+  opacity: 0.4;
+}
+
+/* Le texte de chaque machine vit dans une carte blanche bien lisible, qui
+   « sort » légèrement de son cadre et dont les lignes s'animent une à une
+   quand l'étape devient active (même logique de stagger que .text-content
+   sur les pages pièces-serie / pieces-unitaires). */
+.story-card-body {
   display: block;
-  margin: 0 0 6px;
+  padding: clamp(24px, 2.6vw, 34px) clamp(26px, 2.8vw, 38px);
+  background: #fff;
+  border-radius: 20px;
+  box-shadow: 0 24px 50px rgb(0 0 0 / 35%);
+  transform: translate3d(0, 10px, 0) scale(0.98);
+  opacity: 0.9;
+  transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.6s ease;
+}
+
+.story-item.is-active .story-card-body {
+  transform: translate3d(0, 0, 0) scale(1);
+  box-shadow: 0 30px 64px rgb(0 0 0 / 20%);
+}
+
+.story-card-body > * {
+  opacity: 0;
+  transform: translate3d(0, 14px, 0);
+  transition: opacity 0.55s cubic-bezier(0.16, 1, 0.3, 1), transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.story-item.is-active .story-card-body > * {
+  opacity: 1;
+  transform: translate3d(0, 0, 0);
+}
+
+.story-card-title {
+  transition-delay: 60ms;
+}
+
+.story-card-spec {
+  transition-delay: 140ms;
+}
+
+.story-card-cta {
+  transition-delay: 220ms;
+}
+
+.story-card-title {
+  display: block;
+  margin: 0 0 10px;
+  color: #1c1c1c;
   font-family: Montserrat, Arial, sans-serif;
   font-weight: 700;
-  font-size: clamp(1.2rem, 1.8vw, 1.6rem);
+  font-size: clamp(1.25rem, 2vw, 1.7rem);
 }
 
-.showcase-caption-spec {
+/* Le surlignage rouge du nom de la machine « éclôt » juste après le titre,
+   même principe que .reveal h2 mark mais piloté par .story-item.is-active
+   puisque le récit machines n'utilise pas le système .reveal générique. */
+.story-card-title mark {
+  clip-path: inset(0 0 100% 0);
+  transition:
+    clip-path 0.4s cubic-bezier(0.65, 0, 0.35, 1),
+    background-color 0.4s ease,
+    color 0.4s ease;
+  transition-delay: 380ms;
+}
+
+.story-item.is-active .story-card-title mark {
+  clip-path: inset(0 0 0% 0);
+}
+
+.story-card-spec {
   display: block;
-  color: rgb(255 255 255 / 84%);
-  font-size: 0.96rem;
+  max-width: 46ch;
+  color: #5a5a5a;
+  font-size: 0.98rem;
+  line-height: 1.55;
 }
 
-.showcase-expand {
-  position: absolute;
-  top: 18px;
-  right: 18px;
-  display: inline-grid;
-  place-items: center;
-  width: 38px;
-  height: 38px;
-  border-radius: 50%;
-  background: rgb(20 22 26 / 55%);
-  border: 1px solid rgb(255 255 255 / 30%);
-  color: #fff;
-  font-size: 1.3rem;
-  line-height: 1;
-  backdrop-filter: blur(2px);
-  transition: transform 0.32s ease, background-color 0.32s ease;
+.story-card-cta {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 18px;
+  padding: 10px 18px;
+  border: 1px solid rgb(0 0 0 / 14%);
+  border-radius: 999px;
+  color: #1c1c1c;
+  font-size: 0.86rem;
+  font-weight: 600;
+  transition: background-color 0.28s ease, border-color 0.28s ease, color 0.28s ease, transform 0.28s ease;
 }
 
-.showcase-slide:hover .showcase-expand,
-.showcase-slide:focus-visible .showcase-expand {
-  transform: scale(1.1) rotate(90deg);
+.story-card:hover .story-card-cta,
+.story-card:focus-visible .story-card-cta {
   background: var(--c-teal);
+  border-color: var(--c-teal);
+  color: #fff;
+  transform: translateX(3px);
+}
+
+.focus-note-dark {
+  margin-top: clamp(48px, 7vw, 80px);
+  background: rgb(255 255 255 / 6%);
+  border-color: rgb(255 255 255 / 14%);
+  color: rgb(255 255 255 / 82%);
+}
+
+@media (width <= 900px) {
+  .machines-story-body {
+    grid-template-columns: 20px minmax(0, 1fr);
+  }
+
+  .story-card,
+  .story-item:nth-child(even) .story-card {
+    grid-template-columns: 1fr;
+  }
+
+  .story-item:nth-child(even) .story-card-media {
+    order: 0;
+  }
+
+  .story-card-body {
+    margin-top: -34px;
+    position: relative;
+    z-index: 1;
+  }
 }
 
 @media (width <= 760px), (prefers-reduced-motion: reduce) {
-  .machines-showcase-sticky {
-    position: static;
-    height: auto;
-    padding: 6px 0 10px;
+  .story-card-media img {
+    filter: grayscale(0) brightness(1) contrast(1);
+    transform: none;
   }
 
-  .machines-showcase-track {
-    overflow-x: auto;
-    scroll-snap-type: x mandatory;
-    -webkit-overflow-scrolling: touch;
-    padding: 0 20px;
+  .story-card-body,
+  .story-card-body > * {
+    opacity: 1;
+    transform: none;
   }
 
-  .showcase-slide {
-    flex-basis: min(84vw, 420px);
-    height: 58vh;
-    scroll-snap-align: start;
+  .story-card-title mark {
+    clip-path: none;
   }
 }
 
@@ -4697,9 +5159,11 @@ body.modal-open {
 @media (prefers-reduced-motion: reduce) {
   .machine-modal,
   .machine-modal-dialog,
-  .showcase-slide,
-  .showcase-slide img,
-  .showcase-expand {
+  .story-card,
+  .story-card-media img,
+  .story-card-body,
+  .story-card-title mark,
+  .machines-story-rail-fill {
     transition: none;
   }
 }

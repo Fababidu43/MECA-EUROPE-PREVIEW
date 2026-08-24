@@ -11,10 +11,11 @@ const parallaxImages = document.querySelectorAll('.intro-figure img, .engage-sec
 const keyFiguresSection = document.querySelector('.key-figures-section');
 const keyFigureCounters = keyFiguresSection ? keyFiguresSection.querySelectorAll('[data-count]') : [];
 const body = document.body;
-const machinesShowcase = document.querySelector('[data-horizontal-showcase]');
-const showcaseViewport = machinesShowcase ? machinesShowcase.querySelector('.machines-showcase-sticky') : null;
-const showcaseTrack = machinesShowcase ? machinesShowcase.querySelector('[data-showcase-track]') : null;
-const showcaseSlides = document.querySelectorAll('[data-showcase-slide]');
+const machinesStory = document.querySelector('[data-story]');
+const storyList = machinesStory ? machinesStory.querySelector('[data-story-list]') : null;
+const storyItems = machinesStory ? Array.from(machinesStory.querySelectorAll('[data-story-item]')) : [];
+const storyRailFill = machinesStory ? machinesStory.querySelector('[data-story-rail]') : null;
+const storySlides = document.querySelectorAll('[data-story-slide]');
 const machineModal = document.querySelector('[data-machine-modal]');
 const machineModalImage = machineModal ? machineModal.querySelector('[data-machine-modal-image]') : null;
 const machineModalTitle = machineModal ? machineModal.querySelector('[data-machine-modal-title]') : null;
@@ -24,17 +25,13 @@ let machineModalTrigger = null;
 
 const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 const revealItems = document.querySelectorAll('.reveal');
-const intersectionScrollItems = Array.from(document.querySelectorAll('[data-intersection-scroll]'));
 const sectionTargets = new Map();
-const intersectionStates = new Map();
 const tintStates = new Map();
 let tintScrollItems = [];
 
 let lastScrollY = window.scrollY || 0;
 let scrollFrame = 0;
 let forceScrollSync = false;
-let showcaseScrollDistance = 0;
-let showcaseActive = false;
 
 const clamp = (value, min, max) => Math.min(Math.max(value, min), max);
 const NAV_ACTIVE_LOOKAHEAD = 120;
@@ -81,59 +78,6 @@ const updateActiveNavLink = () => {
       link.removeAttribute('aria-current');
     }
   });
-};
-
-const getIntersectionState = (element) => {
-  if (!intersectionStates.has(element)) {
-    intersectionStates.set(element, {
-      progress: 0,
-      locked: false,
-    });
-  }
-
-  return intersectionStates.get(element);
-};
-
-const syncIntersectionScrolls = (force = false) => {
-  if (!intersectionScrollItems.length) {
-    return;
-  }
-
-  const currentScrollY = window.scrollY || 0;
-  const scrollingDown = currentScrollY > lastScrollY;
-
-  if (!force && !scrollingDown) {
-    return;
-  }
-
-  const viewportHeight = window.innerHeight || 1;
-
-  intersectionScrollItems.forEach((item) => {
-    const state = getIntersectionState(item);
-
-    if (state.locked) {
-      return;
-    }
-
-    const rect = item.getBoundingClientRect();
-    const revealStart = viewportHeight * 0.82;
-    const revealEnd = -Math.max(0, rect.height * 0.14);
-    const span = Math.max(1, revealStart - revealEnd);
-    const rawProgress = clamp((revealStart - rect.top) / span, 0, 1);
-    const nextProgress = Math.max(state.progress, rawProgress);
-
-    if (nextProgress !== state.progress) {
-      state.progress = nextProgress;
-      item.style.setProperty('--intersection-reveal', String(nextProgress));
-    }
-
-    if (nextProgress >= 1) {
-      state.locked = true;
-      item.style.setProperty('--intersection-reveal', '1');
-    }
-  });
-
-  lastScrollY = currentScrollY;
 };
 
 const getTintState = (element) => {
@@ -217,32 +161,42 @@ const updateScrollDynamics = () => {
   });
 };
 
-const measureShowcase = () => {
-  if (!machinesShowcase || !showcaseViewport || !showcaseTrack) {
+/* Rail latéral du récit machines : sa hauteur (scaleY) suit la progression du
+   scroll dans la liste, du premier au dernier repère. */
+const updateStoryRail = () => {
+  if (!storyList || !storyRailFill) {
     return;
   }
 
-  showcaseActive = !prefersReducedMotion && window.innerWidth > 760;
-
-  if (!showcaseActive) {
-    showcaseScrollDistance = 0;
-    machinesShowcase.style.height = '';
-    showcaseTrack.style.transform = '';
-    return;
-  }
-
-  showcaseScrollDistance = Math.max(0, showcaseTrack.scrollWidth - showcaseViewport.clientWidth);
-  machinesShowcase.style.height = `${window.innerHeight + showcaseScrollDistance}px`;
+  const rect = storyList.getBoundingClientRect();
+  const viewportMiddle = window.innerHeight * 0.5;
+  const progress = clamp((viewportMiddle - rect.top) / Math.max(1, rect.height), 0, 1);
+  storyRailFill.style.transform = `scaleY(${progress})`;
 };
 
-const updateShowcaseProgress = () => {
-  if (!showcaseActive || !showcaseScrollDistance) {
+/* Chaque étape du récit s'« allume » (couleur, texte, index rouge) quand elle
+   traverse la bande centrale de l'écran, et se remet en veille ensuite —
+   c'est ce va-et-vient qui raconte la visite d'atelier au fil du scroll. */
+const setupStoryObserver = () => {
+  if (!storyItems.length) {
     return;
   }
 
-  const rect = machinesShowcase.getBoundingClientRect();
-  const progress = clamp(-rect.top / showcaseScrollDistance, 0, 1);
-  showcaseTrack.style.transform = `translate3d(${-progress * showcaseScrollDistance}px, 0, 0)`;
+  if (prefersReducedMotion || !('IntersectionObserver' in window)) {
+    storyItems.forEach((item) => item.classList.add('is-active'));
+    return;
+  }
+
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach((entry) => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('is-active');
+        observer.unobserve(entry.target);
+      }
+    });
+  }, { rootMargin: '-42% 0px -15% 0px', threshold: 0 });
+
+  storyItems.forEach((item) => observer.observe(item));
 };
 
 const syncScrollState = (force = false) => {
@@ -258,10 +212,9 @@ const syncScrollState = (force = false) => {
     }
 
     updateActiveNavLink();
-    syncIntersectionScrolls(forceScrollSync);
     syncTintReveal(forceScrollSync);
     updateScrollDynamics();
-    updateShowcaseProgress();
+    updateStoryRail();
     lastScrollY = window.scrollY || 0;
     scrollFrame = 0;
     forceScrollSync = false;
@@ -574,8 +527,8 @@ const openMachineModal = (slide) => {
   }
 
   const image = slide.querySelector('img');
-  const title = slide.querySelector('.showcase-caption-title');
-  const specs = slide.querySelector('.showcase-caption-spec');
+  const title = slide.querySelector('.story-card-title');
+  const specs = slide.querySelector('.story-card-spec');
 
   if (machineModalImage && image) {
     machineModalImage.src = image.currentSrc || image.src;
@@ -627,11 +580,11 @@ const closeMachineModal = () => {
 };
 
 const setupMachineModal = () => {
-  if (!machineModal || !showcaseSlides.length) {
+  if (!machineModal || !storySlides.length) {
     return;
   }
 
-  showcaseSlides.forEach((slide) => {
+  storySlides.forEach((slide) => {
     slide.addEventListener('click', () => openMachineModal(slide));
   });
 
@@ -658,7 +611,8 @@ const init = () => {
   setupContactForm();
   setupMachineModal();
   updateScrollDynamics();
-  measureShowcase();
+  setupStoryObserver();
+  updateStoryRail();
 
   if (window.location.hash && window.location.hash.length > 1) {
     window.setTimeout(() => {
@@ -683,7 +637,6 @@ const init = () => {
 
   window.addEventListener('resize', () => {
     computeSectionOffsets();
-    measureShowcase();
     syncScrollState(true);
     updateScrollDynamics();
   }, { passive: true });
