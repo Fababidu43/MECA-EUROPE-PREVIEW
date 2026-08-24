@@ -1095,7 +1095,9 @@ mark {
    harmonisées ici pour toutes les pages (avant, seul le dégradé de couleur
    était défini globalement, la taille dépendait du contexte local). */
 .section-kicker {
-  display: inline-block;
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
   margin: 0 0 14px;
   font-family: Montserrat, Arial, sans-serif;
   font-size: 0.88rem;
@@ -1103,6 +1105,25 @@ mark {
   letter-spacing: 0.18em;
   line-height: 1;
   text-transform: uppercase;
+}
+
+/* Petit rappel du rideau rouge du page-hero sur les autres titres de
+   section : une barre qui se déploie de gauche à droite avant le kicker,
+   pour garder le même dynamisme (barre puis étiquette puis titre) partout. */
+.section-kicker::before {
+  content: "";
+  flex: none;
+  width: 16px;
+  height: 3px;
+  border-radius: 2px;
+  background: var(--c-teal);
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 0.5s cubic-bezier(0.65, 0, 0.35, 1);
+}
+
+.reveal.is-visible .section-kicker::before {
+  transform: scaleX(1);
 }
 
 /* Titres de section « nus » (juste un kicker + un h2 dans .wrap, sans
@@ -1165,7 +1186,50 @@ mark {
    pendant que le texte est encore invisible et l'effet est perdu. */
 .legal-hero h1 mark,
 .page-hero h1 mark {
-  transition-delay: 1.55s;
+  transition-delay: 1.05s;
+}
+
+/* La toute première section qui suit un page-hero est visible dès le
+   chargement, en même temps que le rideau rouge de l'en-tête : sans ce
+   décalage, son propre dynamisme d'arrivée démarrait pendant que le rideau
+   jouait encore, et les deux animations se chevauchaient. On attend donc
+   la fin du rideau + du titre (~1,6s) avant de lancer son reveal. */
+.page-hero + section.reveal {
+  transition-delay: 1.05s;
+}
+
+.page-hero + section.reveal .intro-copy > *,
+.page-hero + section.reveal .text-content > *,
+.page-hero + section.reveal .contact-showcase-content > *,
+.page-hero + section.reveal .plan-copy > * {
+  transition-delay: calc(var(--entry-delay, 0ms) + 1.05s);
+}
+
+.page-hero + section.reveal .intro-copy > h2,
+.page-hero + section.reveal .text-content > h2,
+.page-hero + section.reveal .contact-showcase-content > h2,
+.page-hero + section.reveal .plan-copy > h2 {
+  transition-delay: 1.05s;
+}
+
+.page-hero + section.reveal .intro-figure img,
+.page-hero + section.reveal .section-figure img,
+.page-hero + section.reveal .plan-map-wrap {
+  transition-delay: 1.05s;
+}
+
+.page-hero + section.reveal h2 mark {
+  transition-delay: 1.25s;
+}
+
+/* Même principe pour le récit du parc machines : son titre (Visite
+   d'atelier) suit directement le page-hero et doit attendre le rideau. */
+.page-hero + .machines-story .machines-story-head.reveal {
+  transition-delay: 1.05s;
+}
+
+.page-hero + .machines-story .machines-story-head.reveal h2 mark {
+  transition-delay: 1.25s;
 }
 
 .contact-showcase-kicker {
@@ -1191,6 +1255,13 @@ mark {
   .reveal h2 mark {
     clip-path: none;
     transition: none;
+  }
+
+  .section-kicker::before,
+  .machines-story-kicker::before,
+  .contact-showcase-kicker::after,
+  #plan .plan-kicker::after {
+    transform: scaleX(1) !important;
   }
 }
 
@@ -1812,6 +1883,13 @@ mark {
   border-radius: 999px;
   margin-top: 13px;
   background: rgb(225 22 22 / 38%);
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 0.6s cubic-bezier(0.65, 0, 0.35, 1);
+}
+
+.reveal.is-visible .contact-showcase-kicker::after {
+  transform: scaleX(1);
 }
 
 .contact-showcase h2 {
@@ -2669,15 +2747,15 @@ body.legal-page {
 .legal-hero::before,
 .reveal.is-visible.page-hero::before {
   animation:
-    hero-curtain-wipe 0.85s cubic-bezier(0.6, 0, 0.3, 1) 0.05s forwards,
-    hero-curtain-lift 0.55s cubic-bezier(0.6, 0, 0.3, 1) 1.05s forwards;
+    hero-curtain-wipe 0.55s cubic-bezier(0.6, 0, 0.3, 1) 0.03s forwards,
+    hero-curtain-lift 0.36s cubic-bezier(0.6, 0, 0.3, 1) 0.68s forwards;
 }
 
 .legal-hero::after,
 .reveal.is-visible.page-hero::after {
   animation:
-    hero-curtain-wipe 0.85s cubic-bezier(0.6, 0, 0.3, 1) 0.05s forwards,
-    hero-curtain-sheen 0.85s ease 0.05s forwards;
+    hero-curtain-wipe 0.55s cubic-bezier(0.6, 0, 0.3, 1) 0.03s forwards,
+    hero-curtain-sheen 0.55s ease 0.03s forwards;
 }
 
 @keyframes hero-curtain-wipe {
@@ -2737,17 +2815,17 @@ body.legal-page {
 
 .legal-hero .legal-kicker,
 .page-hero.reveal.is-visible .page-kicker {
-  animation: hero-content-rise 0.55s ease 1.15s forwards;
+  animation: hero-content-rise 0.36s ease 0.75s forwards;
 }
 
 .legal-hero h1,
 .page-hero.reveal.is-visible h1 {
-  animation: hero-content-rise 0.6s ease 1.25s forwards;
+  animation: hero-content-rise 0.4s ease 0.82s forwards;
 }
 
 .legal-hero p,
 .page-hero.reveal.is-visible p {
-  animation: hero-content-rise 0.55s ease 1.35s forwards;
+  animation: hero-content-rise 0.36s ease 0.9s forwards;
 }
 
 @keyframes hero-content-rise {
@@ -4740,6 +4818,9 @@ body.legal-page {
 }
 
 .machines-story-kicker {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
   margin: 0 0 10px;
   color: var(--c-teal);
   font-family: Montserrat, Arial, sans-serif;
@@ -4747,6 +4828,22 @@ body.legal-page {
   font-weight: 800;
   letter-spacing: 0.2em;
   text-transform: uppercase;
+}
+
+.machines-story-kicker::before {
+  content: "";
+  flex: none;
+  width: 16px;
+  height: 3px;
+  border-radius: 2px;
+  background: var(--c-teal);
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 0.5s cubic-bezier(0.65, 0, 0.35, 1);
+}
+
+.reveal.is-visible .machines-story-kicker::before {
+  transform: scaleX(1);
 }
 
 .machines-story-title {
@@ -4827,12 +4924,30 @@ body.legal-page {
   order: 2;
 }
 
+/* Chaque étape arrive maintenant en glissement croisé (photo et bulle
+   blanche partent de côtés opposés, comme .engage-section ailleurs sur le
+   site), en plus du dégradé de couleur/texte déjà en place — sens inversé
+   une étape sur deux puisque la mise en page (photo/texte) s'inverse aussi. */
 .story-card-media {
   position: relative;
   border-radius: 20px;
   overflow: hidden;
   aspect-ratio: 4 / 3;
   box-shadow: 0 30px 60px rgb(0 0 0 / 45%);
+  opacity: 0;
+  transform: translate3d(clamp(-280px, -16vw, -60px), 26px, 0) scale(0.96);
+  transition:
+    opacity 0.9s cubic-bezier(0.16, 1, 0.3, 1),
+    transform 1s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.story-item:nth-child(even) .story-card-media {
+  transform: translate3d(clamp(60px, 16vw, 280px), 26px, 0) scale(0.96);
+}
+
+.story-item.is-active .story-card-media {
+  opacity: 1;
+  transform: translate3d(0, 0, 0) scale(1);
 }
 
 .story-card-media img {
@@ -4874,12 +4989,20 @@ body.legal-page {
   background: #fff;
   border-radius: 20px;
   box-shadow: 0 24px 50px rgb(0 0 0 / 35%);
-  transform: translate3d(0, 10px, 0) scale(0.98);
-  opacity: 0.9;
-  transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.6s ease;
+  opacity: 0;
+  transform: translate3d(clamp(60px, 16vw, 280px), 26px, 0) scale(0.98);
+  transition:
+    opacity 0.9s cubic-bezier(0.16, 1, 0.3, 1),
+    transform 0.9s cubic-bezier(0.16, 1, 0.3, 1),
+    box-shadow 0.6s ease;
+}
+
+.story-item:nth-child(even) .story-card-body {
+  transform: translate3d(clamp(-280px, -16vw, -60px), 26px, 0) scale(0.98);
 }
 
 .story-item.is-active .story-card-body {
+  opacity: 1;
   transform: translate3d(0, 0, 0) scale(1);
   box-shadow: 0 30px 64px rgb(0 0 0 / 20%);
 }
@@ -4930,6 +5053,34 @@ body.legal-page {
 
 .story-item.is-active .story-card-title mark {
   clip-path: inset(0 0 0% 0);
+}
+
+/* La toute première carte (Tour Puma 5100) est visible dès le chargement,
+   en même temps que le titre "Visite d'atelier" : sans ce délai elle
+   s'activait avant que le rideau + le titre de la section aient fini. Les
+   cartes suivantes se déclenchent naturellement au scroll (pas besoin de ce
+   décalage) et gardent le glissement croisé défini plus haut. */
+.story-item:first-child .story-card-media,
+.story-item:first-child .story-card-body,
+.story-item:first-child .story-card-media img,
+.story-item:first-child .story-card-media::after {
+  transition-delay: 1.05s;
+}
+
+.story-item:first-child .story-card-title {
+  transition-delay: 1.11s;
+}
+
+.story-item:first-child .story-card-spec {
+  transition-delay: 1.19s;
+}
+
+.story-item:first-child .story-card-cta {
+  transition-delay: 1.27s;
+}
+
+.story-item:first-child .story-card-title mark {
+  transition-delay: 1.43s;
 }
 
 .story-card-spec {
@@ -4996,6 +5147,7 @@ body.legal-page {
     transform: none;
   }
 
+  .story-card-media,
   .story-card-body,
   .story-card-body > * {
     opacity: 1;
@@ -5160,6 +5312,7 @@ body.modal-open {
   .machine-modal,
   .machine-modal-dialog,
   .story-card,
+  .story-card-media,
   .story-card-media img,
   .story-card-body,
   .story-card-title mark,
@@ -5521,6 +5674,13 @@ body.modal-open {
   height: 2px;
   margin-left: 20px;
   background: linear-gradient(90deg, rgb(225 22 22 / 10%) 0%, rgb(225 22 22 / 100%) 78%, rgb(225 22 22 / 10%) 100%);
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 0.6s cubic-bezier(0.65, 0, 0.35, 1);
+}
+
+#plan.reveal.is-visible .plan-kicker::after {
+  transform: scaleX(1);
 }
 
 #plan .plan-copy h2 {
