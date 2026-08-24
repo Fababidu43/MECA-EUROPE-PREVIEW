@@ -865,61 +865,15 @@ a {
   pointer-events: none;
 }
 
-/* Quand un intro-section suit directement le page-hero (noir plein), cette
-   bande "gomme" déborde de 92px vers le haut et recouvre donc une partie du
-   texte du hero (repeindre par-dessus en noir cache toujours le texte, même
-   sans que ça se voie) : on la supprime complètement dans ce cas précis. */
-.page-hero + .intro-section::before {
-  content: none;
-}
-
-.intro-grid {
-  display: grid;
-  grid-template-columns: 0.95fr 1.05fr;
-  gap: 40px;
-  align-items: center;
-}
-
-.intro-figure {
-  margin: 0;
-  min-height: 420px;
-  border-radius: 22px;
-  overflow: hidden;
-  position: relative;
-  z-index: 2;
-  background: #fff;
-  box-shadow: 0 10px 22px rgb(10 39 64 / 12%);
-}
-
-.intro-figure img {
-  width: 100%;
-  height: 100%;
-  max-height: 480px;
-  object-fit: cover;
-  object-position: center;
-  display: block;
-  border-radius: inherit;
-  transform: translate3d(0, var(--media-parallax-y, 0), 0) scale(1.04);
-  will-change: transform;
-}
-
-/* Cette section est la toute première de la page pieces-serie.html, déjà
-   visible sans scroll au chargement : le grand glissement/rotation/flou de
-   section (identique aux autres .intro-section/.engage-section) y ressemblait
-   à un bug plutôt qu'à un effet voulu. On la laisse donc statique — seuls le
-   reveal en cascade du texte et le surlignage rouge (non touchés) animent. */
-.intro-section.reveal .intro-copy,
-.intro-section.reveal .intro-figure {
+/* Première section de pieces-serie.html, déjà visible sans scroll au
+   chargement : même correctif que #pieces-unitaires plus bas, on neutralise
+   le grand glissement de section (le reveal en cascade du texte et le
+   surlignage rouge restent inchangés). */
+#pieces-serie.engage-section.reveal .text-content,
+#pieces-serie.engage-section.reveal .section-figure {
   opacity: 1;
   transform: none;
   filter: none;
-}
-
-.intro-section.reveal.is-visible .intro-copy,
-.intro-section.reveal.is-visible .intro-figure {
-  opacity: 1;
-  transform: translate3d(0, 0, 0) rotate(0deg) scale(1);
-  filter: blur(0);
 }
 
 .engage-section.reveal .text-content {
@@ -1059,6 +1013,7 @@ a {
   transform: translate3d(0, 0, 0) rotate(0deg) scale(1);
   filter: blur(0);
 }
+
 .intro-copy h2,
 .text-content h2 {
   margin: 0 0 24px;
@@ -1088,6 +1043,7 @@ mark {
   background: var(--c-teal);
   padding: 2px 10px 5px;
   box-decoration-break: clone;
+  /* stylelint-disable-next-line property-no-vendor-prefix -- requis par Safari, qui ne connaît que la version préfixée */
   -webkit-box-decoration-break: clone;
 }
 
@@ -1236,9 +1192,15 @@ mark {
   color: #e11616;
   background: none;
   background-image: none;
+  /* stylelint-disable-next-line property-no-vendor-prefix -- required by Chrome/Edge for background-clip: border-box */
   -webkit-background-clip: border-box;
   background-clip: border-box;
   -webkit-text-fill-color: initial;
+  margin: 0;
+  font-size: 1.08rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.16em;
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -1334,28 +1296,14 @@ mark {
   color: var(--c-teal);
 }
 
+/* Bulle de texte harmonisée entre la 1ère section de pieces-serie.html
+   (.series-copy) et celle de pieces-unitaires.html (#pieces-unitaires
+   .text-content) : padding/coins ici, le reste (fond/ombre/typo) est
+   harmonisé plus bas avec le parc machines. */
+#pieces-serie .series-copy,
 #pieces-unitaires .text-content {
-  background: #fff;
   padding: 42px 40px 34px;
-  box-shadow: 0 20px 44px rgb(0 0 0 / 10%);
-  border: 1px solid rgb(0 0 0 / 10%);
   border-radius: 120px 120px 28px;
-}
-
-#pieces-unitaires .text-content h2 {
-  color: #1f1f1f;
-  font-size: clamp(1.55rem, 2.1vw, 2.4rem);
-  margin-bottom: 18px;
-}
-
-#pieces-unitaires .text-content ul {
-  color: #5a5a5a;
-  font-size: clamp(0.98rem, 1.08vw, 1.2rem);
-  line-height: 1.5;
-}
-
-#pieces-unitaires .text-content li::marker {
-  color: var(--c-teal);
 }
 
 .button-pill {
@@ -1538,6 +1486,7 @@ mark {
   color: #fff;
   background: var(--c-teal);
   box-decoration-break: clone;
+  /* stylelint-disable-next-line property-no-vendor-prefix -- requis par Safari, qui ne connaît que la version préfixée */
   -webkit-box-decoration-break: clone;
 }
 
@@ -1865,14 +1814,6 @@ mark {
   max-width: 560px;
   display: grid;
   gap: 20px;
-}
-
-.contact-showcase-kicker {
-  margin: 0;
-  font-size: 1.08rem;
-  font-weight: 800;
-  text-transform: uppercase;
-  letter-spacing: 0.16em;
 }
 
 .contact-showcase-kicker::after {
@@ -2373,6 +2314,27 @@ mark {
   content: none;
 }
 
+/* Fin trait rouge qui se dessine en haut du footer au scroll (jamais au
+   chargement, piloté par .reveal.is-visible comme le reste du site). */
+.footer::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 2px;
+  background: var(--c-teal);
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 0.6s cubic-bezier(0.65, 0, 0.35, 1);
+  transition-delay: 120ms;
+  pointer-events: none;
+}
+
+.footer.reveal.is-visible::after {
+  transform: scaleX(1);
+}
+
 .footer-head {
   justify-content: space-between;
   align-items: center;
@@ -2422,6 +2384,38 @@ mark {
   padding-top: 42px;
   padding-bottom: 40px;
   border-bottom: 0;
+}
+
+/* Arrivée du footer au scroll, dans la continuité du reste du site : le
+   footer garde son fondu/montée générique (.reveal), et ses colonnes
+   arrivent en plus en cascade (même easing que .intro-copy > * ailleurs). */
+.footer.reveal .footer-main > * {
+  opacity: 0;
+  transform: translate3d(0, 22px, 0);
+  transition:
+    opacity 0.7s cubic-bezier(0.16, 1, 0.3, 1),
+    transform 0.75s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.footer.reveal.is-visible .footer-main > * {
+  opacity: 1;
+  transform: translate3d(0, 0, 0);
+}
+
+.footer.reveal .footer-main > *:nth-child(1) {
+  transition-delay: 0ms;
+}
+
+.footer.reveal .footer-main > *:nth-child(2) {
+  transition-delay: 90ms;
+}
+
+.footer.reveal .footer-main > *:nth-child(3) {
+  transition-delay: 180ms;
+}
+
+.footer.reveal .footer-main > *:nth-child(4) {
+  transition-delay: 270ms;
 }
 
 .footer h4 {
@@ -2518,6 +2512,7 @@ mark {
   opacity: 1;
   transform: translate3d(0, 0, 0) scale(1);
 }
+
 .reveal .intro-copy > *,
 .reveal .text-content > *,
 .reveal .contact-showcase-content > *,
@@ -2530,6 +2525,7 @@ mark {
   transition-delay: calc(var(--entry-delay, 0ms) + 180ms);
   will-change: opacity, transform;
 }
+
 .reveal .intro-copy > h2,
 .reveal .text-content > h2,
 .reveal .contact-showcase-content > h2,
@@ -2541,6 +2537,7 @@ mark {
     transform 1.25s cubic-bezier(0.16, 1, 0.3, 1),
     clip-path 1.3s cubic-bezier(0.16, 1, 0.3, 1);
 }
+
 .reveal.is-visible .intro-copy > *,
 .reveal.is-visible .text-content > *,
 .reveal.is-visible .contact-showcase-content > *,
@@ -2548,36 +2545,42 @@ mark {
   opacity: 1;
   transform: translate3d(0, 0, 0);
 }
+
 .reveal.is-visible .intro-copy > h2,
 .reveal.is-visible .text-content > h2,
 .reveal.is-visible .contact-showcase-content > h2,
 .reveal.is-visible .plan-copy > h2 {
   clip-path: inset(0 0 0 0);
 }
+
 .reveal .intro-copy > *:nth-child(1),
 .reveal .text-content > *:nth-child(1),
 .reveal .contact-showcase-content > *:nth-child(1),
 .reveal .plan-copy > *:nth-child(1) {
   --entry-delay: 0ms;
 }
+
 .reveal .intro-copy > *:nth-child(2),
 .reveal .text-content > *:nth-child(2),
 .reveal .contact-showcase-content > *:nth-child(2),
 .reveal .plan-copy > *:nth-child(2) {
   --entry-delay: 160ms;
 }
+
 .reveal .intro-copy > *:nth-child(3),
 .reveal .text-content > *:nth-child(3),
 .reveal .contact-showcase-content > *:nth-child(3),
 .reveal .plan-copy > *:nth-child(3) {
   --entry-delay: 320ms;
 }
+
 .reveal .intro-copy > *:nth-child(4),
 .reveal .text-content > *:nth-child(4),
 .reveal .contact-showcase-content > *:nth-child(4),
 .reveal .plan-copy > *:nth-child(4) {
   --entry-delay: 480ms;
 }
+
 .reveal .intro-copy > *:nth-child(5),
 .reveal .text-content > *:nth-child(5),
 .reveal .contact-showcase-content > *:nth-child(5),
@@ -2657,6 +2660,7 @@ mark {
     opacity: 1;
     transform: none;
   }
+
   .reveal .intro-copy > *,
 .reveal .text-content > *,
 .reveal .contact-showcase-content > *,
@@ -2676,7 +2680,10 @@ mark {
 .key-figures-section.reveal .key-figures-heading > *,
 .key-figures-section.reveal .key-figure-card,
 .key-figure-phrase > span,
-.key-figure-date > span {
+.key-figure-date > span,
+.footer.reveal .footer-main > *,
+.footer-brand-rule,
+.footer::after {
     opacity: 1;
     transform: none;
     transition: none;
@@ -2829,7 +2836,10 @@ body.legal-page {
 }
 
 @keyframes hero-content-rise {
-  to { opacity: 1; transform: translateY(0); }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -3038,7 +3048,6 @@ body.legal-page {
 }
 
 @media (width <= 1250px) {
-
   .header-main {
     padding: 14px 0;
     min-height: initial;
@@ -3608,6 +3617,7 @@ body.legal-page {
   .split-grid.reverse .section-figure {
     order: 2;
   }
+
   .intro-copy h2,
 .text-content h2 {
     font-size: clamp(1.02rem, 5.1vw, 1.34rem);
@@ -3615,6 +3625,7 @@ body.legal-page {
     line-height: 1.08;
     overflow-wrap: anywhere;
   }
+
   .intro-copy h2 mark,
 .text-content h2 mark,
 .plan-copy h2 mark,
@@ -3762,8 +3773,8 @@ body.legal-page {
 
   .key-figures-heading {
     grid-template-columns: 1fr;
-    gap: 18px;
-    margin-bottom: 34px;
+    gap: 16px;
+    margin-bottom: 30px;
   }
 
   .key-figures-heading .section-kicker {
@@ -3771,7 +3782,9 @@ body.legal-page {
   }
 
   .key-figures-heading > p:last-child {
-    max-width: 620px;
+    max-width: 640px;
+    margin-top: 0;
+    padding-top: 0;
   }
 
   .key-figures-grid {
@@ -3779,8 +3792,8 @@ body.legal-page {
   }
 
   .key-figure-card {
-    min-height: 164px;
     padding: 24px 20px 20px;
+    min-height: 186px;
   }
 }
 
@@ -3791,20 +3804,21 @@ body.legal-page {
   }
 
   .key-figures-heading {
-    margin-bottom: 38px;
+    margin-bottom: 24px;
   }
 
   .key-figures-heading h2 {
-    font-size: clamp(2rem, 9vw, 3.1rem);
+    font-size: clamp(2.35rem, 8.8vw, 3.35rem);
+    line-height: 0.98;
   }
 
   .key-figure-card {
-    min-height: 190px;
-    padding: 28px 20px 24px;
+    min-height: 172px;
+    padding: 24px 20px 22px;
   }
 
   .key-figure-value {
-    font-size: clamp(2.8rem, 12vw, 4.3rem);
+    font-size: clamp(2.6rem, 11vw, 4rem);
   }
 
   .key-figure-phrase {
@@ -3816,7 +3830,8 @@ body.legal-page {
   }
 
   .key-figure-card h3 {
-    margin-top: 24px;
+    margin-top: 18px;
+    font-size: 0.9rem;
   }
 
   .key-figures-section.reveal .key-figures-heading > *,
@@ -3840,8 +3855,8 @@ body.legal-page {
   }
 
   .key-figure-card {
-    min-height: 148px;
-    padding: 20px 14px 17px;
+    min-height: 162px;
+    padding: 22px 16px 18px;
   }
 
   .key-figure-value {
@@ -3917,6 +3932,7 @@ body.legal-page {
   #parc-machines .text-content.dark {
     border-radius: 22px;
   }
+
   .intro-copy h2,
 .text-content h2 {
     font-size: clamp(0.98rem, 5vw, 1.22rem);
@@ -4077,6 +4093,7 @@ body.legal-page {
   #parc-machines .text-content.dark {
     border-radius: 22px;
   }
+
   .intro-copy h2,
 .text-content h2 {
     font-size: clamp(0.92rem, 4.8vw, 1.1rem);
@@ -4153,6 +4170,7 @@ body.legal-page {
     aspect-ratio: 4 / 3;
     border-radius: 24px;
   }
+
   .intro-copy h2,
 .text-content h2,
 .plan-copy h2,
@@ -4252,7 +4270,9 @@ body.legal-page {
 
   .section-figure {
     width: 100%;
-  }#parc-machines .text-content.dark h2,
+  }
+
+#parc-machines .text-content.dark h2,
 #pieces-unitaires .text-content h2,
 .intro-copy h2,
 .text-content h2,
@@ -4437,40 +4457,11 @@ body.legal-page {
   .key-figures-section {
     padding: 70px 0 80px;
   }
-
-  .key-figures-heading {
-    grid-template-columns: 1fr;
-    gap: 16px;
-    margin-bottom: 30px;
-  }
-
-  .key-figures-heading > p:last-child {
-    max-width: 640px;
-    margin-top: 0;
-    padding-top: 0;
-  }
-
-  .key-figures-grid {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-  }
-
-  .key-figure-card {
-    min-height: 186px;
-  }
 }
 
 @media (width <= 760px) {
   .key-figures-section {
     padding: 58px 0 64px;
-  }
-
-  .key-figures-heading {
-    margin-bottom: 24px;
-  }
-
-  .key-figures-heading h2 {
-    font-size: clamp(2.35rem, 8.8vw, 3.35rem);
-    line-height: 0.98;
   }
 
   .key-figures-heading > p:last-child {
@@ -4482,23 +4473,9 @@ body.legal-page {
     grid-template-columns: 1fr;
   }
 
-  .key-figure-card {
-    min-height: 172px;
-    padding: 24px 20px 22px;
-  }
-
-  .key-figure-value {
-    font-size: clamp(2.6rem, 11vw, 4rem);
-  }
-
   .key-figure-phrase,
   .key-figure-date {
     font-size: clamp(1.9rem, 7vw, 2.85rem);
-  }
-
-  .key-figure-card h3 {
-    margin-top: 18px;
-    font-size: 0.9rem;
   }
 }
 
@@ -4511,11 +4488,6 @@ body.legal-page {
     font-size: clamp(2rem, 10vw, 2.75rem);
   }
 
-  .key-figure-card {
-    min-height: 162px;
-    padding: 22px 16px 18px;
-  }
-
   .key-figure-card h3 {
     margin-top: 16px;
     font-size: 0.82rem;
@@ -4523,20 +4495,6 @@ body.legal-page {
 }
 
 /* Overrides finaux pour les deux points signalés. */
-
-/* Harmonisation des blocs "série / unitaires / parc machines". */
-#pieces-serie .series-copy,
-#pieces-unitaires .text-content,
-#parc-machines .text-content.dark {
-  background: linear-gradient(180deg, #fff 0%, #fcfcfc 100%);
-  border: 1px solid #d8dde4;
-  box-shadow: 0 12px 28px rgb(20 31 42 / 6%);
-}
-
-#pieces-serie .series-copy,
-#parc-machines .text-content.dark {
-  border-radius: 120px 120px 120px 28px;
-}
 
 #pieces-serie .series-figure,
 #pieces-unitaires .section-figure,
@@ -4564,6 +4522,7 @@ body.legal-page {
   pointer-events: none;
 }
 
+#pieces-serie .series-figure::before,
 #pieces-unitaires .section-figure::before {
   inset: 28px -18px -14px -14px;
   border-left: 0;
@@ -4573,8 +4532,8 @@ body.legal-page {
 
 /* Même liseré rouge sur les sections en layout inversé (photo à gauche,
    cf. .split-grid.reverse) : "Doosan Puma 4100" (pieces-serie.html) et
-   "Exemple de réalisation" (pieces-unitaires.html) — la photo y est du même
-   côté que #pieces-serie .series-figure, donc même variante du cadre. */
+   "Exemple de réalisation" (pieces-unitaires.html) — la photo y est à
+   gauche, donc la variante "par défaut" du cadre (bord gauche/bas). */
 .split-grid.reverse .section-figure {
   position: relative;
   z-index: 2;
@@ -4617,37 +4576,7 @@ body.legal-page {
   box-shadow: 0 18px 42px rgb(0 0 0 / 22%);
 }
 
-#pieces-unitaires .text-content h2,
-#parc-machines .text-content.dark h2,
-#pieces-serie .series-copy h2 {
-  color: #1f1f1f;
-  font-size: clamp(1.45rem, 2.05vw, 2.4rem);
-  line-height: 1.2;
-  margin-bottom: 18px;
-}
-
-#pieces-serie .series-copy h2 mark,
-#pieces-unitaires .text-content h2 mark,
-#parc-machines .text-content.dark h2 mark {
-  padding: 2px 10px 5px;
-  color: #fff;
-  background: var(--c-teal);
-}
-
-#pieces-serie .series-lead,
-#pieces-unitaires .text-content ul,
-#parc-machines .text-content.dark ul,
-#pieces-serie .series-text {
-  color: #5a5a5a;
-}
-
 @media (width <= 760px) {
-  #pieces-serie .series-copy,
-  #pieces-unitaires .text-content,
-  #parc-machines .text-content.dark {
-    border-radius: 22px;
-  }
-
   #pieces-serie .series-figure::before,
   #pieces-unitaires .section-figure::before,
   #parc-machines .section-figure::before,
@@ -4656,6 +4585,7 @@ body.legal-page {
     border-width: 1.25px;
   }
 
+  #pieces-serie .series-figure::before,
   #pieces-unitaires .section-figure::before {
     inset: 18px -10px -10px;
   }
@@ -4922,6 +4852,7 @@ body.legal-page {
 
 .story-item:nth-child(even) .story-card-media {
   order: 2;
+  transform: translate3d(clamp(60px, 16vw, 280px), 26px, 0) scale(0.96);
 }
 
 /* Chaque étape arrive maintenant en glissement croisé (photo et bulle
@@ -4939,10 +4870,6 @@ body.legal-page {
   transition:
     opacity 0.9s cubic-bezier(0.16, 1, 0.3, 1),
     transform 1s cubic-bezier(0.16, 1, 0.3, 1);
-}
-
-.story-item:nth-child(even) .story-card-media {
-  transform: translate3d(clamp(60px, 16vw, 280px), 26px, 0) scale(0.96);
 }
 
 .story-item.is-active .story-card-media {
@@ -5020,23 +4947,41 @@ body.legal-page {
 
 .story-card-title {
   transition-delay: 60ms;
-}
-
-.story-card-spec {
-  transition-delay: 140ms;
-}
-
-.story-card-cta {
-  transition-delay: 220ms;
-}
-
-.story-card-title {
   display: block;
   margin: 0 0 10px;
   color: #1c1c1c;
   font-family: Montserrat, Arial, sans-serif;
   font-weight: 700;
   font-size: clamp(1.25rem, 2vw, 1.7rem);
+}
+
+.story-card-spec {
+  transition-delay: 140ms;
+  display: block;
+  max-width: 46ch;
+  color: #5a5a5a;
+  font-size: 0.98rem;
+  line-height: 1.55;
+}
+
+.story-card-cta {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 18px;
+  padding: 10px 18px;
+  border: 1px solid rgb(0 0 0 / 14%);
+  border-radius: 999px;
+  color: #1c1c1c;
+  font-size: 0.86rem;
+  font-weight: 600;
+  transition:
+    opacity 0.55s cubic-bezier(0.16, 1, 0.3, 1),
+    transform 0.28s ease,
+    background-color 0.28s ease,
+    border-color 0.28s ease,
+    color 0.28s ease;
+  transition-delay: 220ms;
 }
 
 /* Le surlignage rouge du nom de la machine « éclôt » juste après le titre,
@@ -5081,28 +5026,6 @@ body.legal-page {
 
 .story-item:first-child .story-card-title mark {
   transition-delay: 1.43s;
-}
-
-.story-card-spec {
-  display: block;
-  max-width: 46ch;
-  color: #5a5a5a;
-  font-size: 0.98rem;
-  line-height: 1.55;
-}
-
-.story-card-cta {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  margin-top: 18px;
-  padding: 10px 18px;
-  border: 1px solid rgb(0 0 0 / 14%);
-  border-radius: 999px;
-  color: #1c1c1c;
-  font-size: 0.86rem;
-  font-weight: 600;
-  transition: background-color 0.28s ease, border-color 0.28s ease, color 0.28s ease, transform 0.28s ease;
 }
 
 .story-card:hover .story-card-cta,
@@ -5397,178 +5320,9 @@ body.modal-open {
   padding: clamp(34px, 4vw, 52px) 0 clamp(30px, 3.5vw, 46px);
 }
 
-#pieces-serie.intro-section {
-  padding-top: clamp(34px, 4vw, 52px);
-}
-
-#pieces-serie.intro-section::before {
-  top: -42px;
-  height: 56px;
-}
-
-#pieces-serie .intro-grid {
-  grid-template-columns: minmax(0, 0.94fr) minmax(0, 1.06fr);
-  gap: clamp(14px, 2vw, 26px);
-  align-items: stretch;
-}
-
-#pieces-serie .intro-figure {
-  position: relative;
-  z-index: 2;
-  margin: 0;
-  padding: 0;
-  height: 100%;
-  min-height: 430px;
-  overflow: visible;
-  background: transparent;
-  box-shadow: none;
-  border-radius: 30px;
-}
-
-#pieces-serie .intro-figure::before {
-  content: "";
-  position: absolute;
-  inset: 28px -14px -14px -18px;
-  border-left: 1.5px solid rgb(225 22 22 / 75%);
-  border-bottom: 1.5px solid rgb(225 22 22 / 75%);
-  border-top: 0;
-  border-right: 0;
-  border-radius: 30px 0 30px 30px;
-  pointer-events: none;
-}
-
-#pieces-serie .intro-figure img {
-  position: relative;
-  z-index: 1;
-  width: 100%;
-  height: 100%;
-  max-height: none;
-  object-fit: cover;
-  border-radius: 28px;
-  box-shadow: 0 18px 42px rgb(0 0 0 / 22%);
-}
-
-#pieces-serie .intro-copy {
-  position: relative;
-  align-self: stretch;
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-start;
-  border-radius: 34px;
-  border: 1px solid #d8dde4;
-  background: linear-gradient(180deg, #fff 0%, #fcfcfc 100%);
-  box-shadow: 0 12px 28px rgb(20 31 42 / 6%);
-  padding: clamp(22px, 2.6vw, 36px) clamp(26px, 3vw, 42px) clamp(20px, 2.2vw, 30px);
-}
-
-#pieces-serie .intro-copy h2 {
-  margin: 0;
-  max-width: 610px;
-  color: #1f1f1f;
-  font-family: Montserrat, Arial, sans-serif;
-  font-size: clamp(1.55rem, 2.1vw, 2.4rem);
-  font-weight: 700;
-  line-height: 1.18;
-  letter-spacing: -0.04em;
-}
-
-#pieces-serie .series-title-label {
-  display: block;
-}
-
-#pieces-serie .intro-copy h2 mark {
-  display: inline-block;
-  padding: 2px 10px 5px;
-  color: #fff;
-  background: var(--c-teal);
-}
-
-#pieces-serie .series-lead {
-  margin: 18px 0 12px;
-  color: #475260;
-  font-size: clamp(1rem, 1.06vw, 1.15rem);
-  line-height: 1.5;
-  font-weight: 700;
-}
-
-#pieces-serie .series-text {
-  margin: 0;
-  max-width: 58ch;
-  color: #5b6571;
-  font-size: clamp(0.95rem, 0.96vw, 1.04rem);
-  line-height: 1.54;
-}
-
-@media (width <= 1024px) {
-  #pieces-serie .intro-grid {
-    gap: 14px;
-  }
-
-  #pieces-serie .intro-figure {
-    min-height: 360px;
-  }
-
-  #pieces-serie .intro-copy {
-    padding: 22px 22px 20px;
-  }
-
-  #pieces-serie .intro-copy h2 {
-    font-size: clamp(1.45rem, 3.6vw, 2.25rem);
-  }
-}
-
-@media (width <= 760px) {
-  #pieces-serie .intro-grid {
-    gap: 14px;
-  }
-
-  #pieces-serie .intro-figure {
-    min-height: 0;
-    aspect-ratio: 4 / 3;
-  }
-
-  #pieces-serie .intro-figure::before {
-    inset: 18px -10px -10px;
-    border-width: 1.25px;
-  }
-
-  #pieces-serie .intro-copy {
-    padding: 20px 18px 18px;
-    border-radius: 26px;
-  }
-
-  #pieces-serie .intro-copy h2 {
-    max-width: 100%;
-    font-size: clamp(1.32rem, 6.3vw, 1.78rem);
-  }
-
-  #pieces-serie .series-lead {
-    margin-top: 16px;
-    font-size: 0.95rem;
-  }
-
-  #pieces-serie .series-text {
-    font-size: 0.92rem;
-  }
-}
-
-@media (width <= 540px) {
-  #pieces-serie .intro-copy {
-    padding: 18px 16px 16px;
-  }
-
-  #pieces-serie .intro-copy h2 {
-    font-size: clamp(1.24rem, 5.8vw, 1.5rem);
-  }
-
-  #pieces-serie .series-lead,
-  #pieces-serie .series-text {
-    line-height: 1.5;
-  }
-}
-
-/* Alignement final des bulles de texte des sections unitaires et parc machines
-   sur le traitement visuel de "Pièces de série". */
+/* Alignement final des bulles de texte des sections série / unitaires et
+   parc machines : même traitement visuel des trois côtés. */
+#pieces-serie .series-copy,
 #pieces-unitaires .text-content,
 #parc-machines .text-content.dark {
   background: #fff;
@@ -5576,6 +5330,7 @@ body.modal-open {
   border: 1px solid rgb(0 0 0 / 10%);
 }
 
+#pieces-serie .series-copy h2,
 #pieces-unitaires .text-content h2,
 #parc-machines .text-content.dark h2 {
   margin: 0;
@@ -5587,11 +5342,13 @@ body.modal-open {
   letter-spacing: -0.04em;
 }
 
+#pieces-serie .series-copy h2 .series-title-label,
 #pieces-unitaires .text-content h2 .series-title-label,
 #parc-machines .text-content.dark h2 .series-title-label {
   display: block;
 }
 
+#pieces-serie .series-copy h2 mark,
 #pieces-unitaires .text-content h2 mark,
 #parc-machines .text-content.dark h2 mark {
   display: inline-block;
@@ -5600,6 +5357,7 @@ body.modal-open {
   background: var(--c-teal);
 }
 
+#pieces-serie .series-copy ul,
 #pieces-unitaires .text-content ul,
 #parc-machines .text-content.dark ul {
   color: #5a5a5a;
@@ -5607,33 +5365,31 @@ body.modal-open {
   line-height: 1.5;
 }
 
+#pieces-serie .series-copy li::marker,
 #pieces-unitaires .text-content li::marker,
 #parc-machines .text-content.dark li::marker {
   color: var(--c-teal);
 }
 
 @media (width <= 760px) {
+  #pieces-serie .series-copy,
   #pieces-unitaires .text-content,
   #parc-machines .text-content.dark {
     border-radius: 22px;
   }
 
+  #pieces-serie .series-copy h2,
   #pieces-unitaires .text-content h2,
   #parc-machines .text-content.dark h2 {
     font-size: clamp(1.02rem, 5.1vw, 1.34rem);
     line-height: 1.08;
   }
 
+  #pieces-serie .series-copy h2 mark,
   #pieces-unitaires .text-content h2 mark,
   #parc-machines .text-content.dark h2 mark {
     padding: 0.01em 0.1em 0.06em;
   }
-}
-
-@media (width <= 1250px) {
-}
-
-@media (width <= 760px) {
 }
 
 /* Bas de page : plan + footer calés sur la nouvelle maquette. */
@@ -6008,6 +5764,14 @@ body.modal-open {
   height: 2px;
   margin-top: 15px;
   background: #e11616;
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 0.5s cubic-bezier(0.65, 0, 0.35, 1);
+  transition-delay: 260ms;
+}
+
+.footer.reveal.is-visible .footer-brand-rule {
+  transform: scaleX(1);
 }
 
 /* Titres des colonnes */
