@@ -11,10 +11,16 @@ const parallaxImages = document.querySelectorAll('.intro-figure img, .engage-sec
 const keyFiguresSection = document.querySelector('.key-figures-section');
 const keyFigureCounters = keyFiguresSection ? keyFiguresSection.querySelectorAll('[data-count]') : [];
 const body = document.body;
-const machinesStory = document.querySelector('[data-story]');
-const storyList = machinesStory ? machinesStory.querySelector('[data-story-list]') : null;
-const storyItems = machinesStory ? Array.from(machinesStory.querySelectorAll('[data-story-item]')) : [];
-const storyRailFill = machinesStory ? machinesStory.querySelector('[data-story-rail]') : null;
+const timelinePinCtrl = window.timelinePinCtrl || null;
+const precisionPinCtrl = window.precisionPinCtrl || null;
+/* Récit vertical façon "parc machines" : une page peut en compter plusieurs
+   (a-propos.html a "Notre histoire" et "Précision" en plus du parc machines
+   lui-même), d'où un tableau d'instances plutôt qu'un unique élément. */
+const storyInstances = Array.from(document.querySelectorAll('[data-story]')).map((story) => ({
+  list: story.querySelector('[data-story-list]'),
+  items: Array.from(story.querySelectorAll('[data-story-item]')),
+  railFill: story.querySelector('[data-story-rail]'),
+}));
 const storySlides = document.querySelectorAll('[data-story-slide]');
 const machineModal = document.querySelector('[data-machine-modal]');
 const machineModalImage = machineModal ? machineModal.querySelector('[data-machine-modal-image]') : null;
@@ -25,7 +31,9 @@ let machineModalTrigger = null;
 
 const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 const revealItems = document.querySelectorAll('.reveal');
+const intersectionScrollItems = Array.from(document.querySelectorAll('[data-intersection-scroll]'));
 const sectionTargets = new Map();
+const intersectionStates = new Map();
 const tintStates = new Map();
 let tintScrollItems = [];
 
@@ -76,6 +84,57 @@ const updateActiveNavLink = () => {
       link.setAttribute('aria-current', 'page');
     } else {
       link.removeAttribute('aria-current');
+    }
+  });
+};
+
+const getIntersectionState = (element) => {
+  if (!intersectionStates.has(element)) {
+    intersectionStates.set(element, {
+      progress: 0,
+      locked: false,
+    });
+  }
+
+  return intersectionStates.get(element);
+};
+
+const syncIntersectionScrolls = (force = false) => {
+  if (!intersectionScrollItems.length) {
+    return;
+  }
+
+  const currentScrollY = window.scrollY || 0;
+  const scrollingDown = currentScrollY > lastScrollY;
+
+  if (!force && !scrollingDown) {
+    return;
+  }
+
+  const viewportHeight = window.innerHeight || 1;
+
+  intersectionScrollItems.forEach((item) => {
+    const state = getIntersectionState(item);
+
+    if (state.locked) {
+      return;
+    }
+
+    const rect = item.getBoundingClientRect();
+    const revealStart = viewportHeight * 0.82;
+    const revealEnd = -Math.max(0, rect.height * 0.14);
+    const span = Math.max(1, revealStart - revealEnd);
+    const rawProgress = clamp((revealStart - rect.top) / span, 0, 1);
+    const nextProgress = Math.max(state.progress, rawProgress);
+
+    if (nextProgress !== state.progress) {
+      state.progress = nextProgress;
+      item.style.setProperty('--intersection-reveal', String(nextProgress));
+    }
+
+    if (nextProgress >= 1) {
+      state.locked = true;
+      item.style.setProperty('--intersection-reveal', '1');
     }
   });
 };
@@ -161,29 +220,34 @@ const updateScrollDynamics = () => {
   });
 };
 
-/* Rail latéral du récit machines : sa hauteur (scaleY) suit la progression du
-   scroll dans la liste, du premier au dernier repère. */
+/* Rail latéral de chaque récit vertical façon "parc machines" (le parc
+   machines lui-même, et sur a-propos.html "Notre histoire" / "Précision") :
+   sa hauteur (scaleY) suit la progression du scroll dans sa propre liste, du
+   premier au dernier repère. */
 const updateStoryRail = () => {
-  if (!storyList || !storyRailFill) {
-    return;
-  }
+  storyInstances.forEach(({ list, railFill }) => {
+    if (!list || !railFill) {
+      return;
+    }
 
-  const rect = storyList.getBoundingClientRect();
-  const viewportMiddle = window.innerHeight * 0.5;
-  const progress = clamp((viewportMiddle - rect.top) / Math.max(1, rect.height), 0, 1);
-  storyRailFill.style.transform = `scaleY(${progress})`;
+    const rect = list.getBoundingClientRect();
+    const viewportMiddle = window.innerHeight * 0.5;
+    const progress = clamp((viewportMiddle - rect.top) / Math.max(1, rect.height), 0, 1);
+    railFill.style.transform = `scaleY(${progress})`;
+  });
 };
 
-/* Chaque étape du récit s'« allume » (couleur, texte, index rouge) quand elle
-   traverse la bande centrale de l'écran, et se remet en veille ensuite —
-   c'est ce va-et-vient qui raconte la visite d'atelier au fil du scroll. */
+/* Chaque étape d'un récit s'« allume » (couleur, texte, index rouge) quand
+   elle traverse la bande centrale de l'écran, et le reste ensuite — c'est ce
+   défilement qui raconte l'histoire au fil du scroll. */
 const setupStoryObserver = () => {
-  if (!storyItems.length) {
+  const allItems = storyInstances.flatMap((instance) => instance.items);
+  if (!allItems.length) {
     return;
   }
 
   if (prefersReducedMotion || !('IntersectionObserver' in window)) {
-    storyItems.forEach((item) => item.classList.add('is-active'));
+    allItems.forEach((item) => item.classList.add('is-active'));
     return;
   }
 
@@ -196,7 +260,29 @@ const setupStoryObserver = () => {
     });
   }, { rootMargin: '-42% 0px -15% 0px', threshold: 0 });
 
-  storyItems.forEach((item) => observer.observe(item));
+  allItems.forEach((item) => observer.observe(item));
+};
+
+/* Section "L'atelier" (a-propos.html) : la photo (3 panneaux diagonaux) et
+   le bloc texte partent de la droite et arrivent en cascade. Elle doit se
+   lancer au même moment que le hero, donc on la déclenche au chargement avec
+   le même léger délai que le titre de page, au lieu d'attendre un scroll. */
+const setupAtelierReveal = () => {
+  const section = document.querySelector('[data-atelier-reveal]');
+  if (!section) {
+    return;
+  }
+
+  if (prefersReducedMotion) {
+    section.classList.add('in-view');
+    return;
+  }
+
+  window.setTimeout(() => {
+    window.requestAnimationFrame(() => {
+      section.classList.add('in-view');
+    });
+  }, 1050);
 };
 
 const syncScrollState = (force = false) => {
@@ -212,9 +298,16 @@ const syncScrollState = (force = false) => {
     }
 
     updateActiveNavLink();
+    syncIntersectionScrolls(forceScrollSync);
     syncTintReveal(forceScrollSync);
     updateScrollDynamics();
     updateStoryRail();
+    if (timelinePinCtrl) {
+      timelinePinCtrl.update();
+    }
+    if (precisionPinCtrl) {
+      precisionPinCtrl.update();
+    }
     lastScrollY = window.scrollY || 0;
     scrollFrame = 0;
     forceScrollSync = false;
@@ -408,6 +501,18 @@ const setupRevealObserver = () => {
   });
 
   revealItems.forEach((item) => {
+    // Si la page est rechargée alors qu'on est déjà scrollé plus bas, les
+    // sections situées au-dessus du viewport n'ont jamais été marquées
+    // visibles : en remontant, l'IntersectionObserver les détecte comme si
+    // elles apparaissaient pour la première fois et rejoue toute l'entrée
+    // (rotation/zoom/flou), d'où l'effet "image de travers" au retour en
+    // haut de page. On les marque visibles tout de suite, sans animation,
+    // puisqu'elles ont déjà été dépassées.
+    if (item.getBoundingClientRect().bottom <= 0) {
+      item.classList.add('is-visible');
+      return;
+    }
+
     observer.observe(item);
   });
 };
@@ -612,7 +717,14 @@ const init = () => {
   setupMachineModal();
   updateScrollDynamics();
   setupStoryObserver();
+  setupAtelierReveal();
   updateStoryRail();
+  if (timelinePinCtrl) {
+    timelinePinCtrl.update();
+  }
+  if (precisionPinCtrl) {
+    precisionPinCtrl.update();
+  }
 
   if (window.location.hash && window.location.hash.length > 1) {
     window.setTimeout(() => {
@@ -637,6 +749,12 @@ const init = () => {
 
   window.addEventListener('resize', () => {
     computeSectionOffsets();
+    if (timelinePinCtrl) {
+      timelinePinCtrl.measure();
+    }
+    if (precisionPinCtrl) {
+      precisionPinCtrl.measure();
+    }
     syncScrollState(true);
     updateScrollDynamics();
   }, { passive: true });
@@ -653,6 +771,12 @@ if (document.readyState === 'loading') {
 if (document.fonts) {
   document.fonts.ready.then(() => {
     computeSectionOffsets();
+    if (timelinePinCtrl) {
+      timelinePinCtrl.measure();
+    }
+    if (precisionPinCtrl) {
+      precisionPinCtrl.measure();
+    }
     syncScrollState(true);
   }).catch(() => {});
 }

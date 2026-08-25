@@ -14,6 +14,11 @@
     <style>
       .reveal,
       .reveal * { opacity: 1 !important; transform: none !important; clip-path: none !important; }
+      .story-card-body,
+      .story-card-body > *,
+      .story-card-title mark { clip-path: none !important; }
+      .story-card-media img { filter: none !important; transform: none !important; }
+      .atelier-panel { opacity: 1 !important; transform: none !important; clip-path: none !important; }
     </style>
   </noscript>
 </head>
@@ -70,87 +75,159 @@
         <p class="page-kicker">L'entreprise</p>
         <h1>À propos de <mark>MECA-EUROPE</mark></h1>
         <p>
-          De l'atelier historique Emehy à MECA-EUROPE aujourd'hui : plus d'un demi-siècle de mécanique
-          générale à Riotord.
+          Un atelier né à Riotord, une reprise en 2021 et une même exigence sur chaque pièce usinée.
         </p>
       </div>
     </section>
 
-    <section class="section reveal decor-surface decor-b">
-      <div class="wrap">
-        <figure class="section-figure about-banner-figure">
-          <img src="assets/images/devanture-atelier.webp" alt="Façade de l'atelier MECA-EUROPE à Riotord" width="1448" height="1086" loading="lazy" decoding="async">
-          <figcaption>L'atelier MECA-EUROPE, 22 route du Midi à Riotord.</figcaption>
-        </figure>
-      </div>
-    </section>
+    <section class="section atelier-section about-section--intro about-section--dark" data-atelier-reveal>
+      <div class="wrap atelier-card">
+        <header class="atelier-text about-heading about-heading--dark">
+          <p class="section-kicker">L'atelier</p>
+          <h2>22 route du Midi à <mark>Riotord</mark></h2>
+          <p class="about-lead">
+            Depuis 1969, l'atelier vit au même endroit. Cette adresse a vu
+            évoluer le métier, les outils et les exigences sans jamais perdre
+            son ancrage local.
+          </p>
 
-    <section class="section legal-section reveal decor-surface decor-a">
-      <div class="wrap">
-        <p class="section-kicker">Notre histoire</p>
-        <h2>Une entreprise <mark>ancrée à Riotord</mark></h2>
+          <div class="about-pill-row" aria-label="Repères de l'atelier">
+            <span class="about-pill">Depuis 1969</span>
+            <span class="about-pill">Atelier historique</span>
+            <span class="about-pill">Haute-Loire</span>
+          </div>
 
-        <div class="about-timeline">
-          <article class="about-timeline-item">
-            <span class="about-timeline-date">1969</span>
-            <h3>Création d'Emehy</h3>
-            <p>Naissance de l'atelier de mécanique générale, à Riotord.</p>
-          </article>
+          <p class="about-address">
+            <img src="https://api.iconify.design/mdi:map-marker-outline.svg?color=%23e11616" alt="" aria-hidden="true">
+            22 route du Midi, 43220 Riotord
+          </p>
+        </header>
 
-          <article class="about-timeline-item">
-            <span class="about-timeline-date">1982</span>
-            <h3>Cap sur le turbo</h3>
-            <p>Diversification vers la fabrication de turbos.</p>
-          </article>
-
-          <article class="about-timeline-item">
-            <span class="about-timeline-date">2002</span>
-            <h3>Naissance de MECA-EUROPE</h3>
-            <p>Création de la société le 1er juillet ; fermeture définitive d'Emehy le 25 décembre.</p>
-          </article>
-
-          <article class="about-timeline-item">
-            <span class="about-timeline-date">2021</span>
-            <h3>Reprise de l'atelier</h3>
-            <p>Cap confirmé sur la petite/moyenne série et les pièces unitaires.</p>
-          </article>
+        <div class="atelier-photo-col about-figure--diagonal" role="img" aria-label="Façade de l'atelier MECA-EUROPE à Riotord, au cœur d'un site historique">
+          <div class="atelier-panels">
+            <span class="atelier-panel" aria-hidden="true"></span>
+            <span class="atelier-panel" aria-hidden="true"></span>
+            <span class="atelier-panel" aria-hidden="true"></span>
+          </div>
         </div>
       </div>
     </section>
 
-    <section class="section engage-section reveal decor-surface decor-gray">
-      <div class="wrap split-grid">
-        <article class="text-content">
-          <h2 class="series-title">
-            <span class="series-title-label">Précision</span>
-            <mark>un savoir-faire<br>de mécanique industrielle</mark>
-          </h2>
+    <section class="section about-section about-section--story reveal about-section--dark" data-story>
+      <div class="wrap about-story">
+        <header class="about-heading about-heading--dark">
+          <p class="section-kicker">Notre histoire</p>
+          <h2>Une entreprise <mark>ancrée à Riotord</mark></h2>
           <p>
-            Tournage, fraisage, perçage : chaque pièce est usinée avec le même souci du détail, de la
-            lunette d'appui jusqu'à la finition. Ce niveau d'exigence s'applique aussi bien aux petites
-            séries qu'aux pièces unitaires.
+            Une lecture simple, en chapitres courts. Le scroll fait vivre la
+            chronologie avec un rail animé et des cartes qui s’allument une à
+            une.
           </p>
+        </header>
+
+        <div class="about-timeline-shell">
+          <div class="machines-story-body about-timeline-body">
+            <div class="machines-story-rail" aria-hidden="true">
+              <span class="machines-story-rail-fill" data-story-rail></span>
+            </div>
+
+            <ol class="machines-story-list about-timeline-list" data-story-list>
+              <li class="story-item about-timeline-item" data-story-item>
+                <div class="about-timeline-card">
+                  <p class="about-history-year">1969</p>
+                  <h3>Naissance de l'atelier</h3>
+                  <p>Les murs actuels accueillent le premier atelier de mécanique générale à Riotord.</p>
+                </div>
+              </li>
+
+              <li class="story-item about-timeline-item" data-story-item>
+                <div class="about-timeline-card">
+                  <p class="about-history-year">1982</p>
+                  <h3>Cap sur le turbo</h3>
+                  <p>Le savoir-faire se diversifie, avec une activité orientée vers la fabrication de turbos.</p>
+                </div>
+              </li>
+
+              <li class="story-item about-timeline-item" data-story-item>
+                <div class="about-timeline-card">
+                  <p class="about-history-year">2002</p>
+                  <h3>MECA-EUROPE naît</h3>
+                  <p>La société est créée et l'atelier poursuit son activité sous une nouvelle identité.</p>
+                </div>
+              </li>
+
+              <li class="story-item about-timeline-item" data-story-item>
+                <div class="about-timeline-card">
+                  <p class="about-history-year">2021</p>
+                  <h3>Reprise de l'atelier</h3>
+                  <p>Une reprise qui relance l'outil de production avec un cap clair sur la petite série et l'unitaire.</p>
+                </div>
+              </li>
+            </ol>
+          </div>
+        </div>
+
+        <p class="about-history-note">
+          Le cadre a changé, pas l'exigence: proximité, réactivité et qualité
+          restent la base du projet.
+        </p>
+      </div>
+    </section>
+
+    <section class="section about-section about-section--precision reveal about-section--dark">
+      <div class="wrap about-layout">
+        <article class="about-copy">
+          <p class="section-kicker">Précision</p>
+          <h2>Un savoir-faire <mark>de mécanique industrielle</mark></h2>
+          <p class="about-lead">
+            Tournage, fraisage, perçage, ajustage et contrôle: chaque pièce
+            suit la même logique, avec une attention particulière portée aux
+            cotes, aux états de surface et aux finitions.
+          </p>
+
+          <div class="about-process-grid" aria-label="Etapes de fabrication">
+            <article class="about-process-card">
+              <h3>Tournage</h3>
+              <p>Pour mettre la matière à la cote et tenir les diamètres sensibles.</p>
+            </article>
+
+            <article class="about-process-card">
+              <h3>Fraisage</h3>
+              <p>Pour obtenir les formes, les plans et les reprises géométriques demandées.</p>
+            </article>
+
+            <article class="about-process-card">
+              <h3>Finition</h3>
+              <p>Pour contrôler, ajuster et livrer une pièce propre, prête à l'emploi.</p>
+            </article>
+          </div>
         </article>
-        <figure class="section-figure">
-          <img src="assets/images/tour-puma-5100-detail.webp" alt="Détail de la tourelle du tour Puma 5100" width="1448" height="1086" loading="lazy" decoding="async">
+
+        <figure class="section-figure about-figure about-figure--finish">
+          <img src="assets/images/piece-usinee-cmz.webp" alt="Pièce usinée avec finition soignée" width="1537" height="1023" loading="lazy" decoding="async">
+          <figcaption class="about-figure-caption">
+            La finition, quand la précision doit aussi se voir.
+          </figcaption>
         </figure>
       </div>
     </section>
 
-    <section id="savoir-faire" class="section key-figures-section reveal" aria-labelledby="savoir-faire-title">
-      <div class="key-figures-motifs" aria-hidden="true">
-        <img class="key-figures-motif key-figures-motif-right" src="assets/decor/motif_haut_droite_savoir_faire.svg" alt="">
-      </div>
+    <section id="savoir-faire" class="section key-figures-section reveal about-capabilities" aria-labelledby="savoir-faire-title">
       <div class="wrap key-figures-wrap">
-        <header class="key-figures-heading">
-          <p class="section-kicker">Savoir-faire</p>
+        <header class="key-figures-heading about-capabilities-heading">
+          <p class="section-kicker">Capacités</p>
           <h2 id="savoir-faire-title">
             <span>Les capacités qui</span>
             <span>définissent <mark>MECA-EUROPE</mark></span>
           </h2>
+          <p>
+            Une configuration pensée pour la petite et moyenne série comme pour
+            la pièce unitaire, avec une plage de travail adaptée aux besoins
+            industriels courants.
+          </p>
         </header>
 
-        <div class="key-figures-grid" data-key-figures>
+        <div class="key-figures-grid about-figures-grid" data-key-figures>
           <article class="key-figure-card">
             <p class="key-figure-value">
               <span class="key-number" data-count="5" data-duration="1600" aria-label="5">5</span>
@@ -172,7 +249,7 @@
               <span class="key-number" data-count="2000" data-duration="2100" aria-label="2 000">2&nbsp;000</span>
               <span class="key-unit">mm</span>
             </p>
-            <h3>Longueur d’usinage maxi</h3>
+            <h3>Longueur d'usinage maxi</h3>
           </article>
 
           <article class="key-figure-card">
@@ -181,22 +258,6 @@
               <span class="key-unit">t</span>
             </p>
             <h3>Pont roulant</h3>
-          </article>
-
-          <article class="key-figure-card key-figure-card--phrase">
-            <p class="key-figure-value key-figure-phrase" aria-label="Pièce unique vers série">
-              <span class="key-line">Pièce unique</span>
-              <span class="key-line"><span class="key-arrow" aria-hidden="true">→</span>série</span>
-            </p>
-            <h3>Une production adaptée à chaque besoin</h3>
-          </article>
-
-          <article class="key-figure-card key-figure-card--date">
-            <p class="key-figure-value key-figure-date" aria-label="1er juillet 2002">
-              <span class="key-line key-date-row"><span>1er</span><span class="key-date-month">juillet</span></span>
-              <span class="key-line">2002</span>
-            </p>
-            <h3>Date de création</h3>
           </article>
         </div>
       </div>
