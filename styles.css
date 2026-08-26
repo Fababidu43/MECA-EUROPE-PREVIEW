@@ -412,6 +412,7 @@ a {
     gap: 2px;
     display: grid;
     grid-template-columns: 1fr;
+    background: #fff;
   }
 
   .primary-nav a {
@@ -641,7 +642,6 @@ a {
 }
 
 .menu-toggle {
-  display: none;
   align-items: center;
   gap: 10px;
   padding: 10px 16px;
@@ -655,6 +655,16 @@ a {
   letter-spacing: 0.01em;
   cursor: pointer;
   transition: background-color 0.2s ease, border-color 0.2s ease, transform 0.2s ease;
+}
+
+/* Caché uniquement au-delà du point de bascule vers le menu complet : sans
+   cette portée en media query, cette règle (non conditionnelle, plus bas
+   dans le fichier que les media queries qui l'affichent en mobile) reprenait
+   la main sur elles et masquait le bouton du menu sur mobile/tablette. */
+@media (width > 1250px) {
+  .menu-toggle {
+    display: none;
+  }
 }
 
 .menu-toggle:hover,
@@ -4718,6 +4728,37 @@ body.legal-page {
   }
 }
 
+/* Sur téléphone (contrairement aux tablettes ~760px), la liste des 6
+   métiers prenait beaucoup de hauteur avant d'atteindre "Découvrir
+   l'atelier" : resserré sans rien retirer, pour un premier écran plus
+   dynamique au scroll. */
+@media (width <= 480px) {
+  .hero-content {
+    padding-top: 40px;
+  }
+
+  .hero .metiers-list {
+    margin-top: 26px;
+    gap: 14px 0;
+  }
+
+  .hero .metier-item {
+    min-height: 104px;
+    gap: 9px;
+  }
+
+  .hero .icon-wrap {
+    width: 50px;
+    height: 50px;
+    flex-basis: 50px;
+  }
+
+  .hero .icon-wrap img {
+    width: 24px;
+    height: 24px;
+  }
+}
+
 @media (width >= 1251px) {
   .hero-content {
     padding-top: clamp(145px, 17vh, 180px);
@@ -6110,16 +6151,25 @@ body.legal-page {
 }
 
 @media (width <= 760px) {
+  .atelier-text .about-pill {
+    min-height: 36px;
+  }
+}
+
+/* La photo (3 panneaux) et le bloc texte glissent horizontalement (78-140px)
+   pour converger en 2 colonnes — mais .atelier-card repasse en 1 colonne dès
+   860px (cf. règle juste au-dessus), donc entre 761 et 860px ce glissement
+   partait d'un bloc désormais empilé sur toute la largeur et débordait de
+   l'écran (jusqu'à 64px de dépassement mesuré en tablette portrait). Montée
+   verticale au lieu du glissement latéral tant que la mise en page est
+   empilée, alignée sur la même borne que .atelier-card. */
+@media (width <= 860px) {
   .atelier-panel {
     transform: translate3d(0, 22px, 0);
   }
 
   .atelier-text > * {
     transform: translate3d(0, 22px, 0);
-  }
-
-  .atelier-text .about-pill {
-    min-height: 36px;
   }
 
   [data-atelier-reveal].in-view .atelier-panel,
@@ -7419,4 +7469,429 @@ body.legal-page {
   height: 4px;
   border-radius: 50%;
   background: #e11616;
+}
+
+/* =========================================================
+   RETOUCHES MOBILE UNIQUEMENT — bloc isolé, placé en toute fin
+   de fichier pour gagner la cascade sans jamais modifier les
+   règles ci-dessus (donc sans aucun impact sur la version PC).
+   ========================================================= */
+
+/* 1) Footer : le "collage" entre l'email et le © venait du
+   margin-top négatif de .legal (pensé pour le rail SVG desktop,
+   qui est haut de ~34px). Sur mobile ce rail est écrasé à
+   quelques pixels de haut par son ratio, donc ce même négatif
+   plaque la ligne légale contre la colonne contact au-dessus. */
+@media (width <= 760px) {
+  .footer-main {
+    padding-bottom: 26px;
+  }
+
+  .legal {
+    margin-top: 0;
+    padding-top: 18px;
+    gap: 10px;
+  }
+}
+
+/* 3) Parc machines sur mobile : le récit vertical coupait toute
+   animation (opacity/transform figés) car le grand glissement
+   croisé desktop débordait de l'écran. On lui redonne un vrai
+   dynamisme d'arrivée, simple et fluide (fondu + montée + léger
+   zoom photo), sans toucher à l'en-tête de section ni au rideau
+   du page-hero qui restent gérés par .machines-story-head. */
+@media (width <= 760px) {
+  .story-card-media,
+  .story-card-body {
+    opacity: 0;
+    transform: translate3d(0, 34px, 0) scale(0.97);
+    transition:
+      opacity 0.85s cubic-bezier(0.16, 1, 0.3, 1),
+      transform 0.9s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  .story-card-body {
+    transition-delay: 90ms;
+  }
+
+  .story-item.is-active .story-card-media,
+  .story-item.is-active .story-card-body {
+    opacity: 1;
+    transform: translate3d(0, 0, 0) scale(1);
+  }
+
+  .story-card-media img {
+    filter: grayscale(0.35) brightness(0.85);
+    transform: scale(1.08);
+    transition:
+      filter 0.9s ease,
+      transform 1.1s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  .story-item.is-active .story-card-media img {
+    filter: grayscale(0) brightness(1);
+    transform: scale(1);
+  }
+
+  .story-card-body > * {
+    opacity: 0;
+    transform: translate3d(0, 12px, 0);
+    transition: opacity 0.5s ease, transform 0.55s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  .story-item.is-active .story-card-body > * {
+    opacity: 1;
+    transform: translate3d(0, 0, 0);
+  }
+
+  .story-card-title mark {
+    clip-path: inset(0 0 100% 0);
+    transition: clip-path 0.4s cubic-bezier(0.65, 0, 0.35, 1);
+    transition-delay: 320ms;
+  }
+
+  .story-item.is-active .story-card-title mark {
+    clip-path: inset(0 0 0% 0);
+  }
+}
+
+@media (width <= 760px) and (prefers-reduced-motion: reduce) {
+  .story-card-media,
+  .story-card-body,
+  .story-card-body > *,
+  .story-card-media img {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+
+  .story-card-title mark {
+    clip-path: none;
+  }
+}
+
+/* 4) En-têtes de page (page-hero / legal-hero) légèrement moins
+   hauts sur mobile : padding réduit + titre un peu plus compact,
+   dynamisme d'arrivée (rideau, montée du texte) inchangé. */
+@media (width <= 640px) {
+  .legal-hero,
+  .page-hero {
+    padding: 26px 0 22px;
+  }
+
+  .legal-hero-inner,
+  .page-hero-inner {
+    gap: 10px;
+  }
+
+  .legal-hero h1,
+  .page-hero h1 {
+    font-size: clamp(1.6rem, 7.2vw, 2.3rem);
+    line-height: 1.14;
+  }
+
+  .legal-hero p,
+  .page-hero p {
+    font-size: 0.94rem;
+    line-height: 1.5;
+  }
+}
+
+/* 6) Page d'accueil : les deux sections sous le hero ("Nos savoir-faire"
+   et le bandeau d'appel à l'action) n'avaient qu'un fondu générique très
+   discret. Sur mobile ET tablette (jusqu'à 1250px, la borne où le site
+   bascule réellement en mise en page desktop), on leur donne une arrivée
+   horizontale alternée (gauche puis droite), plus les 4 cartes de
+   "Nos savoir-faire" qui arrivent en cascade légère. Scopé par
+   #apercu / .cta-band, uniques à index.html : aucune autre page n'est
+   concernée. */
+@media (width <= 1250px) {
+  #apercu.reveal {
+    transform: translate3d(-64px, 0, 0);
+  }
+
+  #apercu.reveal.is-visible {
+    transform: translate3d(0, 0, 0);
+  }
+
+  .cta-band.reveal {
+    transform: translate3d(64px, 0, 0);
+  }
+
+  .cta-band.reveal.is-visible {
+    transform: translate3d(0, 0, 0);
+  }
+
+  /* Cascade plus riche pour les 4 cartes (flou + montée + zoom léger),
+     même langage que le reveal desktop des .overview-card / .feature-card,
+     mais avec des durées courtes pensées pour un scroll au doigt. */
+  #apercu .overview-card {
+    opacity: 0;
+    filter: blur(5px);
+    transform: translate3d(0, 34px, 0) scale(0.93);
+    transition:
+      opacity 0.7s cubic-bezier(0.16, 1, 0.3, 1),
+      transform 0.75s cubic-bezier(0.16, 1, 0.3, 1),
+      filter 0.7s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  #apercu.reveal.is-visible .overview-card {
+    opacity: 1;
+    filter: blur(0);
+    transform: translate3d(0, 0, 0) scale(1);
+  }
+
+  #apercu.reveal.is-visible .overview-card:nth-child(1) { transition-delay: 0.08s; }
+  #apercu.reveal.is-visible .overview-card:nth-child(2) { transition-delay: 0.18s; }
+  #apercu.reveal.is-visible .overview-card:nth-child(3) { transition-delay: 0.28s; }
+  #apercu.reveal.is-visible .overview-card:nth-child(4) { transition-delay: 0.38s; }
+
+  /* La photo de chaque carte reste plate le reste du temps : ici le
+     cadre est overflow:hidden (contrairement aux pages Pièces), donc un
+     zoom-arrière sur l'image elle-même est sans risque de débord. */
+  #apercu .overview-card-media img {
+    transform: scale(1.22);
+    transition: transform 0.9s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  #apercu.reveal.is-visible .overview-card-media img {
+    transform: scale(1);
+  }
+
+  #apercu.reveal.is-visible .overview-card:nth-child(1) .overview-card-media img { transition-delay: 0.08s; }
+  #apercu.reveal.is-visible .overview-card:nth-child(2) .overview-card-media img { transition-delay: 0.18s; }
+  #apercu.reveal.is-visible .overview-card:nth-child(3) .overview-card-media img { transition-delay: 0.28s; }
+  #apercu.reveal.is-visible .overview-card:nth-child(4) .overview-card-media img { transition-delay: 0.38s; }
+
+  /* Bandeau CTA : titre, texte et bouton arrivaient d'un bloc avec le
+     glissement de la section ; une légère cascade interne leur donne un
+     peu plus de vie au moment où ils passent au premier plan. */
+  .cta-band.reveal .cta-band-inner > * {
+    opacity: 0;
+    transform: translate3d(0, 20px, 0);
+    transition: opacity 0.55s cubic-bezier(0.16, 1, 0.3, 1), transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  .cta-band.reveal .cta-band-inner > *:nth-child(1) { transition-delay: 0.05s; }
+  .cta-band.reveal .cta-band-inner > *:nth-child(2) { transition-delay: 0.15s; }
+  .cta-band.reveal .cta-band-inner > *:nth-child(3) { transition-delay: 0.25s; }
+
+  .cta-band.reveal.is-visible .cta-band-inner > * {
+    opacity: 1;
+    transform: translate3d(0, 0, 0);
+  }
+}
+
+@media (width <= 1250px) and (prefers-reduced-motion: reduce) {
+  #apercu.reveal,
+  .cta-band.reveal,
+  #apercu .overview-card,
+  #apercu .overview-card-media img,
+  .cta-band-inner > * {
+    transform: none;
+    filter: none;
+    opacity: 1;
+  }
+}
+
+/* 7) Pièces de série / Pièces unitaires : refonte complète du dynamisme
+   mobile ET tablette (jusqu'à 1250px : .split-grid ne repasse en 2
+   colonnes côte à côte qu'au-delà, cf. règle plus haut dans le fichier —
+   en dessous, le texte et la photo sont empilés sur toute la largeur).
+   Les glissements horizontaux hérités du desktop (jusqu'à 680px de
+   translation + rotation + zoom photo, cadre à overflow visible pour le
+   liseré rouge) ne fonctionnent pas sur un écran empilé : traversée trop
+   longue, débordements (jusqu'à 274px mesurés en tablette), vide pendant
+   la transition. On repart sur un système propre : fondu + légère montée
+   verticale, rapide (0,5-0,65s, jamais plus), sans rotation ni zoom sur
+   les photos (donc aucun risque de débordement/rognage), avec la photo
+   toujours affichée nette (seule sa bulle glisse, pas l'image elle-même).
+   Scopé via .mobile-showcase, posé sur le <body> de pieces-serie.html et
+   pieces-unitaires.html uniquement : aucune autre page n'est concernée,
+   et le PC de ces deux pages non plus (au-delà de 1250px, ce bloc entier
+   ne s'applique plus). */
+@media (width <= 1250px) {
+  /* Plusieurs anciennes règles desktop (certaines scopées par #id, donc
+     très prioritaires) imposent encore leurs propres opacity/transform à
+     ces mêmes éléments. Plutôt que de dupliquer chaque combinaison de
+     sélecteurs pour les dépasser en spécificité, on utilise !important
+     ici : sans risque, puisque tout ce bloc est doublement scopé (media
+     query mobile + .mobile-showcase sur pieces-serie.html/
+     pieces-unitaires.html uniquement) et qu'aucune règle plus bas dans le
+     fichier ne vient plus le contredire. */
+
+  /* La section elle-même (l'élément <section class="engage-section reveal">
+     qui enveloppe la photo ET le texte) n'a plus son propre fondu : seuls
+     ses deux enfants (bulle de texte, photo) animent, chacun une fois,
+     proprement — sinon la section restait translucide pendant que ses
+     enfants étaient déjà nets, et donnait l'impression que la section
+     suivante "mangeait" la photo du dessus. */
+  .mobile-showcase .engage-section.reveal,
+  .mobile-showcase .legal-section.reveal {
+    opacity: 1 !important;
+    transform: none !important;
+    transition: none !important;
+  }
+
+  .mobile-showcase .engage-section .text-content {
+    opacity: 0 !important;
+    transform: translate3d(0, 34px, 0) scale(0.98) !important;
+    filter: none !important;
+    transition:
+      opacity 0.6s cubic-bezier(0.16, 1, 0.3, 1),
+      transform 0.6s cubic-bezier(0.16, 1, 0.3, 1) !important;
+  }
+
+  /* La bulle photo a droit à un peu plus de relief que le texte (flou +
+     zoom léger en plus de la montée) : sans texte à l'intérieur, le flou
+     ne nuit jamais à la lisibilité et donne un vrai effet "développement
+     photo" façon Polaroid, cohérent avec le glissement flouté du desktop. */
+  .mobile-showcase .engage-section .section-figure {
+    opacity: 0 !important;
+    transform: translate3d(0, 34px, 0) scale(0.92) !important;
+    filter: blur(6px) !important;
+    transition:
+      opacity 0.65s cubic-bezier(0.16, 1, 0.3, 1),
+      transform 0.65s cubic-bezier(0.16, 1, 0.3, 1),
+      filter 0.6s cubic-bezier(0.16, 1, 0.3, 1) !important;
+    transition-delay: 100ms !important;
+  }
+
+  .mobile-showcase .engage-section.reveal.is-visible .text-content {
+    opacity: 1 !important;
+    transform: translate3d(0, 0, 0) scale(1) !important;
+  }
+
+  .mobile-showcase .engage-section.reveal.is-visible .section-figure {
+    opacity: 1 !important;
+    transform: translate3d(0, 0, 0) scale(1) !important;
+    filter: blur(0) !important;
+  }
+
+  /* La toute première section de chaque page (juste après le page-hero)
+     doit rester synchronisée avec la fin du rideau rouge de l'en-tête,
+     exactement comme sur À propos / Contact / Parc machines : sans ce
+     correctif plus précis (donc plus prioritaire), la règle générale
+     ci-dessus la faisait partir immédiatement, avant même que le rideau
+     ait fini de jouer — d'où l'impression que "l'en-tête ne correspond
+     plus" et que "la section ne le suit pas". */
+  .mobile-showcase .page-hero + .engage-section.reveal .text-content {
+    transition-delay: 1.05s !important;
+  }
+
+  .mobile-showcase .page-hero + .engage-section.reveal .section-figure {
+    transition-delay: 1.15s !important;
+  }
+
+  /* La photo elle-même reste toujours nette et fixe : c'est sa bulle
+     (.section-figure, avec son cadre et son liseré rouge) qui glisse,
+     jamais l'image à l'intérieur — le cadre de ces deux pages a
+     volontairement overflow:visible pour laisser dépasser le liseré, donc
+     tout glissement/zoom appliqué à l'image elle-même n'est jamais coupé
+     et vient chevaucher la section suivante. */
+  .mobile-showcase .engage-section .section-figure img {
+    opacity: 1 !important;
+    transform: none !important;
+    filter: none !important;
+    transition: none !important;
+  }
+
+  /* Bug trouvé en analysant le "décalé par rapport au scroll" signalé :
+     un système hérité fait apparaître chaque enfant direct de
+     .text-content (titre, liste, bouton) un par un, en 1,05 à 1,3s
+     chacun, avec un décalage supplémentaire jusqu'à 640ms pour le
+     dernier. Résultat : la bulle de texte (elle-même déjà pleinement
+     visible en 0,5s ci-dessus) reste vide/fantôme jusqu'à 2,1s après
+     le déclenchement — largement après que l'utilisateur ait continué
+     à scroller. On désactive ce système interne pour ces deux pages :
+     .text-content dans son ensemble suffit comme animation d'entrée. */
+  .mobile-showcase .engage-section .text-content > * {
+    opacity: 1 !important;
+    transform: none !important;
+    clip-path: none !important;
+    transition: none !important;
+  }
+
+  /* Même décalage sur le surlignage rouge du titre : la première section
+     de chaque page attend 1,25s avant de commencer à le peindre (pensé
+     pour l'ancien système, deux fois plus lent) — le texte est déjà
+     lisible depuis longtemps quand la couleur arrive enfin. Ramené à un
+     délai court et cohérent sur les deux sections des deux pages. */
+  .mobile-showcase .engage-section h2 mark,
+  .mobile-showcase .legal-section h2 mark {
+    transition-delay: 200ms !important;
+    transition-duration: 0.35s !important;
+  }
+
+  /* Même règle que pour .text-content / .section-figure juste au-dessus :
+     la première section de chaque page attend la fin du rideau avant que
+     son surlignage ne se peigne, pour rester alignée sur le reste du site. */
+  .mobile-showcase .page-hero + .engage-section.reveal h2 mark {
+    transition-delay: 1.4s !important;
+    transition-duration: 0.4s !important;
+  }
+
+  /* Les 3 cartes de chaque page ("Précision / Matières / ..." et
+     "Étude / Secteurs / Réactivité") arrivent en cascade, avec le même
+     flou + zoom léger que la photo ci-dessus pour un vrai relief. */
+  .mobile-showcase .legal-section .feature-card {
+    opacity: 0 !important;
+    filter: blur(5px) !important;
+    transform: translate3d(0, 30px, 0) scale(0.92) !important;
+    transition:
+      opacity 0.6s cubic-bezier(0.16, 1, 0.3, 1),
+      transform 0.6s cubic-bezier(0.16, 1, 0.3, 1),
+      filter 0.55s cubic-bezier(0.16, 1, 0.3, 1) !important;
+  }
+
+  .mobile-showcase .legal-section.reveal.is-visible .feature-card {
+    opacity: 1 !important;
+    filter: blur(0) !important;
+    transform: translate3d(0, 0, 0) scale(1) !important;
+  }
+
+  .mobile-showcase .legal-section.reveal.is-visible .feature-card:nth-child(1) {
+    transition-delay: 0ms !important;
+  }
+
+  .mobile-showcase .legal-section.reveal.is-visible .feature-card:nth-child(2) {
+    transition-delay: 130ms !important;
+  }
+
+  .mobile-showcase .legal-section.reveal.is-visible .feature-card:nth-child(3) {
+    transition-delay: 260ms !important;
+  }
+
+  /* Footer : on garde le fondu générique du site, juste raccourci pour
+     rester cohérent avec le rythme rapide du reste de ces deux pages. */
+  .mobile-showcase .footer.reveal {
+    transition:
+      opacity 0.5s cubic-bezier(0.16, 1, 0.3, 1),
+      transform 0.5s cubic-bezier(0.16, 1, 0.3, 1) !important;
+  }
+
+  /* Le padding bas généreux de #pieces-serie (jusqu'à 104px) réservait de
+     la place au débord du cadre photo + à la dérive de parallaxe au
+     scroll (~30px), tous deux desktop uniquement. Sans le grand
+     glissement desktop, ce vide devenait un blanc anormal avant "Doosan
+     Puma 4100" : ramené à une valeur qui respire sans être excessive.
+     #pieces-unitaires n'avait jamais eu ce padding généreux (34px de
+     base seulement), ce qui donnait un espacement trop juste avant
+     "Exemple de réalisation" comparé à sa page jumelle : alignée sur la
+     même valeur pour que les deux pages respirent pareil. */
+  #pieces-serie,
+  #pieces-unitaires {
+    padding-bottom: 90px;
+  }
+}
+
+@media (width <= 1250px) and (prefers-reduced-motion: reduce) {
+  .mobile-showcase .engage-section .text-content,
+  .mobile-showcase .engage-section .section-figure,
+  .mobile-showcase .legal-section .feature-card {
+    opacity: 1 !important;
+    filter: none !important;
+    transform: none !important;
+    transition: none !important;
+  }
 }
