@@ -78,9 +78,28 @@
 
     <section id="formulaire" class="section contact-form-section reveal decor-surface decor-gray">
       <div class="wrap">
+       <div class="contact-grid">
+        <div class="contact-form-intro">
         <p class="section-kicker">Formulaire</p>
-        <h2>Envoyez votre <mark>demande</mark></h2>
-        <p class="about-intro">Indiquez vos besoins, nous vous répondons rapidement.</p>
+        <h2>Parlons de <mark>votre projet</mark></h2>
+        <span class="contact-divider" aria-hidden="true"></span>
+        <p class="about-intro">Décrivez votre besoin, nous vous répondons dans les meilleurs délais.</p>
+
+        <ul class="contact-perks">
+          <li>
+            <span class="contact-perks-icon" aria-hidden="true"><img src="https://api.iconify.design/mdi:clock-fast.svg?color=%23e11616" alt=""></span>
+            <span>Réponse sous 24h ouvrées</span>
+          </li>
+          <li>
+            <span class="contact-perks-icon" aria-hidden="true"><img src="https://api.iconify.design/mdi:file-check-outline.svg?color=%23e11616" alt=""></span>
+            <span>Devis gratuit et sans engagement</span>
+          </li>
+          <li>
+            <span class="contact-perks-icon" aria-hidden="true"><img src="https://api.iconify.design/mdi:cog-outline.svg?color=%23e11616" alt=""></span>
+            <span>Usinage sur mesure, à façon</span>
+          </li>
+        </ul>
+        </div>
 
         <div class="contact-form-card" data-intersection-scroll>
           <form class="contact-form" id="contact-form">
@@ -101,21 +120,24 @@
               <textarea name="message" required rows="4" placeholder="Décrivez votre besoin (série, unitaire, matière, délais)..."></textarea>
             </label>
             <div class="contact-form-actions">
-              <button type="submit" class="button-pill">Envoyer</button>
+              <button type="submit" class="button-pill">Envoyer ma demande</button>
             </div>
           </form>
 
           <p class="contact-form-feedback" id="contact-form-feedback" aria-live="polite"></p>
         </div>
+       </div>
       </div>
     </section>
 
     <section id="plan" class="plan-section reveal decor-surface decor-a">
-      <div class="wrap plan-grid">
+      <div class="wrap">
+       <div class="plan-panel">
+        <div class="plan-grid">
         <div class="plan-copy">
           <p class="plan-kicker">Plan et accès</p>
-          <h2 class="plan-title"><span>Retrouvez</span> <mark>MECA-EUROPE</mark> <span>à Riotord</span></h2>
-          <p class="plan-lead">L'atelier est situé au 22 route du Midi, 43220 Riotord. La carte ci-contre reste interactive pour zoomer, dézoomer et mieux préparer votre trajet.</p>
+          <h2 class="plan-title"><span>Notre atelier</span><mark>à Riotord</mark></h2>
+          <p class="plan-lead">Implantés depuis 1969 au 22 route du Midi, au cœur de Riotord, nous mettons notre savoir-faire au service de vos projets.</p>
           <div class="plan-details">
             <div class="plan-detail">
               <span class="plan-detail-icon" aria-hidden="true"><img src="https://api.iconify.design/mdi:map-marker-outline.svg?color=%23e11616" alt=""></span>
@@ -143,18 +165,26 @@
         </div>
 
         <div class="plan-media" data-intersection-scroll>
-          <figure class="section-figure plan-devanture">
-            <img src="assets/images/devanture-atelier.webp" alt="Façade de l'atelier MECA-EUROPE à Riotord" width="1448" height="1086" loading="lazy" decoding="async">
-            <figcaption>L'atelier MECA-EUROPE, 22 route du Midi à Riotord.</figcaption>
-          </figure>
-
           <div class="plan-map-wrap">
             <img class="plan-map" src="assets/images/map-section.png" alt="Carte de localisation de MECA-EUROPE à Riotord" width="1200" height="760" loading="lazy" decoding="async">
+
+            <figure class="plan-devanture">
+              <img src="assets/images/devanture-atelier.webp" alt="Façade de l'atelier MECA-EUROPE à Riotord" width="1448" height="1086" loading="lazy" decoding="async">
+              <figcaption>La façade de l'atelier,<br>au cœur de notre histoire.</figcaption>
+            </figure>
+
             <a class="plan-map-link" href="https://www.google.com/maps/dir/?api=1&destination=22+route+du+Midi,+43220+Riotord" target="_blank" rel="noopener noreferrer">
               <span>Voir sur Google Maps</span>
+              <img src="https://api.iconify.design/mdi:open-in-new.svg?color=%23ffffff" alt="" aria-hidden="true">
+            </a>
+
+            <a class="plan-map-send" href="https://www.google.com/maps/dir/?api=1&destination=22+route+du+Midi,+43220+Riotord" target="_blank" rel="noopener noreferrer" aria-label="Itinéraire vers l'atelier MECA-EUROPE">
+              <img src="https://api.iconify.design/mdi:send-outline.svg?color=%23ffffff" alt="">
             </a>
           </div>
         </div>
+        </div>
+       </div>
       </div>
     </section>
   </main>

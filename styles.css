@@ -772,6 +772,13 @@ a {
   --decor-shift: 0px;
 }
 
+/* Variante « neutre » : fond blanc explicite, plutôt que de dépendre du
+   fond par défaut des classes de section qui l'accompagnent — au même
+   titre que decor-b/decor-c/decor-gray déclarent le leur. */
+.decor-surface.decor-a {
+  background: #fff;
+}
+
 .decor-surface > .wrap {
   position: relative;
   z-index: 1;
@@ -1087,7 +1094,7 @@ mark {
    harmonisés sur la même taille que les autres titres de section du site. */
 .legal-section > .wrap > h2,
 #apercu-title,
-.contact-form-section > .wrap > h2 {
+.contact-form-section .contact-form-intro h2 {
   margin: 0 0 18px;
   max-width: 720px;
   color: #1f1f1f;
@@ -1493,7 +1500,7 @@ mark {
 .key-figures-heading > p:last-child {
   margin: 10px 0 0;
   padding-top: clamp(12px, 1.7vw, 26px);
-  color: #545b67;
+  color: var(--c-text);
   font-size: clamp(1rem, 1.35vw, 1.3rem);
   font-weight: 600;
   line-height: 1.6;
@@ -1503,6 +1510,8 @@ mark {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
   border: 1px solid #dde2e8;
+  border-radius: 18px;
+  overflow: hidden;
   background: rgb(255 255 255 / 86%);
   box-shadow: 0 24px 60px rgb(15 25 36 / 7%);
 }
@@ -1584,7 +1593,7 @@ mark {
 
 .key-figure-card h3 {
   margin: 30px 0 0;
-  color: #5a6170;
+  color: var(--c-text);
   font-size: clamp(0.95rem, 1.05vw, 1.08rem);
   font-weight: 600;
   line-height: 1.45;
@@ -2042,28 +2051,121 @@ mark {
   max-width: none;
 }
 
+/* Colonne texte + carte formulaire, cote a cote, sur le modele de la
+   maquette de reference (eyebrow / titre / trait rouge / accroche /
+   arguments a puces, puis la carte sombre du formulaire). */
+.contact-grid {
+  display: grid;
+  grid-template-columns: 0.85fr 1.15fr;
+  gap: 40px;
+  align-items: center;
+}
+
+.contact-form-intro {
+  max-width: 400px;
+}
+
+.contact-form-intro .about-intro {
+  margin: 0;
+  max-width: 340px;
+}
+
+.contact-divider {
+  display: block;
+  width: 48px;
+  height: 3px;
+  margin: 18px 0 16px;
+  background: var(--c-teal);
+}
+
+.contact-perks {
+  list-style: none;
+  margin: 30px 0 0;
+  padding: 22px 0 0;
+  border-top: 1px solid #e2e0dc;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  max-width: 340px;
+}
+
+.contact-perks li {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  color: #2a2a2a;
+  font-size: 0.92rem;
+  font-weight: 600;
+  line-height: 1.4;
+}
+
+.contact-perks-icon {
+  display: inline-grid;
+  place-items: center;
+  flex-shrink: 0;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: #fff;
+  border: 1px solid #e2e0dc;
+  box-shadow: 0 6px 14px -8px rgb(0 0 0 / 25%);
+}
+
+.contact-perks-icon img {
+  width: 16px;
+  height: 16px;
+}
+
+@media (width <= 1024px) {
+  .contact-grid {
+    grid-template-columns: 1fr;
+    gap: 30px;
+  }
+
+  .contact-form-intro,
+  .contact-form-intro .about-intro,
+  .contact-perks {
+    max-width: none;
+  }
+}
+
 #formulaire.contact-form-section,
 #formulaire.contact-form-section.decor-surface.decor-gray {
   background: #fff;
 }
 
 #formulaire.contact-form-section::after {
-  background-image: none;
+  opacity: 0.62;
+  background-image:
+    url("assets/decor/motif-points-rouges.svg"),
+    url("assets/decor/motif-grand-cercle-fin.svg"),
+    url("assets/decor/motif-repere-cible.svg"),
+    url("assets/decor/motif-chevrons.svg"),
+    url("assets/decor/motif-points-gris.svg");
+  background-size: 128px, 280px, 96px, 100px, 120px;
+  background-position:
+    6% calc(10% + var(--decor-shift)),
+    96% calc(82% - var(--decor-shift)),
+    91% calc(12% + var(--decor-shift)),
+    9% calc(78% - var(--decor-shift)),
+    50% calc(92% + var(--decor-shift));
 }
 
+/* Carte de formulaire sombre, dans l'esprit atelier des sections
+   page-hero / machines-story (même noir, même grain de points, même accent
+   rouge) plutôt que la carte blanche précédente. */
 .contact-form-card {
   position: relative;
   isolation: isolate;
   overflow: hidden;
-  background:
-    linear-gradient(180deg, rgb(255 255 255 / 98%) 0%, rgb(247 248 249 / 98%) 100%);
-  border: 1px solid rgb(0 0 0 / 16%);
+  background: linear-gradient(155deg, #1c1e22 0%, #222428 100%);
+  border: 1px solid rgb(255 255 255 / 8%);
   border-radius: 28px;
   padding: clamp(30px, 3.4vw, 46px);
   box-shadow:
-    0 30px 72px rgb(2 8 15 / 12%),
-    0 2px 0 rgb(255 255 255 / 72%) inset,
-    0 0 0 1px rgb(225 22 22 / 6%) inset;
+    0 30px 72px rgb(0 0 0 / 35%),
+    0 0 0 1px rgb(225 22 22 / 10%) inset;
+  color: #fff;
   will-change: transform, opacity;
 }
 
@@ -2072,8 +2174,9 @@ mark {
   position: absolute;
   inset: 0;
   background:
-    radial-gradient(circle at top right, rgb(225 22 22 / 10%) 0%, transparent 34%),
-    linear-gradient(180deg, rgb(255 255 255 / 48%) 0%, transparent 20%);
+    radial-gradient(420px 260px at 100% 0%, rgb(225 22 22 / 18%), transparent 70%),
+    radial-gradient(1px 1px at center, rgb(255 255 255 / 10%) 1px, transparent 1.5px);
+  background-size: auto, 26px 26px;
   pointer-events: none;
 }
 
@@ -2082,7 +2185,7 @@ mark {
   position: absolute;
   inset: 0;
   border-radius: inherit;
-  border: 1px solid rgb(225 22 22 / 12%);
+  border: 1px solid rgb(255 255 255 / 6%);
   pointer-events: none;
 }
 
@@ -2094,47 +2197,21 @@ mark {
 .contact-form {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 16px 18px;
+  gap: 18px 18px;
 }
 
 .contact-form label {
   display: grid;
-  gap: 10px;
-  color: #1b2026;
-  font-weight: 700;
-  font-size: 0.94rem;
-  padding: 15px 15px 14px;
-  border: 1px solid rgb(0 0 0 / 10%);
-  border-radius: 20px;
-  background: linear-gradient(180deg, rgb(255 255 255 / 98%) 0%, rgb(250 250 250 / 98%) 100%);
-  box-shadow:
-    inset 0 1px 0 rgb(255 255 255 / 88%),
-    0 1px 0 rgb(255 255 255 / 80%);
-  transition:
-    transform 0.35s cubic-bezier(0.16, 1, 0.3, 1),
-    box-shadow 0.35s cubic-bezier(0.16, 1, 0.3, 1),
-    border-color 0.35s ease,
-    background 0.35s ease;
-  will-change: transform, box-shadow;
+  gap: 9px;
+  color: rgb(255 255 255 / 84%);
+  font-family: Montserrat, Arial, sans-serif;
+  font-weight: 800;
+  font-size: 0.74rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
 }
 
-.contact-form label:hover {
-  transform: translateY(-2px);
-  border-color: rgb(225 22 22 / 24%);
-  box-shadow:
-    0 16px 36px rgb(2 8 15 / 8%),
-    inset 0 1px 0 rgb(255 255 255 / 95%);
-}
-
-.contact-form label:focus-within {
-  transform: translateY(-2px);
-  border-color: rgb(225 22 22 / 52%);
-  box-shadow:
-    0 0 0 4px rgb(225 22 22 / 10%),
-    0 18px 38px rgb(2 8 15 / 10%),
-    inset 0 1px 0 rgb(255 255 255 / 95%);
-}
-
+.contact-form label:nth-of-type(3),
 .contact-form label:nth-of-type(4) {
   grid-column: 1 / -1;
 }
@@ -2147,36 +2224,55 @@ mark {
 .contact-form input,
 .contact-form textarea {
   width: 100%;
-  border: 0;
-  border-radius: 12px;
-  background: rgb(245 246 247 / 100%);
-  color: #1f2328;
-  padding: 12px 14px;
-  font: inherit;
+  border: 1px solid rgb(255 255 255 / 18%);
+  border-radius: 14px;
+  background: rgb(255 255 255 / 7%);
+  color: #fff;
+  padding: 14px 16px;
+  font-family: "Source Sans 3", Arial, sans-serif;
+  font-size: 0.98rem;
+  font-weight: 500;
   line-height: 1.5;
-  box-shadow:
-    inset 0 1px 2px rgb(0 0 0 / 6%),
-    0 0 0 1px rgb(0 0 0 / 6%);
+  transition: border-color 0.28s ease, background-color 0.28s ease, box-shadow 0.28s ease;
+}
+
+.contact-form input[name="name"],
+.contact-form input[name="email"],
+.contact-form input[name="phone"] {
+  padding-right: 44px;
+  background-repeat: no-repeat;
+  background-position: right 14px center;
+  background-size: 20px;
+}
+
+.contact-form input[name="name"] {
+  background-image: url("https://api.iconify.design/mdi:account-outline.svg?color=%23e11616");
+}
+
+.contact-form input[name="email"] {
+  background-image: url("https://api.iconify.design/mdi:email-outline.svg?color=%23e11616");
+}
+
+.contact-form input[name="phone"] {
+  background-image: url("https://api.iconify.design/mdi:phone-outline.svg?color=%23e11616");
 }
 
 .contact-form input::placeholder,
 .contact-form textarea::placeholder {
-  color: #7f8790;
+  color: rgb(255 255 255 / 52%);
 }
 
 .contact-form textarea {
-  min-height: 170px;
+  min-height: 150px;
   resize: vertical;
 }
 
 .contact-form input:focus,
 .contact-form textarea:focus {
   outline: none;
-  background: #fff;
-  box-shadow:
-    0 0 0 3px rgb(225 22 22 / 10%),
-    inset 0 1px 2px rgb(0 0 0 / 5%),
-    0 0 0 1px rgb(225 22 22 / 18%);
+  background: rgb(255 255 255 / 8%);
+  border-color: rgb(225 22 22 / 55%);
+  box-shadow: 0 0 0 3px rgb(225 22 22 / 16%);
 }
 
 .contact-form-actions {
@@ -2188,15 +2284,21 @@ mark {
 
 .contact-form-actions .button-pill {
   margin-top: 0;
+  min-height: 56px;
+  padding: 0 clamp(24px, 2vw, 34px);
+  border-radius: 14px;
+  background: linear-gradient(135deg, #ec1717, #c90000);
+  box-shadow: 0 10px 24px rgb(225 22 22 / 22%);
+  font-size: 1.05rem;
 }
 
 .contact-form-cancel {
   min-height: 48px;
   padding: 0 20px;
   border-radius: 999px;
-  border: 1px solid rgb(0 0 0 / 24%);
+  border: 1px solid rgb(255 255 255 / 24%);
   background: transparent;
-  color: #2a2a2a;
+  color: #fff;
   font-weight: 700;
   cursor: pointer;
 }
@@ -2204,7 +2306,7 @@ mark {
 .contact-form-feedback {
   min-height: 1.4em;
   margin: 6px 0 0;
-  color: #2a2a2a;
+  color: rgb(255 255 255 / 78%);
   font-weight: 600;
 }
 
@@ -2286,7 +2388,7 @@ mark {
 
 .plan-kicker {
   margin: 0 0 16px;
-  color: #7a7a7a;
+  color: var(--c-text);
   font-size: 0.98rem;
   font-weight: 700;
   text-transform: uppercase;
@@ -2379,7 +2481,7 @@ mark {
 
 .plan-devanture figcaption {
   margin: 10px 22px 0;
-  color: #7a7a7a;
+  color: var(--c-text);
   font-size: 0.92rem;
 }
 
@@ -2458,7 +2560,7 @@ mark {
   position: relative;
   overflow: hidden;
   padding: 0 0 16px;
-  color: #555a60;
+  color: var(--c-text);
   background:
     linear-gradient(
       180deg,
@@ -2604,7 +2706,7 @@ mark {
 .footer li,
 .footer a {
   margin: 0;
-  color: #555a60;
+  color: var(--c-text);
   font-size: 0.92rem;
   line-height: 1.5;
 }
@@ -3090,7 +3192,7 @@ body.legal-page {
 }
 
 .legal-note {
-  color: #7a7a7a;
+  color: var(--c-text);
   font-size: 0.96rem;
 }
 
@@ -4737,7 +4839,12 @@ body.legal-page {
 /* Même liseré rouge sur les sections en layout inversé (photo à gauche,
    cf. .split-grid.reverse) : "Doosan Puma 4100" (pieces-serie.html) et
    "Exemple de réalisation" (pieces-unitaires.html) — la photo y est à
-   gauche, donc la variante "par défaut" du cadre (bord gauche/bas). */
+   gauche, donc la variante "par défaut" du cadre (bord gauche/bas).
+   Ces deux photos rejouaient aussi leur glissade d'entrée (et donc le
+   cadre qui se retrouvait décalé/penché le temps de l'anim) à chaque
+   fois qu'on les recroisait en remontant après un rechargement en cours
+   de page — même bug que les premières sections, même correctif : on
+   neutralise leur dynamisme d'entrée pour de bon. */
 .split-grid.reverse .section-figure {
   position: relative;
   z-index: 2;
@@ -4746,6 +4853,10 @@ body.legal-page {
   box-shadow: none;
   overflow: visible;
   border-radius: 30px;
+  opacity: 1 !important;
+  transform: none !important;
+  filter: none !important;
+  transition: none !important;
 }
 
 .split-grid.reverse .section-figure::before {
@@ -4796,11 +4907,24 @@ body.legal-page {
 }
 
 /* Grille d'aperçus de l'accueil (Pièces de série / Pièces unitaires / Parc machines / À propos). */
+
+/* Alignée sur la même largeur que .hero-layout (le bloc "Usinage de pièces
+   mécaniques" etc. au-dessus) plutôt que le .wrap standard, pour que la
+   grille démarre et finisse pile au même niveau que la liste de métiers.
+   Uniquement au-delà de 1024px : en dessous, la grille passe en 2 puis 1
+   colonne et l'alignement au pixel près compte moins que les marges. */
+@media (width > 1024px) {
+  #apercu.section > .wrap {
+    width: min(80%, 1340px);
+    max-width: none;
+  }
+}
+
 .overview-grid {
   position: relative;
   display: grid;
   grid-template-columns: repeat(4, minmax(0, 1fr));
-  gap: 24px;
+  gap: 30px;
   margin-top: clamp(46px, 5vw, 60px);
 }
 
@@ -4897,7 +5021,7 @@ body.legal-page {
 .overview-card:nth-child(4) { --overview-index: 3; }
 
 .overview-card-media {
-  aspect-ratio: 4 / 3;
+  aspect-ratio: 5 / 4;
   overflow: hidden;
   background: #eee;
 }
@@ -4919,21 +5043,21 @@ body.legal-page {
   display: flex;
   flex-direction: column;
   flex-grow: 1;
-  padding: 18px 20px 20px;
+  padding: 24px 26px 26px;
 }
 
 .overview-card-body h3 {
-  margin: 0 0 6px;
+  margin: 0 0 8px;
   color: #1f1f1f;
-  font-size: 1.08rem;
+  font-size: 1.24rem;
   line-height: 1.3;
 }
 
 .overview-card-body p {
   margin: 0;
   color: #5a5a5a;
-  font-size: 0.92rem;
-  line-height: 1.5;
+  font-size: 0.98rem;
+  line-height: 1.55;
   flex-grow: 1;
 }
 
@@ -5278,29 +5402,11 @@ body.legal-page {
   transition-delay: 140ms;
   display: block;
   max-width: 46ch;
-  color: #5a5a5a;
-  font-size: 0.98rem;
-  line-height: 1.55;
-}
-
-.story-card-cta {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  margin-top: 18px;
-  padding: 10px 18px;
-  border: 1px solid rgb(0 0 0 / 14%);
-  border-radius: 999px;
-  color: #1c1c1c;
-  font-size: 0.86rem;
-  font-weight: 600;
-  transition:
-    opacity 0.55s cubic-bezier(0.16, 1, 0.3, 1),
-    transform 0.28s ease,
-    background-color 0.28s ease,
-    border-color 0.28s ease,
-    color 0.28s ease;
-  transition-delay: 220ms;
+  color: #3d4045;
+  font-weight: 500;
+  font-size: 1.04rem;
+  line-height: 1.65;
+  letter-spacing: 0.005em;
 }
 
 /* Le surlignage rouge du nom de la machine « éclôt » juste après le titre,
@@ -5343,20 +5449,8 @@ body.legal-page {
   transition-delay: 1.19s;
 }
 
-.page-hero + .machines-story .story-item:first-child .story-card-cta {
-  transition-delay: 1.27s;
-}
-
 .page-hero + .machines-story .story-item:first-child .story-card-title mark {
   transition-delay: 1.43s;
-}
-
-.story-card:hover .story-card-cta,
-.story-card:focus-visible .story-card-cta {
-  background: var(--c-teal);
-  border-color: var(--c-teal);
-  color: #fff;
-  transform: translateX(3px);
 }
 
 /* Variante non cliquable de .story-card (page a-propos.html : "Notre
@@ -5413,158 +5507,7 @@ body.legal-page {
   }
 }
 
-/* Modale de détail machine (page parc-machines.html) : ouverte au clic sur
-   une photo du showcase, referme sur backdrop / croix / Échap. */
-body.modal-open {
-  overflow: hidden;
-}
-
-.machine-modal {
-  position: fixed;
-  inset: 0;
-  z-index: 90;
-  display: grid;
-  place-items: center;
-  padding: 24px;
-  opacity: 0;
-  visibility: hidden;
-  transition: opacity 0.28s ease, visibility 0s linear 0.28s;
-}
-
-.machine-modal.is-open {
-  opacity: 1;
-  visibility: visible;
-  transition: opacity 0.28s ease;
-}
-
-.machine-modal-backdrop {
-  position: absolute;
-  inset: 0;
-  background: rgb(10 12 15 / 72%);
-  backdrop-filter: blur(3px);
-}
-
-.machine-modal-dialog {
-  position: relative;
-  z-index: 1;
-  display: grid;
-  grid-template-columns: minmax(0, 1.1fr) minmax(0, 0.9fr);
-  width: min(920px, 100%);
-  max-height: min(600px, 88vh);
-  background: #fff;
-  border-radius: 26px;
-  overflow: hidden;
-  box-shadow: 0 40px 90px rgb(0 0 0 / 40%);
-  transform: translateY(18px) scale(0.98);
-  transition: transform 0.32s cubic-bezier(0.22, 1, 0.36, 1);
-}
-
-.machine-modal.is-open .machine-modal-dialog {
-  transform: translateY(0) scale(1);
-}
-
-.machine-modal-media {
-  position: relative;
-  margin: 0;
-  height: 100%;
-  min-height: 240px;
-  background: #14161a;
-}
-
-.machine-modal-media img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  display: block;
-}
-
-.machine-modal-body {
-  padding: clamp(28px, 3vw, 42px);
-  overflow-y: auto;
-}
-
-.machine-modal-kicker {
-  margin: 0 0 8px;
-  color: var(--c-teal);
-  font-weight: 700;
-  font-size: 0.82rem;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-}
-
-.machine-modal-body h3 {
-  margin: 0 0 14px;
-  color: #1f1f1f;
-  font-family: Montserrat, Arial, sans-serif;
-  font-size: clamp(1.3rem, 2vw, 1.7rem);
-  line-height: 1.2;
-}
-
-.machine-modal-specs {
-  margin: 0;
-  color: #1f1f1f;
-  font-weight: 600;
-  font-size: 0.98rem;
-  line-height: 1.5;
-}
-
-.machine-modal-detail {
-  margin: 12px 0 0;
-  color: #5a5a5a;
-  font-size: 0.94rem;
-  line-height: 1.55;
-}
-
-.machine-modal-detail:empty {
-  display: none;
-}
-
-.machine-modal-close {
-  position: absolute;
-  top: 16px;
-  right: 16px;
-  z-index: 2;
-  display: inline-grid;
-  place-items: center;
-  width: 40px;
-  height: 40px;
-  border-radius: 50%;
-  border: 0;
-  background: rgb(10 12 15 / 55%);
-  cursor: pointer;
-  transition: background-color 0.24s ease, transform 0.24s ease;
-}
-
-.machine-modal-close:hover,
-.machine-modal-close:focus-visible {
-  background: var(--c-teal);
-  transform: scale(1.06);
-}
-
-.machine-modal-close img {
-  width: 18px;
-  height: 18px;
-}
-
-@media (width <= 760px) {
-  .machine-modal-dialog {
-    grid-template-columns: 1fr;
-    max-height: min(640px, 92vh);
-    overflow-y: auto;
-  }
-
-  .machine-modal-media {
-    min-height: 220px;
-  }
-
-  .machine-modal-body {
-    overflow-y: visible;
-  }
-}
-
 @media (prefers-reduced-motion: reduce) {
-  .machine-modal,
-  .machine-modal-dialog,
   .story-card,
   .story-card-media,
   .story-card-media img,
@@ -5824,7 +5767,7 @@ body.modal-open {
 .about-heading > p:last-child,
 .about-history-note {
   margin: 0;
-  color: #5a6170;
+  color: var(--c-text);
   font-size: clamp(1.02rem, 1.15vw, 1.18rem);
   line-height: 1.7;
 }
@@ -6224,7 +6167,7 @@ body.modal-open {
 
 .about-history-card p {
   margin: 0;
-  color: #5a6170;
+  color: var(--c-text);
   font-size: 0.98rem;
   line-height: 1.62;
 }
@@ -6310,11 +6253,11 @@ body.modal-open {
 }
 
 .about-section--dark .about-history-card .about-history-year {
-  background: rgb(225 22 22 / 22%);
   color: #fff;
   box-shadow:
     inset 0 1px 0 rgb(255 255 255 / 16%),
     0 12px 24px rgb(0 0 0 / 16%);
+  background: linear-gradient(135deg, rgb(225 22 22 / 28%) 0%, rgb(225 22 22 / 18%) 100%);
 }
 
 .about-section--dark .about-figure {
@@ -6336,13 +6279,13 @@ body.modal-open {
 }
 
 .about-timeline-shell {
-  margin-top: clamp(28px, 4vw, 46px);
+  margin-top: clamp(30px, 4.2vw, 52px);
 }
 
 .about-timeline-body {
-  width: min(calc(100% - 24px), 1120px);
   margin: 0 auto;
   display: grid;
+  width: min(calc(100% - 24px), 1120px);
   grid-template-columns: 32px minmax(0, 1fr);
   gap: clamp(18px, 2.8vw, 30px);
 }
@@ -6364,21 +6307,21 @@ body.modal-open {
 .about-timeline-item::before {
   content: "";
   position: absolute;
+  border-radius: 50%;
+  transition:
+    transform 0.7s cubic-bezier(0.16, 1, 0.3, 1),
+    opacity 0.7s ease,
+    box-shadow 0.7s ease;
   top: 28px;
   left: -54px;
   width: 18px;
   height: 18px;
-  border-radius: 50%;
   background: linear-gradient(135deg, #ff5b5b 0%, var(--c-teal) 100%);
   box-shadow:
     0 0 0 9px rgb(225 22 22 / 10%),
     0 0 32px rgb(225 22 22 / 52%);
   transform: scale(0.62);
   opacity: 0.5;
-  transition:
-    transform 0.7s cubic-bezier(0.16, 1, 0.3, 1),
-    opacity 0.7s ease,
-    box-shadow 0.7s ease;
 }
 
 .about-timeline-item.is-active::before {
@@ -6391,6 +6334,14 @@ body.modal-open {
 
 .about-timeline-card {
   position: relative;
+  overflow: hidden;
+  opacity: 0;
+  transition:
+    opacity 0.9s cubic-bezier(0.16, 1, 0.3, 1),
+    transform 1s cubic-bezier(0.16, 1, 0.3, 1),
+    filter 0.95s cubic-bezier(0.16, 1, 0.3, 1),
+    box-shadow 0.35s ease,
+    border-color 0.35s ease;
   padding: clamp(24px, 3vw, 36px) clamp(24px, 3.2vw, 40px);
   border-radius: 30px;
   background:
@@ -6401,16 +6352,8 @@ body.modal-open {
     0 28px 64px rgb(0 0 0 / 32%),
     inset 0 1px 0 rgb(255 255 255 / 6%);
   backdrop-filter: blur(12px);
-  overflow: hidden;
-  opacity: 0;
   transform: translate3d(0, 32px, 0) scale(0.97);
   filter: blur(5px);
-  transition:
-    opacity 0.9s cubic-bezier(0.16, 1, 0.3, 1),
-    transform 1s cubic-bezier(0.16, 1, 0.3, 1),
-    filter 0.95s cubic-bezier(0.16, 1, 0.3, 1),
-    box-shadow 0.35s ease,
-    border-color 0.35s ease;
 }
 
 .about-timeline-card > * {
@@ -6422,15 +6365,23 @@ body.modal-open {
   content: "";
   position: absolute;
   inset: 0;
+  pointer-events: none;
+  opacity: 0.7;
   background:
     radial-gradient(360px 180px at 0% 0%, rgb(225 22 22 / 18%), transparent 58%),
     linear-gradient(180deg, transparent 0%, rgb(0 0 0 / 22%) 100%);
-  pointer-events: none;
-  opacity: 0.7;
 }
 
 .about-timeline-card::after {
   content: none;
+  inset: auto 16px 16px auto;
+  width: 92px;
+  height: 92px;
+  border-radius: 26px;
+  border-color: rgb(225 22 22 / 14%);
+  background:
+    linear-gradient(135deg, rgb(225 22 22 / 14%), transparent 72%),
+    radial-gradient(circle at 30% 30%, rgb(255 255 255 / 12%), transparent 52%);
 }
 
 .about-timeline-item.is-active .about-timeline-card {
@@ -6445,119 +6396,8 @@ body.modal-open {
 
 .about-timeline-card h3 {
   position: relative;
-  margin: 10px 0 12px;
   color: #fff;
   font-family: Montserrat, Arial, sans-serif;
-  font-size: clamp(1.2rem, 2vw, 1.8rem);
-  line-height: 1.08;
-  letter-spacing: -0.04em;
-}
-
-.about-timeline-card p {
-  position: relative;
-  margin: 0;
-  color: rgb(255 255 255 / 76%);
-  font-size: 0.98rem;
-  line-height: 1.65;
-}
-
-.about-timeline-card .about-history-year {
-  position: relative;
-  display: inline-flex;
-  align-items: center;
-  min-height: 26px;
-  margin-bottom: 2px;
-  padding: 0 10px;
-  border-radius: 999px;
-  background: rgb(225 22 22 / 12%);
-  color: var(--c-teal);
-  font-size: 0.76rem;
-  font-weight: 800;
-  letter-spacing: 0.18em;
-  text-transform: uppercase;
-}
-
-.about-timeline-note {
-  max-width: 760px;
-}
-
-/* Frise "Notre histoire" - override final pour renforcer lisibilité et relief
-   sans toucher au contenu. */
-.about-timeline-shell {
-  margin-top: clamp(30px, 4.2vw, 52px);
-}
-
-.about-timeline-body {
-  width: min(calc(100% - 24px), 1120px);
-  grid-template-columns: 32px minmax(0, 1fr);
-  gap: clamp(18px, 2.8vw, 30px);
-}
-
-.about-timeline-body .machines-story-rail {
-  margin-top: 16px;
-  background: rgb(255 255 255 / 10%);
-  box-shadow: inset 0 0 0 1px rgb(255 255 255 / 4%);
-}
-
-.about-timeline-item::before {
-  top: 28px;
-  left: -54px;
-  width: 18px;
-  height: 18px;
-  background: linear-gradient(135deg, #ff5b5b 0%, var(--c-teal) 100%);
-  box-shadow:
-    0 0 0 9px rgb(225 22 22 / 10%),
-    0 0 32px rgb(225 22 22 / 52%);
-  transform: scale(0.62);
-  opacity: 0.5;
-}
-
-.about-timeline-item.is-active::before {
-  box-shadow:
-    0 0 0 10px rgb(225 22 22 / 16%),
-    0 0 38px rgb(225 22 22 / 74%);
-}
-
-.about-timeline-card {
-  padding: clamp(24px, 3vw, 36px) clamp(24px, 3.2vw, 40px);
-  border-radius: 30px;
-  background:
-    linear-gradient(145deg, rgb(255 255 255 / 10%), rgb(255 255 255 / 5%)),
-    rgb(20 22 26 / 92%);
-  border: 1px solid rgb(255 255 255 / 12%);
-  box-shadow:
-    0 28px 64px rgb(0 0 0 / 32%),
-    inset 0 1px 0 rgb(255 255 255 / 6%);
-  backdrop-filter: blur(12px);
-  transform: translate3d(0, 32px, 0) scale(0.97);
-  filter: blur(5px);
-}
-
-.about-timeline-card::before {
-  background:
-    radial-gradient(360px 180px at 0% 0%, rgb(225 22 22 / 18%), transparent 58%),
-    linear-gradient(180deg, transparent 0%, rgb(0 0 0 / 22%) 100%);
-}
-
-.about-timeline-card::after {
-  inset: auto 16px 16px auto;
-  width: 92px;
-  height: 92px;
-  border-radius: 26px;
-  border-color: rgb(225 22 22 / 14%);
-  background:
-    linear-gradient(135deg, rgb(225 22 22 / 14%), transparent 72%),
-    radial-gradient(circle at 30% 30%, rgb(255 255 255 / 12%), transparent 52%);
-}
-
-.about-timeline-item.is-active .about-timeline-card {
-  box-shadow:
-    0 34px 82px rgb(0 0 0 / 36%),
-    inset 0 1px 0 rgb(255 255 255 / 10%);
-  border-color: rgb(255 255 255 / 18%);
-}
-
-.about-timeline-card h3 {
   margin: 12px 0 10px;
   font-size: clamp(1.15rem, 1.9vw, 1.72rem);
   line-height: 1.12;
@@ -6565,28 +6405,39 @@ body.modal-open {
 }
 
 .about-timeline-card p {
+  position: relative;
+  margin: 0;
+  font-size: 0.98rem;
   color: rgb(255 255 255 / 80%);
   line-height: 1.68;
 }
 
 .about-timeline-card .about-history-year {
-  min-height: 28px;
-  padding: 0 11px;
-  background: linear-gradient(135deg, rgb(225 22 22 / 26%) 0%, rgb(225 22 22 / 14%) 100%);
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  margin-bottom: 2px;
+  border-radius: 999px;
+  font-weight: 800;
+  text-transform: uppercase;
+  min-height: 30px;
+  padding: 0 13px;
+  background: linear-gradient(135deg, #ff2626 0%, #c90000 100%);
   color: #fff;
-  font-size: 0.78rem;
+  font-size: 0.88rem;
+  letter-spacing: 0.1em;
   box-shadow:
-    inset 0 1px 0 rgb(255 255 255 / 12%),
-    0 10px 22px rgb(0 0 0 / 12%);
+    inset 0 1px 0 rgb(255 255 255 / 18%),
+    0 10px 22px rgb(0 0 0 / 20%);
 }
 
 .about-timeline-note {
+  max-width: 760px;
   margin-top: 8px;
 }
 
-.about-section--dark .about-history-card .about-history-year {
-  background: linear-gradient(135deg, rgb(225 22 22 / 28%) 0%, rgb(225 22 22 / 18%) 100%);
-}
+/* Frise "Notre histoire" - override final pour renforcer lisibilité et relief
+   sans toucher au contenu. */
 
 .about-process-grid {
   display: grid;
@@ -6613,7 +6464,7 @@ body.modal-open {
 
 .about-process-card p {
   margin: 0;
-  color: #5a6170;
+  color: var(--c-text);
   font-size: 0.96rem;
   line-height: 1.58;
 }
@@ -6663,11 +6514,13 @@ body.modal-open {
 }
 
 .about-capabilities .key-figure-card {
-  min-height: clamp(190px, 17vw, 232px);
+  min-height: 0;
   border-bottom: 0;
-  display: grid;
-  align-content: space-between;
-  gap: 18px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: flex-start;
+  gap: 0;
 }
 
 .about-capabilities .key-figure-card:nth-child(3n) {
@@ -6683,22 +6536,42 @@ body.modal-open {
 }
 
 .about-capabilities .key-figure-value {
-  font-size: clamp(2.8rem, 4.8vw, 5.3rem);
-  line-height: 0.92;
+  margin-bottom: 6px;
+  font-size: clamp(2.2rem, 3.4vw, 3rem);
+  line-height: 0.95;
+}
+
+.about-capabilities .key-figure-rule {
+  display: block;
+  width: 28px;
+  height: 2px;
+  margin: 14px 0 12px;
+  background: var(--c-teal);
 }
 
 .about-capabilities .key-figure-card h3 {
   max-width: 15ch;
   margin-top: 0;
-  padding-top: 6px;
+  margin-bottom: 4px;
+  padding-top: 0;
+}
+
+.about-capabilities .key-figure-sub {
+  margin: 0;
+  max-width: 22ch;
+  color: var(--c-text);
+  font-size: 0.86rem;
+  font-weight: 400;
+  line-height: 1.5;
 }
 
 .about-capabilities .key-prefix {
-  font-size: 0.56em;
+  color: var(--c-teal);
+  font-size: 0.62em;
 }
 
 .about-capabilities .key-unit {
-  font-size: 0.24em;
+  font-size: 0.32em;
 }
 
 @media (width <= 1024px) {
@@ -6821,7 +6694,8 @@ body.modal-open {
 
 #pieces-serie .series-copy h2,
 #pieces-unitaires .text-content h2,
-#parc-machines .text-content.dark h2 {
+#parc-machines .text-content.dark h2,
+.split-grid.reverse .text-content h2 {
   margin: 0;
   max-width: 610px;
   color: #1f1f1f;
@@ -6833,13 +6707,15 @@ body.modal-open {
 
 #pieces-serie .series-copy h2 .series-title-label,
 #pieces-unitaires .text-content h2 .series-title-label,
-#parc-machines .text-content.dark h2 .series-title-label {
+#parc-machines .text-content.dark h2 .series-title-label,
+.split-grid.reverse .text-content h2 .series-title-label {
   display: block;
 }
 
 #pieces-serie .series-copy h2 mark,
 #pieces-unitaires .text-content h2 mark,
-#parc-machines .text-content.dark h2 mark {
+#parc-machines .text-content.dark h2 mark,
+.split-grid.reverse .text-content h2 mark {
   display: inline-block;
   padding: 2px 10px 5px;
   color: #fff;
@@ -6848,8 +6724,10 @@ body.modal-open {
 
 #pieces-serie .series-copy ul,
 #pieces-unitaires .text-content ul,
-#parc-machines .text-content.dark ul {
-  color: #5a5a5a;
+#parc-machines .text-content.dark ul,
+.split-grid.reverse .text-content ul,
+.split-grid.reverse .text-content p {
+  color: var(--c-text);
   font-size: clamp(0.98rem, 1.08vw, 1.2rem);
   line-height: 1.5;
 }
@@ -6869,14 +6747,16 @@ body.modal-open {
 
   #pieces-serie .series-copy h2,
   #pieces-unitaires .text-content h2,
-  #parc-machines .text-content.dark h2 {
+  #parc-machines .text-content.dark h2,
+  .split-grid.reverse .text-content h2 {
     font-size: clamp(1.02rem, 5.1vw, 1.34rem);
     line-height: 1.08;
   }
 
   #pieces-serie .series-copy h2 mark,
   #pieces-unitaires .text-content h2 mark,
-  #parc-machines .text-content.dark h2 mark {
+  #parc-machines .text-content.dark h2 mark,
+  .split-grid.reverse .text-content h2 mark {
     padding: 0.01em 0.1em 0.06em;
   }
 }
@@ -6893,7 +6773,34 @@ body.modal-open {
   display: none;
 }
 
+/* Carte unique, sombre, dans laquelle vivent le texte et la carte —
+   même esprit atelier que la carte de formulaire, avec un léger motif de
+   hachures rouges en fond, sur le modèle de la maquette de référence. */
+#plan .plan-panel {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  background: linear-gradient(155deg, #1c1e22 0%, #17191c 100%);
+  border-radius: 28px;
+  padding: clamp(28px, 3.6vw, 48px);
+  box-shadow: 0 30px 72px rgb(0 0 0 / 32%);
+}
+
+#plan .plan-panel::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: repeating-linear-gradient(135deg, rgb(225 22 22 / 55%) 0 2px, transparent 2px 12px);
+  opacity: 0.14;
+  /* stylelint-disable-next-line property-no-vendor-prefix -- required by Chrome/Edge for mask-image */
+  -webkit-mask-image: linear-gradient(115deg, transparent 55%, black 100%);
+  mask-image: linear-gradient(115deg, transparent 55%, black 100%);
+  pointer-events: none;
+}
+
 #plan .plan-grid {
+  position: relative;
+  z-index: 1;
   grid-template-columns: minmax(0, 1.02fr) minmax(0, 0.98fr);
   align-items: start;
   gap: clamp(22px, 3vw, 40px);
@@ -6936,7 +6843,7 @@ body.modal-open {
 
 #plan .plan-copy h2 {
   margin: 0;
-  color: #1f2328;
+  color: #fff;
   font-family: Montserrat, Arial, sans-serif;
   letter-spacing: -0.05em;
   max-width: 640px;
@@ -6958,7 +6865,7 @@ body.modal-open {
 #plan .plan-lead {
   margin: 18px 0 0;
   max-width: 640px;
-  color: #7b7f86;
+  color: rgb(255 255 255 / 66%);
   font-size: 1rem;
   line-height: 1.55;
 }
@@ -6978,9 +6885,9 @@ body.modal-open {
 #plan .plan-detail-icon {
   display: inline-grid;
   place-items: center;
-  border: 1px solid rgb(225 22 22 / 90%);
+  border: 1px solid rgb(225 22 22 / 55%);
   border-radius: 50%;
-  background: rgb(255 255 255 / 92%);
+  background: rgb(255 255 255 / 6%);
   width: 34px;
   height: 34px;
 }
@@ -6992,16 +6899,20 @@ body.modal-open {
 
 #plan .plan-details p {
   margin: 0;
-  color: #5a5a5a;
+  color: rgb(255 255 255 / 58%);
   font-size: 0.94rem;
   line-height: 1.52;
 }
 
 #plan .plan-details strong {
   display: block;
-  margin-bottom: 8px;
-  color: #1f2328;
+  margin-bottom: 0;
+  color: #fff;
   font-size: 0.98rem;
+}
+
+#plan .plan-details a {
+  color: rgb(255 255 255 / 58%);
 }
 
 #plan .plan-actions {
@@ -7021,25 +6932,64 @@ body.modal-open {
   margin-left: 16px;
 }
 
+/* Carte carte/plan unique, sombre, dans laquelle flottent la photo de
+   façade, le repère et les deux actions — plutôt que photo et carte
+   empilées séparément. */
 #plan .plan-map-wrap {
   position: relative;
   padding: 0;
-  border: 0;
-  border-radius: 0;
-  box-shadow: none;
-  background: transparent;
+  border: 1px solid rgb(255 255 255 / 10%);
+  border-radius: 28px;
+  overflow: hidden;
+  box-shadow: 0 30px 72px rgb(0 0 0 / 30%);
+  background: #14161a;
 }
 
 #plan .plan-map {
   width: 100%;
   height: auto;
-  border-radius: 2px;
-  border: 1px solid rgb(0 0 0 / 8%);
-  box-shadow: 0 16px 36px rgb(0 0 0 / 8%);
+  border-radius: 0;
+  border: 0;
+  box-shadow: none;
   display: block;
-  background: #fff;
-  aspect-ratio: 1.72 / 1;
+  background: #14161a;
+  aspect-ratio: 1.72 / 1.35;
   object-fit: cover;
+  filter: saturate(0.96) brightness(1.02) contrast(1.03);
+}
+
+#plan .plan-devanture {
+  position: absolute;
+  top: 22px;
+  left: 22px;
+  z-index: 2;
+  width: min(52%, 300px);
+  margin: 0;
+  padding: 0;
+  background: #14161a;
+  overflow: hidden;
+  border-radius: 16px;
+  box-shadow: 0 20px 40px rgb(0 0 0 / 45%);
+}
+
+#plan .plan-devanture img {
+  display: block;
+  width: 100%;
+  height: 130px;
+  max-height: none;
+  object-fit: cover;
+  transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+#plan .plan-devanture figcaption {
+  position: absolute;
+  inset: auto 0 0 0;
+  margin: 0;
+  padding: 30px 14px 12px;
+  background: linear-gradient(180deg, transparent 0%, rgb(0 0 0 / 82%) 100%);
+  color: #fff;
+  font-size: 0.8rem;
+  line-height: 1.35;
 }
 
 #plan .plan-map-link {
@@ -7050,9 +7000,10 @@ body.modal-open {
   padding: 0 22px;
   display: flex;
   align-items: center;
+  gap: 8px;
   justify-content: flex-start;
   color: #fff;
-  background: linear-gradient(90deg, rgb(34 34 34 / 92%) 0%, rgb(41 41 41 / 98%) 100%);
+  background: linear-gradient(90deg, rgb(20 22 26 / 92%) 0%, rgb(28 30 34 / 96%) 100%);
   border-radius: 0;
   text-decoration: none;
   min-height: 50px;
@@ -7061,10 +7012,9 @@ body.modal-open {
   z-index: 3;
 }
 
-#plan .plan-map-link::after {
-  content: "↗";
-  margin-left: 12px;
-  font-size: 0.95rem;
+#plan .plan-map-link img {
+  width: 16px;
+  height: 16px;
   opacity: 0.9;
 }
 
@@ -7085,6 +7035,31 @@ body.modal-open {
   height: 50px;
 }
 
+#plan .plan-map-send {
+  position: absolute;
+  right: 16px;
+  bottom: 8px;
+  z-index: 4;
+  display: inline-grid;
+  place-items: center;
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  background: var(--c-teal);
+  box-shadow: 0 8px 18px rgb(0 0 0 / 35%);
+  transition: transform 0.28s ease;
+}
+
+#plan .plan-map-send img {
+  width: 18px;
+  height: 18px;
+}
+
+#plan .plan-map-send:hover,
+#plan .plan-map-send:focus-visible {
+  transform: scale(1.12);
+}
+
 #plan .plan-media,
 #plan .plan-copy {
   transition:
@@ -7100,6 +7075,16 @@ body.modal-open {
 #plan .plan-media:hover .plan-map,
 #plan .plan-media:focus-within .plan-map {
   transform: scale(1.02);
+}
+
+@media (width <= 640px) {
+  #plan .plan-devanture {
+    width: min(60%, 220px);
+  }
+
+  #plan .plan-devanture img {
+    height: 100px;
+  }
 }
 
 .footer-main > div:first-child p {
@@ -7153,6 +7138,11 @@ body.modal-open {
 
   #plan.plan-section {
     padding: 28px 0 20px;
+  }
+
+  #plan .plan-panel {
+    padding: 22px;
+    border-radius: 22px;
   }
 
   #plan .plan-kicker {
@@ -7282,7 +7272,7 @@ body.modal-open {
 .footer-brand > p {
   max-width: 330px;
   margin: 24px 0 0;
-  color: #555a60;
+  color: var(--c-text);
   font-size: 0.94rem;
   font-weight: 400;
   line-height: 1.65;

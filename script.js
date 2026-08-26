@@ -21,13 +21,6 @@ const storyInstances = Array.from(document.querySelectorAll('[data-story]')).map
   items: Array.from(story.querySelectorAll('[data-story-item]')),
   railFill: story.querySelector('[data-story-rail]'),
 }));
-const storySlides = document.querySelectorAll('[data-story-slide]');
-const machineModal = document.querySelector('[data-machine-modal]');
-const machineModalImage = machineModal ? machineModal.querySelector('[data-machine-modal-image]') : null;
-const machineModalTitle = machineModal ? machineModal.querySelector('[data-machine-modal-title]') : null;
-const machineModalSpecs = machineModal ? machineModal.querySelector('[data-machine-modal-specs]') : null;
-const machineModalDetail = machineModal ? machineModal.querySelector('[data-machine-modal-detail]') : null;
-let machineModalTrigger = null;
 
 const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 const revealItems = document.querySelectorAll('.reveal');
@@ -626,84 +619,6 @@ const setupContactForm = () => {
   });
 };
 
-const openMachineModal = (slide) => {
-  if (!machineModal) {
-    return;
-  }
-
-  const image = slide.querySelector('img');
-  const title = slide.querySelector('.story-card-title');
-  const specs = slide.querySelector('.story-card-spec');
-
-  if (machineModalImage && image) {
-    machineModalImage.src = image.currentSrc || image.src;
-    machineModalImage.alt = image.alt;
-  }
-
-  if (machineModalTitle) {
-    machineModalTitle.textContent = title ? title.textContent : '';
-  }
-
-  if (machineModalSpecs) {
-    machineModalSpecs.textContent = specs ? specs.textContent : '';
-  }
-
-  if (machineModalDetail) {
-    machineModalDetail.textContent = slide.dataset.detail || '';
-  }
-
-  machineModalTrigger = slide;
-  machineModal.hidden = false;
-  body.classList.add('modal-open');
-
-  window.requestAnimationFrame(() => {
-    machineModal.classList.add('is-open');
-  });
-
-  const closeBtn = machineModal.querySelector('.machine-modal-close');
-  if (closeBtn) {
-    closeBtn.focus();
-  }
-};
-
-const closeMachineModal = () => {
-  if (!machineModal || !machineModal.classList.contains('is-open')) {
-    return;
-  }
-
-  machineModal.classList.remove('is-open');
-  body.classList.remove('modal-open');
-
-  window.setTimeout(() => {
-    machineModal.hidden = true;
-  }, 280);
-
-  if (machineModalTrigger) {
-    machineModalTrigger.focus();
-    machineModalTrigger = null;
-  }
-};
-
-const setupMachineModal = () => {
-  if (!machineModal || !storySlides.length) {
-    return;
-  }
-
-  storySlides.forEach((slide) => {
-    slide.addEventListener('click', () => openMachineModal(slide));
-  });
-
-  machineModal.querySelectorAll('[data-machine-modal-dismiss]').forEach((el) => {
-    el.addEventListener('click', closeMachineModal);
-  });
-
-  document.addEventListener('keydown', (event) => {
-    if (event.key === 'Escape' && machineModal.classList.contains('is-open')) {
-      closeMachineModal();
-    }
-  });
-};
-
 const init = () => {
   setupNavToggle();
   enableClickPulse();
@@ -714,7 +629,6 @@ const init = () => {
   computeSectionOffsets();
   updateActiveNavLink();
   setupContactForm();
-  setupMachineModal();
   updateScrollDynamics();
   setupStoryObserver();
   setupAtelierReveal();
