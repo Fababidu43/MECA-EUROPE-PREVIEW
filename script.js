@@ -7,12 +7,9 @@ const sectionLinks = document.querySelectorAll('.primary-nav a[href^="#"]');
 const contactForm = document.querySelector('#contact-form');
 const contactFeedback = document.querySelector('#contact-form-feedback');
 const heroParallaxImage = document.querySelector('.hero-video-bg');
-const parallaxImages = document.querySelectorAll('.intro-figure img, .engage-section .section-figure img, .experience-section .section-figure img');
+const parallaxImages = document.querySelectorAll('.engage-section .section-figure img');
 const keyFiguresSection = document.querySelector('.key-figures-section');
 const keyFigureCounters = keyFiguresSection ? keyFiguresSection.querySelectorAll('[data-count]') : [];
-const body = document.body;
-const timelinePinCtrl = window.timelinePinCtrl || null;
-const precisionPinCtrl = window.precisionPinCtrl || null;
 /* Récit vertical façon "parc machines" : une page peut en compter plusieurs
    (a-propos.html a "Notre histoire" et "Précision" en plus du parc machines
    lui-même), d'où un tableau d'instances plutôt qu'un unique élément. */
@@ -295,12 +292,6 @@ const syncScrollState = (force = false) => {
     syncTintReveal(forceScrollSync);
     updateScrollDynamics();
     updateStoryRail();
-    if (timelinePinCtrl) {
-      timelinePinCtrl.update();
-    }
-    if (precisionPinCtrl) {
-      precisionPinCtrl.update();
-    }
     lastScrollY = window.scrollY || 0;
     scrollFrame = 0;
     forceScrollSync = false;
@@ -367,7 +358,7 @@ const setupNavToggle = () => {
 };
 
 const enableClickPulse = () => {
-  const clickTargets = document.querySelectorAll('.button-pill, .plan-phone, .primary-nav a, .sticky-actions a, .contact-form-cancel');
+  const clickTargets = document.querySelectorAll('.button-pill, .primary-nav a, .sticky-actions a');
 
   clickTargets.forEach((target) => {
     target.classList.add('pulse-target');
@@ -511,7 +502,7 @@ const setupRevealObserver = () => {
 };
 
 const setupTintReveal = () => {
-  const tintSelectors = '.section-kicker, .key-prefix, .key-figure-phrase .key-arrow, .key-date-month';
+  const tintSelectors = '.section-kicker, .key-prefix';
 
   if (prefersReducedMotion) {
     tintScrollItems = [];
@@ -633,12 +624,6 @@ const init = () => {
   setupStoryObserver();
   setupAtelierReveal();
   updateStoryRail();
-  if (timelinePinCtrl) {
-    timelinePinCtrl.update();
-  }
-  if (precisionPinCtrl) {
-    precisionPinCtrl.update();
-  }
 
   if (window.location.hash && window.location.hash.length > 1) {
     window.setTimeout(() => {
@@ -663,12 +648,6 @@ const init = () => {
 
   window.addEventListener('resize', () => {
     computeSectionOffsets();
-    if (timelinePinCtrl) {
-      timelinePinCtrl.measure();
-    }
-    if (precisionPinCtrl) {
-      precisionPinCtrl.measure();
-    }
     syncScrollState(true);
     updateScrollDynamics();
   }, { passive: true });
@@ -685,12 +664,6 @@ if (document.readyState === 'loading') {
 if (document.fonts) {
   document.fonts.ready.then(() => {
     computeSectionOffsets();
-    if (timelinePinCtrl) {
-      timelinePinCtrl.measure();
-    }
-    if (precisionPinCtrl) {
-      precisionPinCtrl.measure();
-    }
     syncScrollState(true);
   }).catch(() => {});
 }
